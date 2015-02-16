@@ -52,10 +52,17 @@ end
 
 #*************************************
 Given(/^I have a property owned by an individual$/) do
-  pending # express the regexp above with the code you wish you had
-
-
-
+  # empty the database
+  delete_all_titles
+  # insert the property_hash data into the database
+  @property_hash = {
+    :title_number => "DN1000",
+    :postcode => "PL9 BLT",
+    :street_name => "Test Street",
+    :house_no => 13,
+    :town => "Plymouth"
+  }
+  create_proprietor_title_in_db(@property_hash)
 end
 
 Then(/^I can see who owns the property$/) do
