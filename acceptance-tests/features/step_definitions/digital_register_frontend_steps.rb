@@ -48,3 +48,24 @@ end
 Then(/^I get a page not found message$/) do
   expect(page.status_code).to eq(404)
 end
+
+
+#*************************************
+Given(/^I have a property owned by an individual$/) do
+  pending # express the regexp above with the code you wish you had
+
+
+
+end
+
+Then(/^I can see who owns the property$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+Given(/^the property is owned by a multiple individuals$/) do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then(/^I can see all the owners the property$/) do
+  pending # express the regexp above with the code you wish you had
+end
