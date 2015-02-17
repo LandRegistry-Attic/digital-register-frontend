@@ -421,8 +421,8 @@ INSERT INTO "title_register_data" ("title_number", "register_data") VALUES (
                        "auto_uppercase_override": true
                      }
                    }
-                   #{if multi_proprietors 
-                   '{
+                   #{if multi_proprietors
+                   ',{
                      "addresses": [
                        {
                          "postal_county": "London",
