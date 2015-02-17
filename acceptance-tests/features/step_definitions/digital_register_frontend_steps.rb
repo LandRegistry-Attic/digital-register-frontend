@@ -15,9 +15,13 @@ Given(/^I have a property$/) do
     :postcode => "PL9 BLT",
     :street_name => "Test Street",
     :house_no => 13,
-    :town => "Plymouth"
+    :town => "Plymouth",
+    :surname => "Marie",
+    :forename => "Hill",
+    :name_category => "Personal",
+    :full_text => "PROPRIETOR: %MARIE HILL% of Flat 113, Eaton Rise, Eton College Road, *London* NW3 2DD.",
   }
-  create_title_in_db(@property_hash)
+  create_proprietor_title_in_db(@property_hash)
 end
 
 Given(/^I do not have a property$/) do
@@ -65,7 +69,7 @@ Given(/^I have a property owned by an individual$/) do
     :forename => "Hill",
     :name_category => "Personal",
     :full_text => "PROPRIETOR: %MARIE HILL% of Flat 113, Eaton Rise, Eton College Road, *London* NW3 2DD.",
-    #:multi_proprietors => False
+    :multi_proprietors => "singlePI"
   }
   create_proprietor_title_in_db(@property_hash)
 end
@@ -89,7 +93,7 @@ Given(/^the property is owned by multiple individuals$/) do
     :forename => "Hill",
     :name_category => "Personal",
     :full_text => "PROPRIETOR: %MARIE HILL% of Flat 113, Eaton Rise, Eton College Road, *London* NW3 2DD.",
-#    :multi_proprietors => True
+    :multi_proprietors => "TwoPI"
   }
   create_proprietor_title_in_db(@property_hash)
 end
