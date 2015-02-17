@@ -347,10 +347,10 @@ def create_proprietor_title_in_db(title_data)
   street_name = title_data[:street_name]
   house_no = title_data[:house_no]
   town = title_data[:town]
-  surname = title.data[:surname]
-  forename = title.data[:forename]
-  name_category = title.data[:name_category]
-  full_text = title.data[:full_text]
+  surname = title_data[:surname]
+  forename = title_data[:forename]
+  name_category = title_data[:name_category]
+  full_text = title_data[:full_text]
 
   create_title_sql = <<-eos
 INSERT INTO "title_register_data" ("title_number", "register_data") VALUES (

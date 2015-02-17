@@ -57,10 +57,14 @@ Given(/^I have a property owned by an individual$/) do
   # insert the property_hash data into the database
   @property_hash = {
     :title_number => "DN1000",
-    :postcode => "PL9 BLT",
-    :street_name => "Test Street",
-    :house_no => 13,
-    :town => "Plymouth"
+    :postcode => "NW3 2DD",
+    :street_name => "Eaton Rise",
+    :house_no => 113,
+    :town => "London",
+    :surname => "Marie",
+    :forename => "Hill",
+    :name_category => "Personal",
+    :full_text => "PROPRIETOR: %MARIE HILL% of Flat 113, Eaton Rise, Eton College Road, *London* NW3 2DD."
   }
   create_proprietor_title_in_db(@property_hash)
 end
