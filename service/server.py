@@ -50,7 +50,7 @@ def display_title(title_ref):
                                     'postcode': address_part['postcode']
                                 }
         title = {
-            'number': title_api['data']['title_number'],
+            'number': title_api['title_number'],
             'last_changed': title_api['data']['last_app_timestamp'],
             'address': property_description,
             'lenders': [
