@@ -36,7 +36,7 @@ def create_proprietor_title_in_db(title_data)
   create_title_sql = <<-eos
 INSERT INTO "title_register_data" ("title_number", "register_data", "geometry_data") VALUES (
   '#{title_number}',
-  '{"data": {
+  '{
           "application_reference": "MA2784E",
           "class": "Absolute",
           "districts": [
@@ -149,9 +149,7 @@ INSERT INTO "title_register_data" ("title_number", "register_data", "geometry_da
           "uprns": [
               1068558627
           ]
-      },
-      "title_number": "#{title_number}"
-  }',
+      }',
   '{"geometry_data": {
       "geometry": {
           "extent": {
