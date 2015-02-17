@@ -99,10 +99,6 @@ Given(/^the property is owned by multiple individuals$/) do
 end
 
 Then(/^I can see all the owners the property$/) do
-  #pending # express the regexp above with the code you wish you had
   content = page.body.text
   expect(content).to include("#{@property_hash[:forename]} #{@property_hash[:surname]}")
-  #expect(content).to include("#{@property_hash[:forename2]} #{@property_hash[:surname2]}")
-  #expect(content).to include("#{@property_hash[:forename3]} #{@property_hash[:surname3]}")
-  #expect(content).to include("#{@property_hash[:forename4]} #{@property_hash[:surname4]}")
 end
