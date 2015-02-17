@@ -65,16 +65,17 @@ Given(/^I have a property owned by an individual$/) do
     :forename => "Hill",
     :name_category => "Personal",
     :full_text => "PROPRIETOR: %MARIE HILL% of Flat 113, Eaton Rise, Eton College Road, *London* NW3 2DD.",
-    :multi_proprietors => False
+    #:multi_proprietors => False
   }
   create_proprietor_title_in_db(@property_hash)
 end
 
 Then(/^I can see who owns the property$/) do
-  pending # express the regexp above with the code you wish you had
+  content = page.body.text
+  expect(content).to include("#{@property_hash[:forename]} #{@property_hash[:surname]}")
 end
 
-Given(/^the property is owned by a multiple individuals$/) do
+Given(/^the property is owned by multiple individuals$/) do
   # empty the database
   delete_all_titles
   # insert the property_hash data into the database
@@ -88,11 +89,16 @@ Given(/^the property is owned by a multiple individuals$/) do
     :forename => "Hill",
     :name_category => "Personal",
     :full_text => "PROPRIETOR: %MARIE HILL% of Flat 113, Eaton Rise, Eton College Road, *London* NW3 2DD.",
-    :multi_proprietors => True
+#    :multi_proprietors => True
   }
   create_proprietor_title_in_db(@property_hash)
 end
 
 Then(/^I can see all the owners the property$/) do
   pending # express the regexp above with the code you wish you had
+  #content = page.body.text
+  #expect(content).to include("#{@property_hash[:forename1]} #{@property_hash[:surname1]}")
+  #expect(content).to include("#{@property_hash[:forename2]} #{@property_hash[:surname2]}")
+  #expect(content).to include("#{@property_hash[:forename3]} #{@property_hash[:surname3]}")
+  #expect(content).to include("#{@property_hash[:forename4]} #{@property_hash[:surname4]}")
 end

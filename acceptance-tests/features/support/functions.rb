@@ -351,10 +351,10 @@ def create_proprietor_title_in_db(title_data)
   forename = title_data[:forename]
   name_category = title_data[:name_category]
   full_text = title_data[:full_text]
-  multi_proprietors = title_data[:multi_proprietors]
+  #multi_proprietors = title_data[:multi_proprietors]
 
   create_title_sql = <<-eos
-INSERT INTO "title_register_data" ("title_number", "register_data") VALUES (
+INSERT INTO "title_register_data" ("title_number", "register_data", "geometry_data") VALUES (
   '#{title_number}',
   '{
      "filed_plan_format": "PAPER",
@@ -421,23 +421,7 @@ INSERT INTO "title_register_data" ("title_number", "register_data") VALUES (
                        "auto_uppercase_override": true
                      }
                    }
-                   #{if multi_proprietors
-                   ',{
-                     "addresses": [
-                       {
-                         "postal_county": "London",
-                         "address_string":  "#{house_no}, #{street_name}, #{town} #{postcode}",
-                         "address_type": "UK",
-                         "auto_uppercase_override": true
-                       }
-                     ],
-                     "name": {
-                       "surname": "#{surname}",
-                       "forename": "#{forename}",
-                       "name_category": "#{name_category}",
-                       "auto_uppercase_override": true
-                     }
-                   }'}
+
                  ],
                  "type": "Proprietor"
                }
@@ -448,8 +432,9 @@ INSERT INTO "title_register_data" ("title_number", "register_data") VALUES (
            }
          ]
        }
-     ],
-     "geometry": {
+     ]
+    }',
+  '{"geometry": {
 
      },
      "tenure": "Freehold",
@@ -497,6 +482,35 @@ eos
   # calls the database conection - settings in the config.rb
   # and executes the create property sql
   $db_connection.exec(create_title_sql)
+
+
+=begin
+
+
+#{if multi_proprietors
+',{
+  "addresses": [
+    {
+      "postal_county": "London",
+      "address_string":  "#{house_no}, #{street_name}, #{town} #{postcode}",
+      "address_type": "UK",
+      "auto_uppercase_override": true
+    }
+  ],
+  "name": {
+    "surname": "#{surname}",
+    "forename": "#{forename}",
+    "name_category": "#{name_category}",
+    "auto_uppercase_override": true
+  }
+}'}
+
+
+
+
+=end
+
+
 end
 
 # connect to the database and execute the sql (that deletes everything)
