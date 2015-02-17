@@ -1,32 +1,39 @@
 {
-    "data":{
+    "data": {
         "application_reference": "MA2784E",
+        "class": "Absolute",
+        "districts": [
+            "LUTON"
+        ],
+        "dlr": "Peterborough Office",
+        "edition_date": "2014-05-22",
+        "filed_plan_format": "VECTOR",
         "groups": [
             {
                 "category": "PROPERTY",
                 "entries": [
                     {
-                        "entry_id": "2014-05-22 15:39:52.527610",
-                        "sub_register": "A",
-                        "status": "Current",
-                        "sequence_number": 1,
-                        "role_code": "RDES",
-                        "language": "ENG",
                         "category": "PROPERTY",
+                        "entry_date": "2014-05-22",
+                        "entry_id": "2014-05-22 15:39:52.527610",
+                        "full_text": "The Freehold land shown edged with red on the plan of the above title filed at the Registry and being 17 Kenilworth Road, Luton (LU1 1DQ).",
                         "infills": [
                             {
                                 "address": {
-                                    "postcode": "LU1 1DZ",
-                                    "town": "Luton",
                                     "address_string": "17 Hazelbury Crescent, Luton (LU1 1DZ)",
                                     "house_no": "17",
-                                    "street_name": "Hazelbury Crescent"
+                                    "postcode": "LU1 1DZ",
+                                    "street_name": "Hazelbury Crescent",
+                                    "town": "Luton"
                                 },
                                 "type": "Address"
                             }
                         ],
-                        "full_text": "The Freehold land shown edged with red on the plan of the above title filed at the Registry and being 17 Kenilworth Road, Luton (LU1 1DQ).",
-                        "entry_date": "2014-05-22",
+                        "language": "ENG",
+                        "role_code": "RDES",
+                        "sequence_number": 1,
+                        "status": "Current",
+                        "sub_register": "A",
                         "template_text": "The Freehold land shown edged with red on the plan of the above title filed at the Registry and being *AD*"
                     }
                 ]
@@ -35,54 +42,52 @@
                 "category": "OWNERSHIP",
                 "entries": [
                     {
-                        "entry_id": "2014-05-22 15:39:32.607710",
-                        "sub_register": "B",
-                        "status": "Current",
-                        "sequence_number": 1,
-                        "role_code": "RPRO",
-                        "language": "ENG",
                         "category": "OWNERSHIP",
+                        "entry_date": "2014-05-22",
+                        "entry_id": "2014-05-22 15:39:32.607710",
+                        "full_text": "PROPRIETOR: %SCOTT OAKES% of 17 Kenilworth Road, *Luton* LU1 1DQ.",
                         "infills": [
                             {
                                 "proprietors": [
                                     {
                                         "addresses": [
                                             {
-                                                "postcode": "LU1 1DQ",
-                                                "town": "Luton",
                                                 "address_string": "17 Kenilworth Road, Luton LU1 1DQ",
-                                                "house_no": "17",
                                                 "address_type": "UK",
-                                                "street_name": "Kenilworth Road"
+                                                "house_no": "17",
+                                                "postcode": "LU1 1DQ",
+                                                "street_name": "Kenilworth Road",
+                                                "town": "Luton"
                                             }
                                         ],
                                         "name": {
-                                            "surname": "Oakes",
                                             "forename": "Scott",
-                                            "name_category": "PRIVATE INDIVIDUAL"
+                                            "name_category": "PRIVATE INDIVIDUAL",
+                                            "surname": "Oakes"
                                         }
                                     }
                                 ],
                                 "type": "Proprietor"
                             }
                         ],
-                        "full_text": "PROPRIETOR: %SCOTT OAKES% of 17 Kenilworth Road, *Luton* LU1 1DQ.",
-                        "entry_date": "2014-05-22",
+                        "language": "ENG",
+                        "role_code": "RPRO",
+                        "sequence_number": 1,
+                        "status": "Current",
+                        "sub_register": "B",
                         "template_text": "PROPRIETOR: *RP*"
                     },
                     {
-                        "entry_id": "2014-05-22 15:38:01.287620",
-                        "sub_register": "B",
-                        "status": "Current",
-                        "sequence_number": 2,
-                        "role_code": "RPPD",
-                        "draft_entry_version": 1,
-                        "language": "ENG",
                         "category": "OWNERSHIP",
+                        "draft_entry_code": "BK688",
+                        "draft_entry_version": 1,
+                        "entry_date": "2014-05-22",
+                        "entry_id": "2014-05-22 15:38:01.287620",
+                        "full_text": "The price stated to have been paid on 1 May 2014 was £100,000.",
                         "infills": [
                             {
-                                "text": "01/05/2014",
                                 "date": "2014-05-01",
+                                "text": "01/05/2014",
                                 "type": "DATE"
                             },
                             {
@@ -90,61 +95,554 @@
                                 "type": "PRICE"
                             }
                         ],
-                        "full_text": "The price stated to have been paid on 1 May 2014 was £100,000.",
-                        "entry_date": "2014-05-22",
-                        "template_text": "The price stated to have been paid on *DA* was *AM*.",
-                        "draft_entry_code": "BK688"
+                        "language": "ENG",
+                        "role_code": "RPPD",
+                        "sequence_number": 2,
+                        "status": "Current",
+                        "sub_register": "B",
+                        "template_text": "The price stated to have been paid on *DA* was *AM*."
                     }
                 ]
             }
         ],
+        "last_app_timestamp": "2014-08-28T12:37:13+01:00",
+        "tenure": "Freehold",
+        "title_number": "DN1000",
+        "uprns": [
+            1068558627
+        ]
+    },
+    "geometry_data": {
         "geometry": {
+            "extent": {
+                "crs": {
+                    "properties": {
+                        "name": "urn:ogc:def:crs:EPSG::27700"
+                    },
+                    "type": "name"
+                },
+                "geometry": {
+                    "coordinates": [
+                        [
+                            [
+                                508263.97,
+                                221692.13
+                            ],
+                            [
+                                508266.4,
+                                221698.84
+                            ],
+                            [
+                                508266.35,
+                                221700.25
+                            ],
+                            [
+                                508270.3,
+                                221711.15
+                            ],
+                            [
+                                508273.29,
+                                221719.53
+                            ],
+                            [
+                                508271.4,
+                                221721.65
+                            ],
+                            [
+                                508270.68,
+                                221722.44
+                            ],
+                            [
+                                508269.69,
+                                221723.53
+                            ],
+                            [
+                                508263.58,
+                                221706.87
+                            ],
+                            [
+                                508261.346,
+                                221700.587
+                            ],
+                            [
+                                508258.98,
+                                221693.93
+                            ],
+                            [
+                                508258.01,
+                                221691.18
+                            ],
+                            [
+                                508262,
+                                221689.66
+                            ],
+                            [
+                                508262.95,
+                                221689.3
+                            ],
+                            [
+                                508263.97,
+                                221692.13
+                            ]
+                        ]
+                    ],
+                    "type": "Polygon"
+                },
+                "properties": {
+                    "colour": 17,
+                    "feature_id": 4013,
+                    "graphic_type": "Bordered Polygon",
+                    "render_attributes": {
+                        "border_colour": 17,
+                        "border_width": 1000,
+                        "exterior_edge_colour": 17,
+                        "exterior_edge_thickness": 1,
+                        "exterior_edge_thickness_units": "Pixels",
+                        "fill_colour": 28,
+                        "fill_style": 0,
+                        "render_level": "0"
+                    },
+                    "width": 1000
+                },
+                "type": "Feature"
+            },
+            "index": {
+                "crs": {
+                    "properties": {
+                        "name": "urn:ogc:def:crs:EPSG::27700"
+                    },
+                    "type": "name"
+                },
+                "geometry": {
+                    "coordinates": [
+                        [
+                            [
+                                508263.97,
+                                221692.13
+                            ],
+                            [
+                                508266.4,
+                                221698.84
+                            ],
+                            [
+                                508266.35,
+                                221700.25
+                            ],
+                            [
+                                508270.3,
+                                221711.15
+                            ],
+                            [
+                                508273.29,
+                                221719.53
+                            ],
+                            [
+                                508271.4,
+                                221721.65
+                            ],
+                            [
+                                508270.68,
+                                221722.44
+                            ],
+                            [
+                                508269.69,
+                                221723.53
+                            ],
+                            [
+                                508263.58,
+                                221706.87
+                            ],
+                            [
+                                508258.98,
+                                221693.93
+                            ],
+                            [
+                                508258.01,
+                                221691.18
+                            ],
+                            [
+                                508262,
+                                221689.66
+                            ],
+                            [
+                                508262.95,
+                                221689.3
+                            ],
+                            [
+                                508263.97,
+                                221692.13
+                            ]
+                        ]
+                    ],
+                    "type": "Polygon"
+                },
+                "properties": {
+                    "colour": 25,
+                    "feature_id": 4019,
+                    "graphic_type": "Bordered Polygon",
+                    "render_attributes": {
+                        "border_colour": 25,
+                        "border_width": 0,
+                        "exterior_edge_colour": 1,
+                        "exterior_edge_thickness": 2,
+                        "exterior_edge_thickness_units": "Pixels",
+                        "fill_colour": 25,
+                        "fill_style": 9,
+                        "render_level": "0"
+                    },
+                    "width": 0
+                },
+                "type": "Feature"
+            },
             "map": {
-                "type": "FeatureCollection",
+                "crs": {
+                    "properties": {
+                        "name": "urn:ogc:def:crs:EPSG::27700"
+                    },
+                    "type": "name"
+                },
                 "features": [
                     {
-                        "type": "Feature",
                         "geometry": {
-                            "type": "Polygon",
                             "coordinates": [
                                 [
-                                    [
-                                        508295.35,
-                                        221829.85
-                                    ],
-                                    [
-                                        508297.05,
-                                        221827.2
-                                    ],
-                                    [
-                                        508298.06,
-                                        221827.83
-                                    ],
-                                    [
-                                        508296.27,
-                                        221830.43
-                                    ],
-                                    [
-                                        508295.35,
-                                        221829.85
-                                    ]
+                                    508235.35,
+                                    221720.2
+                                ],
+                                [
+                                    508230.9,
+                                    221712.5
                                 ]
-                            ]
+                            ],
+                            "type": "LineString"
                         },
                         "properties": {
-                            "graphic_type": "Polygon",
-                            "feature_id": 20054,
+                            "feature_id": 10018,
+                            "graphic_type": "Poly Line",
                             "render_attributes": {
-                                "render_level": "-1"
+                                "render_level": "0"
                             }
-                        }
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508296.75,
+                                221743.4
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10169,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": null,
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": null,
+                                "text_vertical_alignment": "Middle"
+                            },
+                            "rotation": -0.9705304697353966,
+                            "value": "AVONDALE ROAD",
+                            "vertical_alignment": "Middle"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508298.7,
+                                221672.85
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10169,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": null,
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": null,
+                                "text_vertical_alignment": "Middle"
+                            },
+                            "rotation": -0.2810061055808009,
+                            "value": "HAZELBURY CRESCENT",
+                            "vertical_alignment": "Middle"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508261.71,
+                                221765.2
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Left",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Left",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": 2.1307951881723985,
+                            "value": "35",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508259.63,
+                                221763.9
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Left",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Left",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": 2.1307951881723985,
+                            "value": "33",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508257.48,
+                                221762.54
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Left",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Left",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": 2.1307951881723985,
+                            "value": "31",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508302.6,
+                                221662.6
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Centre",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Centre",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": 2.9999870521081,
+                            "value": "21",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508282.3,
+                                221747.9
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Centre",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Centre",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": 2.205960246778795,
+                            "value": "27",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508223.04,
+                                221718.34
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Left",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Left",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": 2.6231071472844465,
+                            "value": "1 to 8",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508222.34,
+                                221738.99
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Left",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Left",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": 0,
+                            "value": "Hazelbury",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508287.9,
+                                221685.45
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Centre",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Centre",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": -0.26892600687620144,
+                            "value": "6",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508266.35,
+                                221750.95
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Centre",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Centre",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": -0.9478083793148405,
+                            "value": "1 to 6",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508311.3,
+                                221738.9
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Centre",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Centre",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": -0.9829940636369674,
+                            "value": "30",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
+                    },
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                508238.3,
+                                221682.4
+                            ],
+                            "type": "Point"
+                        },
+                        "properties": {
+                            "feature_id": 10026,
+                            "graphic_type": "Text",
+                            "height": 1000,
+                            "horizontal_alignment": "Centre",
+                            "render_attributes": {
+                                "render_level": "0",
+                                "text_horizontal_alignment": "Centre",
+                                "text_vertical_alignment": "Baseline"
+                            },
+                            "rotation": 2.773053769300268,
+                            "value": "47",
+                            "vertical_alignment": "Baseline"
+                        },
+                        "type": "Feature"
                     }
                 ],
                 "properties": {
+                    "map_reference": "TL0821NW",
                     "orientation_code": "P",
                     "print_size": "A4",
-                    "scale": "1250 ",
-                    "map_reference": "TL0821NW",
+                    "scale": "500  ",
                     "stamp_code_1": " ",
                     "stamp_code_2": " ",
                     "stamp_code_3": " ",
@@ -156,194 +654,117 @@
                     "stamp_text_4": " ",
                     "stamp_text_5": " "
                 },
-                "crs": {
-                    "type": "name",
-                    "properties": {
-                        "name": "urn:ogc:def:crs:EPSG::27700"
-                    }
-                }
+                "type": "FeatureCollection"
             },
-            "extent": {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                        [
-                            [
-                                508237.45,
-                                221796.7
-                            ],
-                            [
-                                508236.7,
-                                221797.75
-                            ],
-                            [
-                                508238.19,
-                                221798.76
-                            ],
-                            [
-                                508231.75,
-                                221805.4
-                            ],
-                            [
-                                508225.4,
-                                221812
-                            ],
-                            [
-                                508221.6,
-                                221815.85
-                            ],
-                            [
-                                508219.2,
-                                221813.35
-                            ],
-                            [
-                                508217.2,
-                                221815.3
-                            ],
-                            [
-                                508214.01,
-                                221811.7
-                            ],
-                            [
-                                508215.92,
-                                221809.92
-                            ],
-                            [
-                                508227.88,
-                                221798.82
-                            ],
-                            [
-                                508233.35,
-                                221793.75
-                            ],
-                            [
-                                508237.45,
-                                221796.7
-                            ]
-                        ]
-                    ]
-                },
-                "properties": {
-                    "graphic_type": "Bordered Polygon",
-                    "feature_id": 4013,
-                    "colour": 17,
-                    "width": 1000,
-                    "render_attributes": {
-                        "border_colour": 17,
-                        "border_width": 1000,
-                        "exterior_edge_colour": 17,
-                        "exterior_edge_thickness": 1,
-                        "exterior_edge_thickness_units": "Pixels",
-                        "fill_colour": 28,
-                        "fill_style": 0,
-                        "render_level": "0"
-                    }
-                },
-                "crs": {
-                    "type": "name",
+            "references": [
+                {
+                    "crs": {
+                        "properties": {
+                            "name": "urn:ogc:def:crs:EPSG::27700"
+                        },
+                        "type": "name"
+                    },
+                    "features": [
+                        {
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        508264.15,
+                                        221699.65
+                                    ],
+                                    [
+                                        508261.346,
+                                        221700.587
+                                    ]
+                                ],
+                                "type": "LineString"
+                            },
+                            "properties": {
+                                "feature_id": 4002,
+                                "graphic_type": "Poly Line",
+                                "render_attributes": {
+                                    "edge_colour": 7,
+                                    "edge_style": 7,
+                                    "edge_thickness": 1,
+                                    "render_level": "0"
+                                }
+                            },
+                            "type": "Feature"
+                        }
+                    ],
                     "properties": {
-                        "name": "urn:ogc:def:crs:EPSG::27700"
-                    }
-                }
-            },
-            "index": {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                        [
-                            [
-                                508225.4,
-                                221812
-                            ],
-                            [
-                                508221.6,
-                                221815.85
-                            ],
-                            [
-                                508219.2,
-                                221813.35
-                            ],
-                            [
-                                508217.2,
-                                221815.3
-                            ],
-                            [
-                                508214.01,
-                                221811.7
-                            ],
-                            [
-                                508215.92,
-                                221809.92
-                            ],
-                            [
-                                508227.88,
-                                221798.82
-                            ],
-                            [
-                                508233.35,
-                                221793.75
-                            ],
-                            [
-                                508237.45,
-                                221796.7
-                            ],
-                            [
-                                508236.7,
-                                221797.75
-                            ],
-                            [
-                                508238.19,
-                                221798.76
-                            ],
-                            [
-                                508231.75,
-                                221805.4
-                            ],
-                            [
-                                508225.4,
-                                221812
-                            ]
-                        ]
-                    ]
+                        "colour_code": 2,
+                        "description": "black pecked line",
+                        "graphic_code": 2,
+                        "text_code": 0
+                    },
+                    "type": "FeatureCollection"
                 },
-                "properties": {
-                    "graphic_type": "Bordered Polygon",
-                    "feature_id": 4019,
-                    "colour": 25,
-                    "width": 0,
-                    "render_attributes": {
-                        "border_colour": 25,
-                        "border_width": 0,
-                        "exterior_edge_colour": 1,
-                        "exterior_edge_thickness": 2,
-                        "exterior_edge_thickness_units": "Pixels",
-                        "fill_colour": 25,
-                        "fill_style": 9,
-                        "render_level": "0"
-                    }
-                },
-                "crs": {
-                    "type": "name",
+                {
+                    "crs": {
+                        "properties": {
+                            "name": "urn:ogc:def:crs:EPSG::27700"
+                        },
+                        "type": "name"
+                    },
+                    "features": [
+                        {
+                            "geometry": {
+                                "coordinates": [
+                                    [
+                                        [
+                                            508264.15,
+                                            221699.65
+                                        ],
+                                        [
+                                            508266.35,
+                                            221705.9
+                                        ],
+                                        [
+                                            508263.58,
+                                            221706.87
+                                        ],
+                                        [
+                                            508261.346,
+                                            221700.587
+                                        ],
+                                        [
+                                            508264.15,
+                                            221699.65
+                                        ]
+                                    ]
+                                ],
+                                "type": "Polygon"
+                            },
+                            "properties": {
+                                "colour": 0,
+                                "feature_id": 4011,
+                                "graphic_type": "Bordered Polygon",
+                                "render_attributes": {
+                                    "border_colour": 0,
+                                    "border_width": 0,
+                                    "exterior_edge_colour": 9,
+                                    "exterior_edge_thickness": 1,
+                                    "exterior_edge_thickness_units": "Pixels",
+                                    "fill_colour": 28,
+                                    "fill_style": 9,
+                                    "render_level": "0"
+                                },
+                                "width": 0
+                            },
+                            "type": "Feature"
+                        }
+                    ],
                     "properties": {
-                        "name": "urn:ogc:def:crs:EPSG::27700"
-                    }
+                        "colour_code": 5,
+                        "description": "tinted blue",
+                        "graphic_code": 15,
+                        "text_code": 0
+                    },
+                    "type": "FeatureCollection"
                 }
-            }
-        },
-        "filed_plan_format": "VECTOR",
-        "edition_date": "2014-05-22",
-        "last_app_timestamp": "2014-08-28T12:37:13+01:00",
-        "class": "Absolute",
-        "tenure": "Freehold",
-        "uprns": [
-            1068558627
-        ],
-        "title_number": "DN1000",
-        "dlr": "Peterborough Office",
-        "districts": [
-            "LUTON"
-        ]
-    }
+            ]
+        }
+    },
+    "title_number": "DN1000"
 }

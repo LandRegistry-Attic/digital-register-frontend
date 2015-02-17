@@ -38,3 +38,8 @@ class ViewTitleTestCase(unittest.TestCase):
     def test_proprietor_on_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
         self.assertIn('Scott Oakes', str(response.data))
+
+    @mock.patch('requests.get', return_value=fake_title)
+    def test_property_tenure_on_title_page(self, mock_get):
+        response = self.app.get('/titles/titleref')
+        self.assertIn('Freehold', str(response.data))
