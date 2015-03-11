@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <main id="wrapper" role="main">
+        <div id="content">
+
+            {% include "beta_banner.html" %}
+
+            <div class="outer-block">
+                <div class="inner-block">
+
+                    <div class="text">
+
+                        <h1 class="heading-xlarge">
+                            No Results
+                        </h1>
+
+                        <p class="lede">No result(s) found for the Title Number: <strong>{{ search_term }}</strong></p>
+
+                    </div>
+                    <form action="/title-search/" method="GET" role="form">
+                        <div class="form-group">
+                            <button type="submit" class="button">New Search</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+{% endblock %}

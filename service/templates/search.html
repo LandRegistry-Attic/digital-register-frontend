@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <main id="wrapper" role="main">
+        <div id="content">
+
+            {% include "beta_banner.html" %}
+
+            <div class="outer-block">
+                <div class="inner-block">
+
+                    <div class="text">
+
+                        <h1 class="heading-xlarge">
+                            Search for Title
+                        </h1>
+
+                        <p class="lede">Use this service to get information related to any title in England and Wales.</p>
+
+                    </div>
+
+                    <form action="/title-search/" method="POST" role="form">
+                        <div class="form-group">
+                            <label class="form-label-bold" for="search-terms">
+                                Find a title
+                                <span class="form-hint">
+                                    e.g. postcode or title number
+                                </span>
+                            </label>
+                            <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}"/>
+                            {% with messages = get_flashed_messages() %}
+                              {% if messages %}
+                                <ul>
+                                {% for message in messages %}
+                                    <li><span style="color: red">{{ message }}</span></li>
+                                {% endfor %}
+                                </ul>
+                              {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="button">Search</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+{% endblock %}

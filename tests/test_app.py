@@ -27,6 +27,10 @@ class ViewTitleTestCase(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 
+    def test_get_title_page_no_title(self):
+        response = self.app.get('/titles/titleref')
+        assert response.status_code == 404
+
     @mock.patch('requests.get', return_value=fake_title)
     def test_get_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
@@ -69,3 +73,26 @@ class ViewTitleTestCase(unittest.TestCase):
         self.assertIn('geometry', str(response.data))
         self.assertIn('coordinates', str(response.data))
         self.assertIn(coordinate_data, str(response.data))
+
+    def test_get_title_search_page(self):
+        response = self.app.get('/title-search/')
+        assert response.status_code == 200
+        self.assertIn('Find a title', str(response.data))
+
+    @mock.patch('requests.get', return_value=fake_title)
+    def test_title_search_success(self, mock_get):
+        response = self.app.post('/title-search/', data=dict(search_term='DN1000'), follow_redirects=True)
+        assert response.status_code == 200
+        self.assertIn('DN1000', str(response.data))
+        self.assertIn('28 August 2014 at 12:37:13', str(response.data))
+        self.assertIn('17 Hazelbury Crescent', str(response.data))
+        self.assertIn('Luton', str(response.data))
+        self.assertIn('LU1 1DZ', str(response.data))
+
+    def test_title_search_invalid_search_value_format(self):
+        response = self.app.post('/title-search/', data=dict(search_term='invalid value'))
+        self.assertIn('Search value not in a recognised format', str(response.data))
+
+    def test_title_search_title_not_found(self):
+        response = self.app.post('/title-search/', data=dict(search_term='DT1000'))
+        self.assertIn('No result(s) found for the Title Number: ', str(response.data))
