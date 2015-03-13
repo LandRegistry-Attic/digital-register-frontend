@@ -124,6 +124,15 @@ class TestViewTitle:
             follow_redirects=False
         )
 
+    @mock.patch('requests.get', return_value=fake_title)
+    def test_postcode_search_success(self, mock_get):
+        response = self.app.post('/title-search/', data=dict(search_term='LU1 1DZ'), follow_redirects=True)
+        assert response.status_code == 200
+        assert 'DN1000' in str(response.data)
+        assert '28 August 2014 at 12:37:13' in str(response.data)
+        assert '17 Hazelbury Crescent' in str(response.data)
+        assert 'Luton' in str(response.data)
+        assert 'LU1 1DZ' in str(response.data)
 
 if __name__ == '__main__':
     pytest.main()

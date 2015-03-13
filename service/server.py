@@ -43,7 +43,7 @@ class User():
 class LoginApiClient():
     def __init__(self, login_api_url):
         self.authentication_endpoint_url = '{}user/authenticate'.format(login_api_url)
-    
+
     def authenticate_user(self, username, password):
         user_dict = {"user_id": username, "password": password}
         request_dict = {"credentials": user_dict}
@@ -137,6 +137,8 @@ def find_titles():
         LOGGER.info("SEARCH REGISTER: {0} was searched by {1}".format(search_term, current_user.get_id()))
         # Determine search term type and preform search
         title_number_regex = re.compile("^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$")
+        postcode_regex = re.compile("(GIR 0AA)|((([A-Z-[QVX]][0-9][0-9]?)|(([A-Z-[QVX]][A-Z-[IJZ]][0-9][0-9]?)|(([A-Z-[QVX]][0-9][A-HJKSTUW])|([A-Z-[QVX]][A-Z-[IJZ]][0-9][ABEHMNPRVWXY])))) [0-9][A-Z-[CIKMOV]]{2})")
+        # If it matches the title number regex...
         if title_number_regex.match(search_term.upper()):
             title = get_register_title(search_term.upper())
             if title:
@@ -144,9 +146,20 @@ def find_titles():
                 session['title'] = title
                 # Redirect to the display_title method to display the digital register
                 return redirect(url_for('display_title', title_ref=search_term.upper()))
-        # If search value doesn't match, return no results found screen
-        return render_template('no_title_number_results.html', asset_path = '../static/',
-            search_term=search_term, google_api_key=GOOGLE_ANALYTICS_API_KEY, form=TitleSearchForm())
+            else:
+                # If title not found display 'no title found' screen
+                return render_template('no_title_number_results.html', asset_path = '../static/', search_term=search_term, google_api_key=google_analytics_api_key)
+        # If it matches the postcode regex ...
+        elif postcode_regex.match(search_term.upper()):
+            postcode_search_results = get_register_title_via_postcode(search_term.upper())
+            if postcode_search_results:
+                # If there are results store them in the session
+                session['postcode_search_results'] = psotcode_search_results
+                # Redirect to the results page to display the results
+                return redirect(url_for(''))
+        else:
+            # If search value doesn't match, return no results found screen
+            return render_template('no_title_number_results.html', asset_path = '../static/', search_term=search_term, google_api_key=google_analytics_api_key)
     else:
         # If not search value enter or a GET request, display the search page
         return render_template('search.html', asset_path = '../static/',
@@ -157,11 +170,21 @@ def _is_csrf_enabled():
     return app.config.get('DISABLE_CSRF_PREVENTION') != True
 
 
+@app.route('/title-search/results', methods=['GET'])
+def display_postcode_search_results(postcode_search_results):
+    postcode_search_result = session.pop('postcode_search_result', get_register_title(title_ref))
+
+
 def get_register_title(title_ref):
     response = requests.get(REGISTER_TITLE_API+'titles/'+title_ref)
     title = format_display_json(response)
     return title
 
+def get_register_title_via_postcode(postcode):
+    response = requests.get(register_title_api+'title_search_postcode/'+postcode)
+    #TODO: actually sort out a response
+    results = response
+    return results
 
 def format_display_json(api_response):
     if api_response:
@@ -268,7 +291,7 @@ def get_property_address_index_polygon(geometry_data):
 class SigninForm(Form):
     username = StringField('username', [Required(message='Username is required'), Length(min=4, max=70, message='Username is incorrect')])
     password = PasswordField('password', [Required(message='Password is required')])
-    
+
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
