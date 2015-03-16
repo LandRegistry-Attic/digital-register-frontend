@@ -148,32 +148,22 @@ def find_titles():
                 return redirect(url_for('display_title', title_ref=search_term.upper()))
             else:
                 # If title not found display 'no title found' screen
-                return render_template('no_title_number_results.html', asset_path = '../static/', search_term=search_term, google_api_key=google_analytics_api_key)
+                return render_template('search_results.html', asset_path = '../static/', search_term=search_term, google_api_key=google_analytics_api_key, results = [])
         # If it matches the postcode regex ...
         elif postcode_regex.match(search_term.upper()):
             postcode_search_results = get_register_titles_via_postcode(search_term.upper())
-            if postcode_search_results:
-                # If there are results store them in the session
-                session['postcode_search_results'] = postcode_search_results
-            # Redirect to the results page to display the results
-            return redirect(url_for('display_postcode_search_results'))
+            return render_template('search_results.html', asset_path = '../static/', search_term=search_term, results=postcode_search_results)
         else:
             # If search value doesn't match, return no results found screen
-            return render_template('no_title_number_results.html', asset_path = '../static/', search_term=search_term, google_api_key=google_analytics_api_key)
-    else:
-        # If not search value enter or a GET request, display the search page
-        return render_template('search.html', asset_path = '../static/',
+            return render_template('search_results.html', asset_path = '../static/', search_term=search_term, google_api_key=google_analytics_api_key, results=[])
+    # If not search value enter or a GET request, display the search page
+    return render_template('search.html', asset_path = '../static/',
             google_api_key=GOOGLE_ANALYTICS_API_KEY, form=TitleSearchForm())
 
 
 def _is_csrf_enabled():
     return app.config.get('DISABLE_CSRF_PREVENTION') != True
 
-
-@app.route('/title-search/results', methods=['GET'])
-def display_postcode_search_results():
-    postcode_search_results = session.pop('postcode_search_results', [])
-    return render_template('search_results.html', asset_path = '../static/', results=postcode_search_results)
 
 def get_register_title(title_ref):
     response = requests.get(REGISTER_TITLE_API+'titles/'+title_ref)
