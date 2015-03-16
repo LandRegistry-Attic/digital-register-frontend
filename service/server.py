@@ -137,10 +137,8 @@ def find_titles():
         LOGGER.info("SEARCH REGISTER: {0} was searched by {1}".format(search_term, current_user.get_id()))
         # Determine search term type and preform search
         title_number_regex = re.compile("^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$")
-        postcode_regex = re.compile("(GIR 0AA)|((([A-Z-[QVX]][0-9][0-9]?)|(([A-Z-[QVX]][A-Z-[IJZ]][0-9][0-9]?)|(([A-Z-[QVX]][0-9][A-HJKSTUW])|([A-Z-[QVX]][A-Z-[IJZ]][0-9][ABEHMNPRVWXY])))) [0-9][A-Z-[CIKMOV]]{2})")
+        postcode_regex = re.compile("^[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z]{2}$")
         # If it matches the title number regex...
-        print(search_term)
-        #TODO Postcode search term is not be recognised
         if title_number_regex.match(search_term.upper()):
             title = get_register_title(search_term.upper())
             if title:
@@ -153,12 +151,12 @@ def find_titles():
                 return render_template('no_title_number_results.html', asset_path = '../static/', search_term=search_term, google_api_key=google_analytics_api_key)
         # If it matches the postcode regex ...
         elif postcode_regex.match(search_term.upper()):
-            postcode_search_results = get_register_title_via_postcode(search_term.upper())
+            postcode_search_results = get_register_titles_via_postcode(search_term.upper())
             if postcode_search_results:
                 # If there are results store them in the session
                 session['postcode_search_results'] = postcode_search_results
-                # Redirect to the results page to display the results
-                return redirect(url_for('display_postcode_search_results'))
+            # Redirect to the results page to display the results
+            return redirect(url_for('display_postcode_search_results'))
         else:
             # If search value doesn't match, return no results found screen
             return render_template('no_title_number_results.html', asset_path = '../static/', search_term=search_term, google_api_key=google_analytics_api_key)
@@ -174,18 +172,17 @@ def _is_csrf_enabled():
 
 @app.route('/title-search/results', methods=['GET'])
 def display_postcode_search_results():
-    postcode_search_result = session.pop('postcode_search_result', get_register_title(title_ref))
-
+    postcode_search_results = session.pop('postcode_search_results', [])
+    return render_template('search_results.html', asset_path = '../static/', results=postcode_search_results)
 
 def get_register_title(title_ref):
     response = requests.get(REGISTER_TITLE_API+'titles/'+title_ref)
     title = format_display_json(response)
     return title
 
-def get_register_title_via_postcode(postcode):
+def get_register_titles_via_postcode(postcode):
     response = requests.get(register_title_api+'title_search_postcode/'+postcode)
-    #TODO: actually sort out a response
-    results = response
+    results = response.json()
     return results
 
 def format_display_json(api_response):
