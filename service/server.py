@@ -104,7 +104,8 @@ def signin():
             return redirect(next_url)
 
     # too many bad log-ins or not authorised
-    time.sleep(NOF_SECS_BETWEEN_LOGINS)
+    if app.config['TESTING']:
+        time.sleep(NOF_SECS_BETWEEN_LOGINS)
     BAD_LOGIN_COUNTER.update([username])
     log_msg = 'Too many bad logins' if too_many_bad_logins else 'Invalid credentials used'
     nof_attempts = BAD_LOGIN_COUNTER[username]
