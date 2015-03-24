@@ -171,7 +171,7 @@ def get_register_title(title_ref):
     return title
 
 def get_register_titles_via_postcode(postcode):
-    response = requests.get(register_title_api+'title_search_postcode/'+postcode)
+    response = requests.get(REGISTER_TITLE_API+'title_search_postcode/'+postcode)
     results = response.json()
     return results
 
