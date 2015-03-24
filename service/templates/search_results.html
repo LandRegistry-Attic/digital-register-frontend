@@ -33,8 +33,26 @@
                               <button type="submit" class="button">Search</button>
                           </div>
                       </form>
-
+                      {% if results %}
+                        <div class="column-two-thirds">
+                          <h2 class="font-xsmall expand-bottom-half">{{ results['titles']|length }} results found</h2>
+                          {% for title in results['titles'] %}
+                            <ol>
+                              <li class="postal">
+                                <h2 class="heading-small collapse-bottom">
+                                  <a href="/titles/{{title['title_number']}}">{{title['data']['address']['address_string']}}</a>
+                                </h2>
+                                <div class="font-xsmall">
+                                  Title number {{title['title_number']}}<br>
+                                  <b>{{title['data']['tenure']}}</b>
+                                </div>
+                              </li>
+                            </ol>
+                          {% endfor %}
+                        </div>
+                      {% else %}
                         <p class="lede">No result(s) found</p>
+                      {% endif %}
 
                     </div>
 
