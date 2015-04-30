@@ -217,7 +217,8 @@ def find_titles():
             postcode_search_results = get_register_titles_via_postcode(postcode)
             return render_search_results(postcode_search_results, postcode)
         else:
-            return render_search_results([], search_term)
+            address_search_results = get_register_titles_via_address(search_term)
+            return render_search_results(address_search_results, search_term)
     # If not search value enter or a GET request, display the search page
     return render_template(
         'search.html',
@@ -251,6 +252,13 @@ def get_register_title(title_ref):
 def get_register_titles_via_postcode(postcode):
     response = requests.get(
         REGISTER_TITLE_API + 'title_search_postcode/' + postcode)
+    results = response.json()
+    return results
+
+
+def get_register_titles_via_address(address):
+    response = requests.get(
+        REGISTER_TITLE_API + 'title_search_address/' + address)
     results = response.json()
     return results
 

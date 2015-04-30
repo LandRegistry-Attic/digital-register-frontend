@@ -10,6 +10,10 @@ with open('tests/fake_title.json', 'r') as fake_title_json_file:
     fake_title_bytes = str.encode(fake_title_json_string)
     fake_title = FakeResponse(fake_title_bytes)
 
+fake_no_titles_json_string = '[]'
+fake_no_titles_bytes = str.encode(fake_no_titles_json_string)
+fake_no_titles = FakeResponse(fake_no_titles_bytes)
+
 with open('tests/fake_postcode_search_result.json', 'r') as fake_postcode_search_results_json_file:
     fake_postcode_search_results_json_string = fake_postcode_search_results_json_file.read()
     fake_postcode_search_bytes = str.encode(fake_postcode_search_results_json_string)
@@ -134,12 +138,13 @@ class TestViewTitle:
         assert 'Luton' in page_content
         assert 'LU1 1DZ' in page_content
 
-    def test_title_search_invalid_search_value_format(self):
+    @mock.patch('requests.get', return_value=fake_no_titles)
+    def test_title_search_plain_text_value_format(self, mock_get):
         response = self.app.post(
             '/title-search/',
-            data=dict(search_term='invalid value')
+            data=dict(search_term='some text')
         )
-        assert 'No result(s) found' in str(response.data)
+        assert 'No result(s) found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=unavailable_title)
     def test_title_search_title_not_found(self, mock_get):
@@ -147,11 +152,6 @@ class TestViewTitle:
             '/title-search/',
             data=dict(search_term='DT1000')
         )
-        assert 'No result(s) found' in response.data.decode()
-
-    @mock.patch('requests.get', return_value=unavailable_title)
-    def test_title_search_title_not_found(self, mock_get):
-        response = self.app.post('/title-search/', data=dict(search_term='DT1000'))
         assert 'No result(s) found' in response.data.decode()
 
     def _log_in_user(self):

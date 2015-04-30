@@ -37,7 +37,7 @@
                         <div class="column-two-thirds">
                           <h2 class="font-xsmall expand-bottom-half">{{ results['titles']|length }} result(s) found</h2>
                           {% for title in results['titles'] %}
-                            <ol>
+                            <ol class="result">
                               <li class="postal">
                                 <h2 class="heading-small collapse-bottom">
                                   <a href="/titles/{{title['title_number']}}">{{title['data']['address']['address_string']}}</a>
