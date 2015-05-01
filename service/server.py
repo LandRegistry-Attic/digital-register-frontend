@@ -443,8 +443,11 @@ class TitleSearchForm(Form):
     pass
 
 
-def run_app():
+if _is_csrf_enabled():
     CsrfProtect(app)
+
+
+def run_app():
     port = int(os.environ.get('PORT', 8003))
     app.run(host='0.0.0.0', port=port)
 
