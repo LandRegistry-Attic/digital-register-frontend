@@ -18,12 +18,9 @@ from service import app, login_manager, address_utils
 
 
 REGISTER_TITLE_API = app.config['REGISTER_TITLE_API']
-UNAUTHORISED_WORDING = Markup('There was an error with your Username/Password '
-                              'combination. If this problem persists please '
-                              'contact us at <br/>'
-                              'digital-register-feedback@'
-                              'digital.landregistry.gov.uk'
-                              )
+UNAUTHORISED_WORDING = Markup('There was an error with your Username/Password combination. If '
+                              'this problem persists please contact us at<br/>'
+                              'digital-register-feedback@digital.landregistry.gov.uk')
 GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
 TITLE_NUMBER_REGEX = '^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$'
 NOF_SECS_BETWEEN_LOGINS = 1
@@ -55,14 +52,12 @@ class LoginApiClient():
             login_api_url)
 
     def authenticate_user(self, username, password):
-        user_dict = {"user_id": username, "password": password}
+        user_dict = {'user_id': username, 'password': password}
         request_dict = {"credentials": user_dict}
         request_json = json.dumps(request_dict)
 
         headers = {'content-type': 'application/json'}
-        response = requests.post(
-            self.authentication_endpoint_url,
-            data=request_json,
+        response = requests.post(self.authentication_endpoint_url, data=request_json,
             headers=headers)
 
         if response.status_code == 200:
@@ -99,48 +94,36 @@ def load_user(user_id):
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('home.html',
-                           google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='/static/'
-                           )
+    return render_template('home.html', google_api_key=GOOGLE_ANALYTICS_API_KEY,
+                           asset_path='/static/')
 
 
 @app.route('/cookies', methods=['GET'])
 def cookies():
-    return render_template('cookies.html',
-                           google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='/static/'
-                           )
+    return render_template('cookies.html', google_api_key=GOOGLE_ANALYTICS_API_KEY,
+                           asset_path='/static/')
 
 
 @app.route('/login', methods=['GET'])
 def signin_page():
-    return render_template(
-        'display_login.html',
-        asset_path='/static/',
+    return render_template('display_login.html', asset_path='/static/',
         google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        form=SigninForm(csrf_enabled=_is_csrf_enabled())
-    )
+                           form=SigninForm(csrf_enabled=_is_csrf_enabled()))
 
 
 @app.route('/login', methods=['POST'])
 def signin():
     form = SigninForm(csrf_enabled=_is_csrf_enabled())
     if not form.validate():
-        # entered details from login form incorrectly so send back to same page
-        # with form error messages
-        return render_template(
-            'display_login.html', asset_path='/static/', form=form)
+        # entered invalid login form details so send back to same page with form error messages
+        return render_template('display_login.html', asset_path='/static/', form=form)
 
     next_url = request.args.get('next', 'title-search')
 
     # form was valid
     username = form.username.data
     # form has correct details. Now need to check authorisation
-    authorised = LOGIN_API_CLIENT.authenticate_user(
-        username,
-        form.password.data
-    )
+    authorised = LOGIN_API_CLIENT.authenticate_user(username,form.password.data)
 
     if authorised:
         login_user(User(username))
@@ -151,11 +134,9 @@ def signin():
     if app.config.get('SLEEP_BETWEEN_LOGINS', True):
         time.sleep(NOF_SECS_BETWEEN_LOGINS)
 
-    return render_template('display_login.html',
-                           google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='/static/', form=form,
-                           unauthorised=UNAUTHORISED_WORDING, next=next_url
-                           )
+    return render_template('display_login.html', google_api_key=GOOGLE_ANALYTICS_API_KEY,
+                           asset_path='/static/', form=form, unauthorised=UNAUTHORISED_WORDING,
+                           next=next_url)
 
 
 @app.route('/titles/<title_ref>', methods=['GET'])
@@ -166,15 +147,10 @@ def display_title(title_ref):
     if title:
         # If the title was found, display the page
         LOGGER.info(
-            "VIEW REGISTER: Title number {0} was viewed by {1}".format(
-                title_ref,
+            "VIEW REGISTER: Title number {0} was viewed by '{1}'".format(title_ref,
                 current_user.get_id()))
-        return render_template(
-            'display_title.html',
-            asset_path='/static/',
-            title=title,
-            google_api_key=GOOGLE_ANALYTICS_API_KEY
-        )
+        return render_template('display_title.html', asset_path='/static/', title=title,
+                               google_api_key=GOOGLE_ANALYTICS_API_KEY)
     else:
         abort(404)
 
@@ -226,16 +202,14 @@ def find_titles(search_term=''):
     elif search_term:
         address_search_results = get_register_titles_via_address(search_term)
         return render_search_results(address_search_results, search_term)
+    else:
+        return render_search_results([], search_term)
 
 
-def render_search_results(results, search_term):
-    return render_template('search_results.html',
-                           asset_path='/static/',
-                           search_term=search_term,
-                           google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           results=results,
-                           form=TitleSearchForm()
-                           )
+def render_search_results(results, search_term, page_num):
+    return render_template('search_results.html', asset_path='/static/', search_term=search_term,
+                           page_num=page_num, google_api_key=GOOGLE_ANALYTICS_API_KEY,
+                           results=results, form=TitleSearchForm(csrf_enabled=False))
 
 
 def _is_csrf_enabled():
@@ -243,22 +217,19 @@ def _is_csrf_enabled():
 
 
 def get_register_title(title_ref):
-    response = requests.get(
-        '{}titles/{}'.format(REGISTER_TITLE_API, title_ref))
+    response = requests.get('{}titles/{}'.format(REGISTER_TITLE_API, title_ref))
     title = format_display_json(response)
     return title
 
 
 def get_register_titles_via_postcode(postcode):
-    response = requests.get(
-        REGISTER_TITLE_API + 'title_search_postcode/' + postcode)
+    response = requests.get('{}title_search_postcode/{}'.format(REGISTER_TITLE_API, postcode))
     results = response.json()
     return results
 
 
 def get_register_titles_via_address(address):
-    response = requests.get(
-        REGISTER_TITLE_API + 'title_search_address/' + address)
+    response = requests.get('{}title_search_address/{}'.format(REGISTER_TITLE_API, address))
     results = response.json()
     return results
 
@@ -266,24 +237,18 @@ def get_register_titles_via_address(address):
 def format_display_json(api_response):
     if api_response:
         title_api = api_response.json()
-        proprietors = format_proprietors(
-            title_api['data']['proprietors'])
+        proprietors = format_proprietors(title_api['data']['proprietors'])
         address_lines = address_utils.get_address_lines(title_api['data']['address'])
-        indexPolygon = get_property_address_index_polygon(
-            title_api['geometry_data'])
+        indexPolygon = get_property_address_index_polygon(title_api['geometry_data'])
         title = {
             # ASSUMPTION 1: All titles have a title number
             'number': title_api['title_number'],
-            'last_changed': title_api['data'].get(
-                'last_application_timestamp',
-                'No data'
-            ),
+            'last_changed': title_api['data'].get('last_application_timestamp', 'No data'),
             'address_lines': address_lines,
             'proprietors': proprietors,
             'tenure': title_api['data'].get('tenure', 'No data'),
             'indexPolygon': indexPolygon
         }
-        print(title)
         return title
     else:
         return None
@@ -311,10 +276,10 @@ def format_proprietors(proprietors_data):
 
 # This method attempts to retrieve the index polygon data for the entry
 def get_property_address_index_polygon(geometry_data):
-    indexPolygon = None
+    index_polygon = None
     if geometry_data and ('index' in geometry_data):
-        indexPolygon = geometry_data['index']
-    return indexPolygon
+        index_polygon = geometry_data['index']
+    return index_polygon
 
 
 def _is_invalid_credentials_response(response):
@@ -326,15 +291,9 @@ def _is_invalid_credentials_response(response):
 
 
 class SigninForm(Form):
-    username = StringField(
-        'username', [
-            Required(
-                message='Username is required'), Length(
-                min=4, max=70, message='Username is incorrect')])
-    password = PasswordField(
-        'password', [
-            Required(
-                message='Password is required')])
+    username = StringField('username', [Required(message='Username is required'),
+                                        Length(min=4, max=70, message='Username is incorrect')])
+    password = PasswordField('password', [Required(message='Password is required')])
 
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
