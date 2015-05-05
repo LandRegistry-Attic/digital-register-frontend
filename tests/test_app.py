@@ -110,6 +110,11 @@ class TestViewTitle:
         assert 'Scott Oakes' in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_title)
+    def test_tenure_on_title_page(self, mock_get):
+        response = self.app.get('/titles/titleref')
+        assert 'Freehold' in response.data.decode()
+
+    @mock.patch('requests.get', return_value=fake_title)
     def test_index_geometry_on_title_page(self, mock_get):
         coordinate_data = '[[[508263.97, 221692.13],'
         response = self.app.get('/titles/titleref')
