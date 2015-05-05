@@ -107,7 +107,7 @@ def load_user(user_id):
 def home():
     return render_template('home.html',
                            google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='../static/'
+                           asset_path='/static/'
                            )
 
 
@@ -115,7 +115,7 @@ def home():
 def cookies():
     return render_template('cookies.html',
                            google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='../static/'
+                           asset_path='/static/'
                            )
 
 
@@ -123,7 +123,7 @@ def cookies():
 def signin_page():
     return render_template(
         'display_login.html',
-        asset_path='../static/',
+        asset_path='/static/',
         google_api_key=GOOGLE_ANALYTICS_API_KEY,
         form=SigninForm(csrf_enabled=_is_csrf_enabled())
     )
@@ -136,7 +136,7 @@ def signin():
         # entered details from login form incorrectly so send back to same page
         # with form error messages
         return render_template(
-            'display_login.html', asset_path='../static/', form=form)
+            'display_login.html', asset_path='/static/', form=form)
 
     next_url = request.args.get('next', 'title-search')
 
@@ -159,7 +159,7 @@ def signin():
 
     return render_template('display_login.html',
                            google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='../static/', form=form,
+                           asset_path='/static/', form=form,
                            unauthorised=UNAUTHORISED_WORDING, next=next_url
                            )
 
@@ -177,7 +177,7 @@ def display_title(title_ref):
                 current_user.get_id()))
         return render_template(
             'display_title.html',
-            asset_path='../static/',
+            asset_path='/static/',
             title=title,
             google_api_key=GOOGLE_ANALYTICS_API_KEY
         )
@@ -225,7 +225,7 @@ def find_titles():
     # If not search value enter or a GET request, display the search page
     return render_template(
         'search.html',
-        asset_path='../static/',
+        asset_path='/static/',
         google_api_key=GOOGLE_ANALYTICS_API_KEY,
         form=TitleSearchForm()
     )
@@ -233,7 +233,7 @@ def find_titles():
 
 def render_search_results(results, search_term):
     return render_template('search_results.html',
-                           asset_path='../static/',
+                           asset_path='/static/',
                            search_term=search_term,
                            google_api_key=GOOGLE_ANALYTICS_API_KEY,
                            results=results,
