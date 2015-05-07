@@ -1,13 +1,14 @@
-import logging
-from logging import config
 from flask import Flask
 import dateutil
 import dateutil.parser
-import json
+import faulthandler
 from flask_login import LoginManager
 
 from config import CONFIG_DICT
+from service import logging_config
 
+# This causes the traceback to be written to stderr in case of faults
+faulthandler.enable()
 
 app = Flask(__name__)
 app.config.update(CONFIG_DICT)
@@ -21,16 +22,5 @@ login_manager.session_protection = "strong"
 def format_datetime(value):
     return dateutil.parser.parse(value).strftime("%d %B %Y at %H:%M:%S")
 
-
-def setup_logging(logging_config_file_path):
-    if CONFIG_DICT['LOGGING']:
-        try:
-            with open(logging_config_file_path, 'rt') as file:
-                config = json.load(file)
-            logging.config.dictConfig(config)
-        except IOError as e:
-            raise(Exception('Failed to load logging configuration', e))
-
-
 app.jinja_env.filters['datetime'] = format_datetime
-setup_logging(app.config['LOGGING_CONFIG_FILE_PATH'])
+logging_config.setup_logging()
