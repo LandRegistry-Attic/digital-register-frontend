@@ -161,50 +161,52 @@ def display_title(title_ref):
         abort(404)
 
 
-@app.route('/title-search/', methods=['GET', 'POST'])
+@app.route('/title-search', methods=['GET', 'POST'])
+@app.route('/title-search/<search_term>/<page_num>', defaults={'page_num': 1}, methods=['GET',
+                                                                                        'POST'])
 @login_required
-def find_titles():
-    # TODO: make this method use a WTF form, just like signin()
-    if request.method == "POST":
+def find_titles(search_term='', page_num=1):
+    if request.method == 'POST':
         search_term = request.form['search_term'].strip()
-        LOGGER.info(
-            "SEARCH REGISTER: '{0}' was searched by {1}".format(
-                search_term,
-                current_user.get_id()))
-        # Determine search term type and preform search
-        title_number_regex = re.compile(TITLE_NUMBER_REGEX)
-        postcode_regex = re.compile(BASIC_POSTCODE_REGEX)
-        search_term = search_term.upper()
-        # If it matches the title number regex...
-        if title_number_regex.match(search_term):
-            title = get_register_title(search_term)
-            if title:
-                # If the title exists store it in the session
-                session['title'] = title
-                # Redirect to the display_title method to display the digital
-                # register
-                return redirect(url_for('display_title', title_ref=search_term))
-            else:
-                # If title not found display 'no title found' screen
-                return render_search_results([], search_term)
-        # If it matches the postcode regex ...
-        elif postcode_regex.match(search_term):
-            # Short term fix to enable user to search with postcode without spaces
-            postcode = sanitise_postcode(search_term)
-            postcode_search_results = get_register_titles_via_postcode(postcode)
-            return render_search_results(postcode_search_results, postcode)
-        elif search_term:
-            address_search_results = get_register_titles_via_address(search_term)
-            return render_search_results(address_search_results, search_term)
+        if search_term:
+            return redirect(url_for('find_titles', search_term=search_term, page_num=1))
         else:
-            return render_search_results([], search_term)
-    # If not search value enter or a GET request, display the search page
-    return render_template(
-        'search.html',
-        asset_path='/static/',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        form=TitleSearchForm()
-    )
+            # display the initial search page
+            return render_template('search.html', asset_path='/static/',
+                                   google_api_key=GOOGLE_ANALYTICS_API_KEY, form=TitleSearchForm())
+    # GET request
+    search_term = search_term.strip()
+    if not search_term:
+        # display the initial search page
+        return render_template('search.html', asset_path='/static/',
+                               google_api_key=GOOGLE_ANALYTICS_API_KEY, form=TitleSearchForm())
+    # search for something
+    LOGGER.info("SEARCH REGISTER: '{0}' was searched by '{1}'".format(search_term,
+                                                                      current_user.get_id()))
+    # Determine search term type and preform search
+    title_number_regex = re.compile(TITLE_NUMBER_REGEX)
+    postcode_regex = re.compile(BASIC_POSTCODE_REGEX)
+    search_term = search_term.upper()
+    # If it matches the title number regex...
+    if title_number_regex.match(search_term):
+        title = get_register_title(search_term)
+        if title:
+            # If the title exists store it in the session
+            session['title'] = title
+            # Redirect to the display_title method to display the digital register
+            return redirect(url_for('display_title', title_ref=search_term))
+        else:
+            # If title not found display 'no title found' screen
+            return render_search_results([], search_term, page_num)
+    # If it matches the postcode regex ...
+    elif postcode_regex.match(search_term):
+        # Short term fix to enable user to search with postcode without spaces
+        postcode = sanitise_postcode(search_term)
+        postcode_search_results = get_register_titles_via_postcode(postcode)
+        return render_search_results(postcode_search_results, postcode, page_num)
+    else:
+        address_search_results = get_register_titles_via_address(search_term)
+        return render_search_results(address_search_results, search_term, page_num)
 
 
 def render_search_results(results, search_term, page_num):
@@ -214,7 +216,7 @@ def render_search_results(results, search_term, page_num):
 
 
 def _is_csrf_enabled():
-    return app.config.get('DISABLE_CSRF_PREVENTION') != True
+    return app.config.get('DISABLE_CSRF_PREVENTION') is not True
 
 
 def get_register_title(title_ref):
@@ -381,14 +383,14 @@ class SigninForm(Form):
 
 
 class TitleSearchForm(Form):
-    # Form used for providing CSRF tokens for title search HTTP form
-    pass
+    search_term = StringField('username', [Required(message='Username is required'),
+                                           Length(min=4, max=70, message='Username is incorrect')])
 
-
-if _is_csrf_enabled():
-    CsrfProtect(app)
+    def __init__(self, *args, **kwargs):
+        Form.__init__(self, *args, **kwargs)
 
 
 def run_app():
+    CsrfProtect(app)
     port = int(os.environ.get('PORT', 8003))
     app.run(host='0.0.0.0', port=port)
