@@ -7,7 +7,7 @@
             {% include "beta_banner.html" %}
 
             <div id="global-breadcrumb">
-                <ol role="breadcrumbs">
+                <ol>
                     <li><a href="/">Home</a></li>
                     <li><a href="/title-search/">Search for Title</a></li>
                     <li>Results</li>
@@ -24,20 +24,18 @@
                           {{ form.hidden_tag() }}
 
                           <div class="form-group">
-                              <label for="search-terms">
-                                  <h1 class="heading-medium">
-                                      Search results for: <span class="visuallyhidden">{% if search_term %}{{ search_term }}{% endif %}</span>
-                                  </h1>
-                              </label>
+                              <h1 class="heading-medium">
+                                  Search results for: <span class="visuallyhidden">{% if search_term %}{{ search_term }}{% endif %}</span>
+                              </h1>
                               <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}"/>
                               <button type="submit" class="button">Search</button>
                           </div>
                       </form>
-                      {% if results %}
-                        <div class="column-two-thirds">
+                      <div class="column-two-thirds">
+                        {% if results %}
                           <h2 class="font-xsmall expand-bottom-half">{{ results['titles']|length }} result(s) found</h2>
                           {% for title in results['titles'] %}
-                            <ol>
+                            <ol class="result">
                               <li class="postal">
                                 <h2 class="heading-small collapse-bottom">
                                   <a href="/titles/{{title['title_number']}}">{{title['data']['address']['address_string']}}</a>
@@ -49,10 +47,10 @@
                               </li>
                             </ol>
                           {% endfor %}
-                        </div>
-                      {% else %}
-                        <p class="lede">No result(s) found</p>
-                      {% endif %}
+                        {% else %}
+                          <h2 class="font-xsmall expand-bottom-half">No result(s) found</h2>
+                        {% endif %}
+                      </div>
 
                     </div>
 

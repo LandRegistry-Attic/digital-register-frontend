@@ -29,3 +29,4 @@ elif settings == 'test':
     CONFIG_DICT['LOGGING'] = False
     CONFIG_DICT['DEBUG'] = True
     CONFIG_DICT['SLEEP_BETWEEN_LOGINS'] = False
+    CONFIG_DICT['DISABLE_CSRF_PREVENTION'] = True
