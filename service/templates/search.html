@@ -9,34 +9,20 @@
             <div class="outer-block">
                 <div class="inner-block">
 
-                    <div class="text">
-
-                        <h1 class="heading-xlarge">
-                            Search for Title
-                        </h1>
-
-                        <p class="lede">Use this service to get information related to any title in England and Wales.</p>
-
-                    </div>
-
-                    <form action="/title-search/" method="POST" role="form">
-
-                        {{ form.hidden_tag() }}
-
-                        <div class="form-group">
-                            <label class="form-label-bold" for="search_term">
-                                Find a title
-                                <span class="form-hint">
-                                    e.g. postcode or title number or address
-                                </span>
-                            </label>
-                            <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}"/>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="button">Search</button>
-                        </div>
-                    </form>
-
+                  <form action="/title-search/" method="POST" role="form" class="form">
+                      {{ form.hidden_tag() }}
+                      <h1 class="heading-xlarge form-title">Find a title</h1>
+                      <div class="form-group">
+                          <div class="text">
+                              <p class="lede"><label for="search_term">Search for the title of any property in England and Wales, even if you don’t own it.</label></p>
+                          </div>
+                          <p class="form-hint">For example a postcode, street name or title number</p>
+                          <input type="text" class="form-control" name="search_term" id="search_term">
+                      </div>
+                      <div class="form-group">
+                          <input type="submit" value="Search" class="button">
+                      </div>
+                  </form>
                 </div>
             </div>
 
