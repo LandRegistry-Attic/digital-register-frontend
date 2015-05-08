@@ -16,6 +16,7 @@ from wtforms.validators import Required, Length
 
 from service import app, login_manager
 
+
 REGISTER_TITLE_API = app.config['REGISTER_TITLE_API']
 UNAUTHORISED_WORDING = Markup('There was an error with your Username/Password '
                               'combination. If this problem persists please '
@@ -450,7 +451,3 @@ if _is_csrf_enabled():
 def run_app():
     port = int(os.environ.get('PORT', 8003))
     app.run(host='0.0.0.0', port=port)
-
-
-if __name__ == '__main__':
-    run_app()
