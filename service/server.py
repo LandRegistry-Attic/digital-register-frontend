@@ -217,9 +217,11 @@ def find_titles():
             postcode = sanitise_postcode(search_term)
             postcode_search_results = get_register_titles_via_postcode(postcode)
             return render_search_results(postcode_search_results, postcode)
-        else:
+        elif search_term:
             address_search_results = get_register_titles_via_address(search_term)
             return render_search_results(address_search_results, search_term)
+        else:
+            return render_search_results([], search_term)
     # If not search value enter or a GET request, display the search page
     return render_template(
         'search.html',
