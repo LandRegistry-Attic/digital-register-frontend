@@ -18,11 +18,11 @@
                     <form class="form" action="/title-search/" method="POST" role="form">
                       {{ form.hidden_tag() }}
                       <div class="form-group">
-                        <label for="search_term">
-                          <h1 class="heading-medium">
-                            Search results for <span class="visuallyhidden">{% if search_term %}{{ search_term }}{% endif %}</span>
-                          </h1>
-                        </label>
+                        <h1 class="heading-medium">
+                          <label for="search_term">
+                          Search results for <span class="visuallyhidden">{% if search_term %}{{ search_term }}{% endif %}</span>
+                          </label>
+                        </h1>
                         <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}">
                         <input type="submit" value="Search" class="button search-button">
                       </div>
