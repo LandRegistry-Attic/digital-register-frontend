@@ -16,6 +16,7 @@ from wtforms.validators import Required, Length
 
 from service import app, login_manager
 
+
 REGISTER_TITLE_API = app.config['REGISTER_TITLE_API']
 UNAUTHORISED_WORDING = Markup('There was an error with your Username/Password '
                               'combination. If this problem persists please '
@@ -216,9 +217,11 @@ def find_titles():
             postcode = sanitise_postcode(search_term)
             postcode_search_results = get_register_titles_via_postcode(postcode)
             return render_search_results(postcode_search_results, postcode)
-        else:
+        elif search_term:
             address_search_results = get_register_titles_via_address(search_term)
             return render_search_results(address_search_results, search_term)
+        else:
+            return render_search_results([], search_term)
     # If not search value enter or a GET request, display the search page
     return render_template(
         'search.html',
@@ -450,7 +453,3 @@ if _is_csrf_enabled():
 def run_app():
     port = int(os.environ.get('PORT', 8003))
     app.run(host='0.0.0.0', port=port)
-
-
-if __name__ == '__main__':
-    run_app()

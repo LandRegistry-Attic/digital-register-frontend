@@ -8,50 +8,45 @@
 
             <div id="global-breadcrumb">
                 <ol>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/title-search/">Search for Title</a></li>
-                    <li>Results</li>
+                    <li><a href="/title-search/">Find a Title</a></li>
+                    <li>Search results</li>
                 </ol>
             </div>
 
             <div class="outer-block">
                 <div class="inner-block">
-
-                    <div class="text">
-
-                      <form action="/title-search/" method="POST" role="form">
-
-                          {{ form.hidden_tag() }}
-
-                          <div class="form-group">
-                              <h1 class="heading-medium">
-                                  Search results for: <span class="visuallyhidden">{% if search_term %}{{ search_term }}{% endif %}</span>
-                              </h1>
-                              <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}"/>
-                              <button type="submit" class="button">Search</button>
-                          </div>
-                      </form>
-                      <div class="column-two-thirds">
-                        {% if results %}
-                          <h2 class="font-xsmall expand-bottom-half">{{ results['titles']|length }} result(s) found</h2>
-                          {% for title in results['titles'] %}
-                            <ol class="result">
-                              <li class="postal">
-                                <h2 class="heading-small collapse-bottom">
-                                  <a href="/titles/{{title['title_number']}}">{{title['data']['address']['address_string']}}</a>
-                                </h2>
-                                <div class="font-xsmall">
-                                  Title number {{title['title_number']}}<br>
-                                  <b>{{title['data']['tenure']}}</b>
-                                </div>
-                              </li>
-                            </ol>
-                          {% endfor %}
-                        {% else %}
-                          <h2 class="font-xsmall expand-bottom-half">No result(s) found</h2>
-                        {% endif %}
+                    <form class="form" action="/title-search/" method="POST" role="form">
+                      {{ form.hidden_tag() }}
+                      <div class="form-group">
+                        <h1 class="heading-medium">
+                          <label for="search_term">
+                          Search results for <span class="visuallyhidden">{% if search_term %}{{ search_term }}{% endif %}</span>
+                          </label>
+                        </h1>
+                        <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}">
+                        <input type="submit" value="Search" class="button search-button">
                       </div>
+                    </form>
 
+                    <div class="column-two-thirds">
+                      {% if results %}
+                        <h2 class="font-xsmall expand-bottom-half">{{ results['titles']|length }} result(s) found</h2>
+                        {% for title in results['titles'] %}
+                          <ol class="result">
+                            <li class="postal">
+                              <h2 class="heading-small collapse-bottom">
+                                <a href="/titles/{{title['title_number']}}">{{title['data']['address']['address_string']}}</a>
+                              </h2>
+                              <div class="font-xsmall">
+                                Title number {{title['title_number']}}<br>
+                                <b>{{title['data']['tenure']}}</b>
+                              </div>
+                            </li>
+                          </ol>
+                        {% endfor %}
+                      {% else %}
+                        <h2 class="font-xsmall expand-bottom-half">No result(s) found</h2>
+                      {% endif %}
                     </div>
 
                 </div>
