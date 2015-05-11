@@ -26,12 +26,6 @@ UNAUTHORISED_WORDING = Markup('There was an error with your Username/Password '
                               )
 GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
 TITLE_NUMBER_REGEX = '^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$'
-BASIC_POSTCODE_REGEX = '^[A-Z]{1,2}[0-9R][0-9A-Z]? ?[0-9][A-Z]{2}$'
-BASIC_POSTCODE_WITH_SURROUNDING_GROUPS_REGEX = (
-    r'(?P<leading_text>.*\b)\s?'
-    r'(?P<postcode>[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z]{2}\b)\s?'
-    r'(?P<trailing_text>.*)'
-)
 NOF_SECS_BETWEEN_LOGINS = 1
 LOGGER = logging.getLogger(__name__)
 
@@ -274,7 +268,7 @@ def format_display_json(api_response):
         title_api = api_response.json()
         proprietors = format_proprietors(
             title_api['data']['proprietors'])
-        address_lines = get_address_lines(title_api['data']['address'])
+        address_lines = address_utils.get_address_lines(title_api['data']['address'])
         indexPolygon = get_property_address_index_polygon(
             title_api['geometry_data'])
         title = {
@@ -289,6 +283,7 @@ def format_display_json(api_response):
             'tenure': title_api['data'].get('tenure', 'No data'),
             'indexPolygon': indexPolygon
         }
+        print(title)
         return title
     else:
         return None
@@ -307,9 +302,9 @@ def format_proprietors(proprietors_data):
             formatted_proprietor["name"] = name['non_private_individual_name']
         formatted_proprietor["addresses"] = []
         for address in addresses:
-            formatted_proprietor["addresses"]+= {
-                "lines": get_address_lines(address)
-            }
+            formatted_proprietor["addresses"] += [{
+                "lines": address_utils.get_address_lines(address)
+            }]
         formatted_proprietors += [formatted_proprietor]
     return formatted_proprietors
 

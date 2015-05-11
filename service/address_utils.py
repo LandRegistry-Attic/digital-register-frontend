@@ -1,3 +1,13 @@
+import re
+
+BASIC_POSTCODE_REGEX = '^[A-Z]{1,2}[0-9R][0-9A-Z]? ?[0-9][A-Z]{2}$'
+BASIC_POSTCODE_WITH_SURROUNDING_GROUPS_REGEX = (
+    r'(?P<leading_text>.*\b)\s?'
+    r'(?P<postcode>[A-Z]{1,2}[0-9R][0-9A-Z]? [0-9][A-Z]{2}\b)\s?'
+    r'(?P<trailing_text>.*)'
+)
+
+
 def get_building_description_lines(address_data):
     lines = []
     if ('sub_building_description' in address_data and
@@ -45,16 +55,35 @@ def get_street_name_lines(address_data):
 def get_address_lines(address_data):
     lines = []
     if address_data:
-        lines.append(address_data.get('leading_info', None))
-        lines = get_building_description_lines(address_data)
-        lines.append(address_data.get('house_description', None))
-        lines += get_street_name_lines(address_data)
-        lines.append(address_data.get('street_name_2', None))
-        lines.append(address_data.get('local_name', None))
-        lines.append(address_data.get('local_name_2', None))
-        lines.append(address_data.get('town', None))
-        lines.append(address_data.get('postcode', None))
-        lines.append(address_data.get('trail_info', None))
+        address_type = address_data.get('address_type', None)
+        if address_type == "DX":
+            lines.append(address_data.get('care_of'), None)
+            lines.append(address_data.get('care_of_name'), None)
+            lines.append(address_data.get('dx_no'), None)
+            lines.append(address_data.get('exchange_name'), None)
+        elif address_type == "ELECTRONIC":
+            lines.append(address_data.get('email_address'), None)
+        elif address_type == "BFPO" or address_type == "FOREIGN":
+            lines.append(address_data.get('care_of'), None)
+            lines.append(address_data.get('care_of_name'), None)
+            lines.append(address_data.get('foreign_bfpo_address1'), None)
+            lines.append(address_data.get('foreign_bfpo_address2'), None)
+            lines.append(address_data.get('foreign_bfpo_address3'), None)
+            lines.append(address_data.get('foreign_bfpo_address4'), None)
+            lines.append(address_data.get('foreign_bfpo_address5'), None)
+            lines.append(address_data.get('foreign_bfpo_address6'), None)
+            lines.append(address_data.get('country'), None)
+        else:
+            lines.append(address_data.get('leading_info', None))
+            lines = get_building_description_lines(address_data)
+            lines.append(address_data.get('house_description', None))
+            lines += get_street_name_lines(address_data)
+            lines.append(address_data.get('street_name_2', None))
+            lines.append(address_data.get('local_name', None))
+            lines.append(address_data.get('local_name_2', None))
+            lines.append(address_data.get('town', None))
+            lines.append(address_data.get('postcode', None))
+            lines.append(address_data.get('trail_info', None))
     non_empty_lines = [x for x in lines if x is not None]
     # If the JSON doesn't contain the individual fields non_empty_lines will be
     # empty
