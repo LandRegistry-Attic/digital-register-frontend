@@ -67,6 +67,7 @@ class TestViewTitle:
     def test_get_title_page_no_title(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert response.status_code == 404
+        assert '404: Not Found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_title)
     def test_get_title_page(self, mock_get):
