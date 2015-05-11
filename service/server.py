@@ -272,7 +272,7 @@ def get_register_titles_via_address(address):
 def format_display_json(api_response):
     if api_response:
         title_api = api_response.json()
-        proprietor_names = get_proprietor_names(
+        proprietors = format_proprietors(
             title_api['data']['proprietors'])
         address_lines = get_address_lines(title_api['data']['address'])
         indexPolygon = get_property_address_index_polygon(
@@ -285,7 +285,7 @@ def format_display_json(api_response):
                 'No data'
             ),
             'address_lines': address_lines,
-            'proprietors': proprietor_names,
+            'proprietors': proprietors,
             'tenure': title_api['data'].get('tenure', 'No data'),
             'indexPolygon': indexPolygon
         }
@@ -294,28 +294,23 @@ def format_display_json(api_response):
         return None
 
 
-def get_proprietor_names(proprietors_data):
-    proprietor_names = []
+def format_proprietors(proprietors_data):
+    formatted_proprietors = []
     for proprietor in proprietors_data:
         name = proprietor['name']
-        # TODO: decide which of the following fields we want to display
-        # company_reg_num
-        # country_incorporation
-        # company_location
-        # local_authority_area
-        # name_supplimentary
-        # charity_name
-        # trust_format
-        # name_information
+        formatted_proprietor = {}
+        # TODO: proprietor names have potentially a lot more fields to display
         if 'forename' in name and 'surname' in name:
-            proprietor_names += [{
-                "name": name['forename'] + ' ' + name['surname']
-            }]
+            formatted_proprietor["name"] = name['forename'] + ' ' + name['surname']
         if 'non_private_individual_name' in name:
-            proprietor_names += [{
-                "name": name['non_private_individual_name']
-            }]
-    return proprietor_names
+            formatted_proprietor["name"] = name['non_private_individual_name']
+        formatted_proprietor["addresses"] = [
+            {"lines": ["todo", "thing"]},
+            {"lines": ["stuff", "stuff 2"]}
+        ]
+        # TODO: add addresses to formatted proprietors
+        formatted_proprietors += [formatted_proprietor]
+    return formatted_proprietors
 
 
 def get_building_description_lines(address_data):
