@@ -82,14 +82,14 @@ def get_address_lines(address_data):
             lines.append(address_data.get('foreign_bfpo_address6', None))
             lines.append(address_data.get('country', None))
         else:
-            if ('care_of' in address_data or 'care_of_name' in address_data):
+            if 'care_of' in address_data or 'care_of_name' in address_data:
                 lines.append(
                     "{0} {1}".format(
                         address_data.get('care_of', ''),
                         address_data.get('care_of_name', ''))
                 )
             lines.append(address_data.get('leading_info', None))
-            lines = get_building_description_lines(address_data)
+            lines += get_building_description_lines(address_data)
             lines.append(address_data.get('house_description', None))
             lines += get_street_name_lines(address_data)
             lines.append(address_data.get('street_name_2', None))
