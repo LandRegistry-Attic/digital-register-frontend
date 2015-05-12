@@ -59,3 +59,86 @@ pre code{padding:0;border:none}.alert-flag{display:-moz-inline-stack;display:inl
 #global-header .search-toggle:hover{background-color:#004f8b}#global-header .search-toggle.js-hidden{display:none}#global-header form#search .content{position:relative;background:#fff}#global-header form#search label{float:left;height:35px;line-height:35px;text-indent:15px;overflow:hidden;display:block;margin-right:10px}.js-enabled #global-header form#search label{float:none;position:absolute;left:0;top:1px;z-index:1;width:100%;margin-right:0}#global-header form#search input{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;float:left;width:50%;min-width:0;display:block;margin:0;border:0;height:35px;padding:6px 0;-webkit-appearance:none;-moz-appearance:none}#global-header form#search input#site-search-text{font-family:"nta",Arial,sans-serif;font-size:16px;line-height:1.4375;font-weight:300;text-transform:none;position:relative;padding:6px;z-index:3;background:transparent}@media (max-width: 640px){#global-header form#search input#site-search-text{font-size:14px;line-height:1.76923}}#global-header form#search input#site-search-text.focus,#global-header form#search input#site-search-text:focus{background:#fff}.js-enabled #global-header form#search input#site-search-text{width:86%;width:-webkit-calc(100% - 37px);width:calc(100% - 37px)}#global-header form#search input.submit{position:absolute;z-index:4;right:0;top:0;width:35px;height:35px;border:1px solid #005ea5;border-width:0 0 0 1px;border-left-color:#222;-webkit-border-radius:0;-moz-border-radius:0;border-radius:0;overflow:hidden;text-indent:-5000px;color:#fff;background-color:#005ea5;background-image:url("/static/images/search-button.png");background-repeat:no-repeat;background-position:0 50%}@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx){#global-header form#search input.submit{background-size:52.5px 35px;background-position:100% 50%}}#global-header form#search input.submit:hover{background-color:#004f8b}@media screen and (max-width: 379px){#global-header form#search{display:none;width:100%}#global-header form#search #site-search-text{width:80%}}#global-header form#search.js-visible{display:block}#global-browser-prompt{display:none}.beta-notice,#global-browser-prompt{padding:0.5em 2em}.beta-notice p,#global-browser-prompt p{font-family:"nta",Arial,sans-serif;font-size:19px;line-height:1.31579;font-weight:400;text-transform:none;margin:0 auto;max-width:960px}@media (max-width: 640px){.beta-notice p,#global-browser-prompt p{font-size:16px;line-height:1.25}}@media (max-width: 640px){.beta-notice,#global-browser-prompt{padding:0.5em 1em}}
 #global-browser-prompt{background-color:#d5e8f3}#global-browser-prompt p{position:relative;padding-right:20px;max-width:940px}#global-browser-prompt .dismiss{background-image:url("close.png");background-color:transparent;background-repeat:no-repeat;background-position:center right;text-decoration:none;height:22px;width:10px;text-indent:-9999px;display:inline-block;position:absolute;right:0}.beta-notice{background-color:#f47738;color:#fff}#global-breadcrumb{background-color:#fff;max-width:1020px;margin:0 auto;z-index:50}@media (max-width: 640px){#global-breadcrumb{padding:0 1em}}#global-breadcrumb ol{max-width:960px;margin:0 30px;padding:0.75em 0}@media (max-width: 640px){#global-breadcrumb ol{margin:0}}#global-breadcrumb ol li{font-family:"nta",Arial,sans-serif;font-size:16px;line-height:1.25;font-weight:300;text-transform:none;background-image:url("/static/images/separator.png");background-position:100% 50%;background-repeat:no-repeat;float:left;list-style:none;margin-left:0;margin-right:0.5em;margin-bottom:0.4em;padding-right:1em}@media (max-width: 640px){#global-breadcrumb ol li{font-size:14px;line-height:1.14286}}@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx){#global-breadcrumb ol li{background-image:url("/static/images/separator-2x.png");background-size:6px 11px}}#global-breadcrumb ol li a{color:#0b0c0c}#global-breadcrumb ol li strong{font-weight:normal}#global-breadcrumb ol li:last-child{background-image:none;margin-right:0}#user-satisfaction-survey{display:none;background-color:#2B358B;padding:0.5em 0;color:#fff}@media (min-width: 769px){#user-satisfaction-survey.visible{display:block}}#user-satisfaction-survey .wrapper{margin:0 auto;max-width:990px;clear:both;padding:0 15px}#user-satisfaction-survey .wrapper h1{font-family:"nta",Arial,sans-serif;font-size:19px;line-height:1.31579;font-weight:400;text-transform:none;font-weight:700;margin-left:20px}@media (max-width: 640px){#user-satisfaction-survey .wrapper h1{font-size:16px;line-height:1.25}}#user-satisfaction-survey .wrapper p{font-family:"nta",Arial,sans-serif;font-size:14px;line-height:1.42857;font-weight:400;text-transform:none;margin:0 0 0 20px}@media (max-width: 640px){#user-satisfaction-survey .wrapper p{font-size:12px;line-height:1.25}}#user-satisfaction-survey .wrapper p a:link,#user-satisfaction-survey .wrapper p a:active,#user-satisfaction-survey .wrapper p a:visited{color:#fff}#user-satisfaction-survey .wrapper p a:hover{color:#fff}#user-satisfaction-survey .wrapper p a#take-survey{font-family:"nta",Arial,sans-serif;font-size:19px;line-height:1.31579;font-weight:400;text-transform:none;padding-right:5px}@media (max-width: 640px){#user-satisfaction-survey .wrapper p a#take-survey{font-size:16px;line-height:1.25}}#user-satisfaction-survey .wrapper p.right{float:right;margin:-20px 20px 0 0}@media (min-width: 641px){#footer .footer-categories{padding:0 15px 30px}}@media (min-width: 641px){#footer .footer-categories .footer-explore,#footer .footer-categories .footer-inside-government{float:left;width:66.66%;padding-bottom:60px}}#footer .footer-categories .footer-explore h2,#footer .footer-categories .footer-inside-government h2{margin:0 15px}@media (min-width: 641px){#footer .footer-categories .footer-explore h2,#footer .footer-categories .footer-inside-government h2{padding:0 0 20px;border-bottom:1px solid #bfc1c3}}#footer .footer-categories hr{clear:both;margin:0 15px 30px;border:1px solid #bfc1c3;border-width:1px 0 0 0}@media (min-width: 641px){#footer .footer-categories hr{margin-bottom:0}}#footer .footer-categories ul{font-family:"nta",Arial,sans-serif;font-size:16px;line-height:1.25;font-weight:300;text-transform:none;list-style:none;padding:10px 0 0;margin:0 15px 30px}@media (max-width: 640px){#footer .footer-categories ul{font-size:14px;line-height:1.14286}}@media (min-width: 641px){#footer .footer-categories ul{padding:20px 0 0;margin:0 15px}}#footer .footer-categories ul li{display:block;margin-bottom:5px}@media (min-width: 641px){#footer .footer-categories ul li{float:left;margin:15px 0 0 0;width:50%}}@media (min-width: 641px){#footer .footer-categories .footer-inside-government{float:left;width:33.33%}}#footer .footer-categories .footer-inside-government ul li{width:100%}.content-title{color:#6f777b;font-weight:400;margin-bottom:0}.pw-summary{margin-bottom:30px}.pw-summary h1{margin-bottom:0}.adr{margin-bottom:30px;padding:30px 0;border-bottom:1px solid #bfc1c3}.change a{color:#ffbf47;text-decoration:none}.change a:hover{text-decoration:underline}.notification{margin:30px 0;padding:30px;background-color:#fff2d3}.notification [class*="heading-"]{margin:0}form .notification{margin-top:0}.notification__highlight{font-weight:bold}.divider{border-top:1px solid #bfc1c3;margin-top:30px;padding:30px 0}.optional-section{margin-bottom:0}
 .search-button{padding-top: 0.35em;padding-bottom: 0.15em}
+
+/* Note: the following is taken from CSS used by http://property-register-prototype-ci.herokuapp.com/digital-register/journeys/v5/search-results?s=+# */
+/* TODO: remove when CSS done properly */
+.govuk-previous-and-next-navigation {
+  display: block;
+  margin-top: 30px; }
+  @media (max-width: 640px) {
+    .govuk-previous-and-next-navigation {
+      margin: 2em 0 0 0; } }
+  .govuk-previous-and-next-navigation ul {
+    margin: 0;
+    padding: 0; }
+  .govuk-previous-and-next-navigation li {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none;
+    float: left;
+    list-style: none;
+    text-align: right;
+    margin: 0;
+    padding: 0;
+    width: 49%; }
+    @media (max-width: 640px) {
+      .govuk-previous-and-next-navigation li {
+        font-size: 14px;
+        line-height: 1.1428571429; } }
+    .govuk-previous-and-next-navigation li a {
+      display: block;
+      color: #005ea5;
+      text-decoration: none; }
+      .govuk-previous-and-next-navigation li a:hover, .govuk-previous-and-next-navigation li a:active {
+        background-color: #f8f8f8; }
+      .govuk-previous-and-next-navigation li a .pagination-label {
+        font-family: "nta", Arial, sans-serif;
+        font-size: 27px;
+        line-height: 1.25;
+        font-weight: 400;
+        text-transform: none;
+        margin-bottom: 0.1em;
+        display: block; }
+        @media (max-width: 640px) {
+          .govuk-previous-and-next-navigation li a .pagination-label {
+            font-size: 20px;
+            line-height: 1.1111111111; } }
+    .govuk-previous-and-next-navigation li.next-page {
+      float: right;
+      text-align: right; }
+    .govuk-previous-and-next-navigation li.next-page a:before {
+      background: transparent url("/static/stylesheets/images/arrow-sprite.png") no-repeat -102px -11px;
+      margin: -4px -32px 0 0;
+      display: block;
+      float: right;
+      width: 30px;
+      height: 38px;
+      content: " "; }
+    .govuk-previous-and-next-navigation li.previous-page a:before {
+      background: transparent url("/static/stylesheets/images/arrow-sprite.png") no-repeat -20px -11px;
+      margin: -4px 0 0 -32px;
+      display: block;
+      float: left;
+      width: 30px;
+      height: 38px;
+      content: " "; }
+    .govuk-previous-and-next-navigation li.previous-page {
+      float: left;
+      text-align: left; }
+    .govuk-previous-and-next-navigation li.previous-page a {
+      padding: 0.75em 0 0.75em 3em; }
+    .govuk-previous-and-next-navigation li.next-page a {
+      padding: 0.75em 3em 0.75em 0; }
+    @media (max-width: 640px) {
+      .govuk-previous-and-next-navigation li.previous-page, .govuk-previous-and-next-navigation li.next-page {
+        float: none;
+        width: 100%; }
+
+      .govuk-previous-and-next-navigation li.next-page a {
+        text-align: right; }
+ }
+.govuk-previous-and-next-navigation > span {
+  white-space: nowrap;
+}
