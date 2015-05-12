@@ -76,12 +76,13 @@
                                     <h3 class="heading-medium">Owner(s)</h3>
 
                                     {% for proprietor in title.proprietors %}
-                                        <div class="grid grid-1-2">
-                                            <p>
-                                                {{ proprietor.name }}<br>
-                                                {{ proprietor.address }}
-                                            </p>
-                                        </div>
+                                        <!-- Proprietor, multiple addresses -->
+                                        <h4 class="heading-small expand-bottom-half">{{ proprietor.name }}</h4>
+                                        {% for address in proprietor.addresses %}
+                                          <div class="grid grid-1-2">
+                                            {{ '<br>'.join(address.lines)|safe }}
+                                          </div>
+                                        {% endfor %}
                                     {% endfor %}
 
                                 </div>
