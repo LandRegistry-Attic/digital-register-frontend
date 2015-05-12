@@ -12,22 +12,15 @@
                 <li>{{ error }}</li>
             </ol>
         </div>
-        <h2 class="inner-block">
-            {% if code != 500 %}
+        <div class="outer-block">
+            <div class="inner-block">
                 <h1 class="heading-xlarge">
                     {{error}}
                 </h1>
                 <div class="text">
                     <p>{{description}}</p><br/>
                 </div>
-            {% else %}
-                <h1 class="heading-xlarge">
-                    Sorry, we are experiencing technical difficulties
-                </h1>
-                <h2 class="heading-large">
-                    <p>Please try again in a few moments.</p>
-                </h2>
-            {% endif %}
+            </div>
         </div>
     </div>
 </main>

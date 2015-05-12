@@ -67,7 +67,7 @@ class TestViewTitle:
     def test_get_title_page_no_title(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert response.status_code == 404
-        assert '404: Not Found' in response.data.decode()
+        assert 'Page not found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_title)
     def test_get_title_page(self, mock_get):
@@ -204,6 +204,13 @@ class TestViewTitle:
         self.app.get('/title-search/Plymouth?page=23')
         mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/PLYMOUTH',
                                     params={'page': 23})
+
+    @mock.patch('requests.get', return_value=unavailable_title)
+    def test_get_title_page_no_title(self, mock_get):
+        mock_get.side_effect = Exception('problem!')
+        response = self.app.get('/titles/titleref')
+        assert response.status_code == 500
+        assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
 
 
 if __name__ == '__main__':
