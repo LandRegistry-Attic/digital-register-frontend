@@ -57,15 +57,21 @@ def get_address_lines(address_data):
     if address_data:
         address_type = address_data.get('address_type', None)
         if address_type == "DX":
-            lines.append(address_data.get('care_of'), None)
-            lines.append(address_data.get('care_of_name'), None)
+            if ('care_of' in address_data or 'care_of_name' in address_data):
+                lines.append(
+                    "{0} {1}".format(
+                        address_data['care_of'],
+                        address_data['care_of_name']))
             lines.append(address_data.get('dx_no'), None)
             lines.append(address_data.get('exchange_name'), None)
         elif address_type == "ELECTRONIC":
             lines.append(address_data.get('email_address'), None)
         elif address_type == "BFPO" or address_type == "FOREIGN":
-            lines.append(address_data.get('care_of'), None)
-            lines.append(address_data.get('care_of_name'), None)
+            if ('care_of' in address_data or 'care_of_name' in address_data):
+                lines.append(
+                    "{0} {1}".format(
+                        address_data['care_of'],
+                        address_data['care_of_name']))
             lines.append(address_data.get('foreign_bfpo_address1'), None)
             lines.append(address_data.get('foreign_bfpo_address2'), None)
             lines.append(address_data.get('foreign_bfpo_address3'), None)
@@ -74,6 +80,11 @@ def get_address_lines(address_data):
             lines.append(address_data.get('foreign_bfpo_address6'), None)
             lines.append(address_data.get('country'), None)
         else:
+            if ('care_of' in address_data or 'care_of_name' in address_data):
+                lines.append(
+                    "{0} {1}".format(
+                        address_data['care_of'],
+                        address_data['care_of_name']))
             lines.append(address_data.get('leading_info', None))
             lines = get_building_description_lines(address_data)
             lines.append(address_data.get('house_description', None))

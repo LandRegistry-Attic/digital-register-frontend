@@ -203,7 +203,7 @@ def find_titles(search_term=''):
             current_user.get_id()))
     # Determine search term type and preform search
     title_number_regex = re.compile(TITLE_NUMBER_REGEX)
-    postcode_regex = re.compile(BASIC_POSTCODE_REGEX)
+    postcode_regex = re.compile(address_utils.BASIC_POSTCODE_REGEX)
     search_term = search_term.upper()
     # If it matches the title number regex...
     if title_number_regex.match(search_term):
