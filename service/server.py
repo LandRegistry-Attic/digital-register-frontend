@@ -292,8 +292,8 @@ def format_display_json(api_response):
 def format_proprietors(proprietors_data):
     formatted_proprietors = []
     for proprietor in proprietors_data:
-        name = proprietor['name']
-        addresses = proprietor['addresses']
+        name = proprietor.get('name') or ''
+        addresses = proprietor.get('addresses') or []
         formatted_proprietor = {}
         # TODO: proprietor names have potentially a lot more fields to display
         if 'forename' in name and 'surname' in name:
