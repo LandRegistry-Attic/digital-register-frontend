@@ -123,7 +123,7 @@ def signin():
     # form was valid
     username = form.username.data
     # form has correct details. Now need to check authorisation
-    authorised = LOGIN_API_CLIENT.authenticate_user(username,form.password.data)
+    authorised = LOGIN_API_CLIENT.authenticate_user(username, form.password.data)
 
     if authorised:
         login_user(User(username))
@@ -156,17 +156,18 @@ def display_title(title_ref):
 
 
 @app.route('/title-search', methods=['GET', 'POST'])
-@app.route('/title-search/<search_term>/<page_num>', defaults={'page_num': 1}, methods=['GET',
-                                                                                        'POST'])
+@app.route('/title-search/<search_term>', methods=['GET', 'POST'])
 @login_required
-def find_titles(search_term='', page_num=1):
+def find_titles(search_term=''):
+    page_num = int(request.args.get('page', 1))
     if request.method == 'POST':
         search_term = request.form['search_term'].strip()
         if search_term:
-            return redirect(url_for('find_titles', search_term=search_term, page_num=1))
+            return redirect(url_for('find_titles', search_term=search_term, page=page_num))
         else:
             # display the initial search page
-            return redirect(url_for('find_titles'))
+            return render_template('search.html', asset_path='/static/',
+                                   google_api_key=GOOGLE_ANALYTICS_API_KEY, form=TitleSearchForm())
     # GET request
     search_term = search_term.strip()
     if not search_term:
@@ -182,12 +183,13 @@ def find_titles(search_term='', page_num=1):
     search_term = search_term.upper()
     # If it matches the title number regex...
     if title_number_regex.match(search_term):
-        title = get_register_title(search_term)
+        title_ref = search_term
+        title = get_register_title(title_ref)
         if title:
             # If the title exists store it in the session
             session['title'] = title
             # Redirect to the display_title method to display the digital register
-            return redirect(url_for('display_title', title_ref=search_term))
+            return redirect(url_for('display_title', title_ref=title_ref))
         else:
             # If title not found display 'no title found' screen
             return render_search_results([], search_term, page_num)
@@ -195,21 +197,17 @@ def find_titles(search_term='', page_num=1):
     elif postcode_regex.match(search_term):
         # Short term fix to enable user to search with postcode without spaces
         postcode = sanitise_postcode(search_term)
-        postcode_search_results = get_register_titles_via_postcode(postcode)
+        postcode_search_results = get_register_titles_via_postcode(postcode, page_num)
         return render_search_results(postcode_search_results, postcode, page_num)
     else:
-        address_search_results = get_register_titles_via_address(search_term)
+        address_search_results = get_register_titles_via_address(search_term, page_num)
         return render_search_results(address_search_results, search_term, page_num)
 
 
 def render_search_results(results, search_term, page_num):
     return render_template('search_results.html', asset_path='/static/', search_term=search_term,
                            page_num=page_num, google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           results=results, form=TitleSearchForm(csrf_enabled=False))
-
-
-def _is_csrf_enabled():
-    return app.config.get('DISABLE_CSRF_PREVENTION') is not True
+                           results=results, form=TitleSearchForm())
 
 
 def get_register_title(title_ref):
@@ -218,14 +216,16 @@ def get_register_title(title_ref):
     return title
 
 
-def get_register_titles_via_postcode(postcode):
-    response = requests.get('{}title_search_postcode/{}'.format(REGISTER_TITLE_API, postcode))
+def get_register_titles_via_postcode(postcode, page_num):
+    response = requests.get('{}title_search_postcode/{}'.format(REGISTER_TITLE_API, postcode),
+                            params={'page': page_num})
     results = response.json()
     return results
 
 
-def get_register_titles_via_address(address):
-    response = requests.get('{}title_search_address/{}'.format(REGISTER_TITLE_API, address))
+def get_register_titles_via_address(address, page_num):
+    response = requests.get('{}title_search_address/{}'.format(REGISTER_TITLE_API, address),
+                            params={'page': page_num})
     results = response.json()
     return results
 
@@ -302,6 +302,9 @@ class TitleSearchForm(Form):
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
+
+def _is_csrf_enabled():
+    return app.config.get('DISABLE_CSRF_PREVENTION') is not True
 
 
 def run_app():
