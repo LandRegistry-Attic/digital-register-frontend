@@ -8,14 +8,14 @@
 
             <div id="global-breadcrumb">
                 <ol>
-                    <li><a href="/title-search/">Find a Title</a></li>
+                    <li><a href="{{ url_for('find_titles') }}">Find a Title</a></li>
                     <li>Search results</li>
                 </ol>
             </div>
 
             <div class="outer-block">
                 <div class="inner-block">
-                    <form class="form" action="/title-search/" method="POST" role="form">
+                    <form class="form" action="{{ url_for('find_titles') }}" method="POST" role="form">
                       {{ form.hidden_tag() }}
                       <div class="form-group">
                         <h1 class="heading-medium">
@@ -35,7 +35,7 @@
                           <ol class="result">
                             <li class="postal">
                               <h2 class="heading-small collapse-bottom">
-                                <a href="/titles/{{title['title_number']}}">{{title['data']['address']['address_string']}}</a>
+                                <a href="{{ url_for('display_title', title_ref=title['title_number']) }}">{{title['data']['address']['address_string']}}</a>
                               </h2>
                               <div class="font-xsmall">
                                 Title number {{title['title_number']}}<br>

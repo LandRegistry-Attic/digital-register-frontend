@@ -9,7 +9,7 @@
             <div class="outer-block">
                 <div class="inner-block">
 
-                  <form action="/title-search/" method="POST" role="form" class="form">
+                  <form action="{{ url_for('find_titles') }}" method="post" role="form" class="form">
                       {{ form.hidden_tag() }}
                       <h1 class="heading-xlarge form-title">Find a title</h1>
                       <div class="form-group">
