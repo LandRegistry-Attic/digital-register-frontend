@@ -59,7 +59,7 @@ We use three separate builds:
 
 ## Third Party Tools
 
-<a href="http://wwww.browserstack.com"><img src="https://www.browserstack.com/images/layout/browserstack-logo-600x315.png" alt="browserstack logo" width=300/></a>
+<a href="http://www.browserstack.com"><img src="https://www.browserstack.com/images/layout/browserstack-logo-600x315.png" alt="browserstack logo" width=300/></a>
 
 <p>This repo is being tested using browserstack</p>
 <p><i>Rapid Selenium webdriver testing with 100% reliability</i></p>
