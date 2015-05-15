@@ -124,14 +124,14 @@ class TestViewTitle:
         assert coordinate_data in page_content
 
     def test_get_title_search_page(self):
-        response = self.app.get('/title-search/')
+        response = self.app.get('/title-search')
         assert response.status_code == 200
         assert 'Find a title' in str(response.data)
 
     @mock.patch('requests.get', return_value=fake_title)
     def test_title_search_success(self, mock_get):
         response = self.app.post(
-            '/title-search/',
+            '/title-search',
             data=dict(search_term='DN1000'),
             follow_redirects=True
         )
@@ -146,16 +146,18 @@ class TestViewTitle:
     @mock.patch('requests.get', return_value=fake_no_titles)
     def test_title_search_plain_text_value_format(self, mock_get):
         response = self.app.post(
-            '/title-search/',
-            data=dict(search_term='some text')
+            '/title-search',
+            data=dict(search_term='some text'),
+            follow_redirects=True
         )
         assert 'No result(s) found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=unavailable_title)
     def test_title_search_title_not_found(self, mock_get):
         response = self.app.post(
-            '/title-search/',
-            data=dict(search_term='DT1000')
+            '/title-search',
+            data=dict(search_term='DT1000'),
+            follow_redirects=True
         )
         assert 'No result(s) found' in response.data.decode()
 
@@ -169,7 +171,7 @@ class TestViewTitle:
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_success(self, mock_get):
         response = self.app.post(
-            '/title-search/',
+            '/title-search',
             data=dict(search_term='PL9 7FN'),
             follow_redirects=True
         )
