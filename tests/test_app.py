@@ -19,6 +19,8 @@ with open('tests/fake_postcode_search_result.json', 'r') as fake_postcode_search
     fake_postcode_search_bytes = str.encode(fake_postcode_search_results_json_string)
     fake_postcode_search = FakeResponse(fake_postcode_search_bytes)
 
+fake_address_search = fake_postcode_search
+
 with open('tests/fake_no_address_title.json', 'r') as fake_no_address_title_file:
     fake_no_address_title_json_string = fake_no_address_title_file.read()
     fake_no_address_title_bytes = str.encode(fake_no_address_title_json_string)
@@ -145,15 +147,19 @@ class TestViewTitle:
 
     @mock.patch('requests.get', return_value=fake_no_titles)
     def test_title_search_plain_text_value_format(self, mock_get):
-        response = self.app.get(
-            '/title-search/sometext'
+        response = self.app.post(
+            '/title-search',
+            data=dict(search_term='some text'),
+            follow_redirects=True
         )
         assert 'No result(s) found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=unavailable_title)
     def test_title_search_title_not_found(self, mock_get):
-        response = self.app.get(
-            '/title-search/DT1000'
+        response = self.app.post(
+            '/title-search',
+            data=dict(search_term='DT1000'),
+            follow_redirects=True
         )
         assert 'No result(s) found' in response.data.decode()
 
@@ -185,6 +191,18 @@ class TestViewTitle:
         search_term = 'PL 98TB'
         postcode = sanitise_postcode(search_term)
         assert postcode == 'PL9 8TB'
+
+    @mock.patch('requests.get', return_value=fake_postcode_search)
+    def test_postcode_search_with_page_calls_api_correctly(self, mock_get):
+        self.app.get('/title-search/PL9%207FN?page=23')
+        mock_get.assert_called_with('http://landregistry.local:8004/title_search_postcode/PL9 7FN',
+                                    params={'page': 23})
+
+    @mock.patch('requests.get', return_value=fake_address_search)
+    def test_address_search_with_page_calls_api_correctly(self, mock_get):
+        self.app.get('/title-search/Plymouth?page=23')
+        mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/PLYMOUTH',
+                                    params={'page': 23})
 
 
 if __name__ == '__main__':
