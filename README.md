@@ -55,3 +55,14 @@ We use three separate builds:
 - [branch](http://52.16.47.1/job/digital-register-frontend-unit-tests%20(Branch)/)
 - [master](http://52.16.47.1/job/digital-register-frontend-unit-tests%20(Master)/)
 - [acceptance](http://52.16.47.1/job/digital-register-frontend-acceptance-tests/)
+
+
+## Third Party Tools
+
+<a href="http://www.browserstack.com"><img src="https://www.browserstack.com/images/layout/browserstack-logo-600x315.png" alt="browserstack logo" width=300/></a>
+
+<p>This repo is being tested using browserstack</p>
+<p><i>Rapid Selenium webdriver testing with 100% reliability</i></p>
+
+
+
