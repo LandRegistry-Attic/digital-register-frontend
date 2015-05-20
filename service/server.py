@@ -256,18 +256,27 @@ def format_proprietors(proprietors_data):
         name = proprietor.get('name') or ''
         addresses = proprietor.get('addresses') or []
         formatted_proprietor = {}
-        # TODO: proprietor names have potentially a lot more fields to display
-        if 'forename' in name and 'surname' in name:
-            formatted_proprietor["name"] = name['forename'] + ' ' + name['surname']
-        if 'non_private_individual_name' in name:
-            formatted_proprietor["name"] = name['non_private_individual_name']
-        formatted_proprietor["addresses"] = []
+
+        formatted_proprietor['name'] = format_proprietor_name(name)
+        formatted_proprietor['addresses'] = []
         for address in addresses:
-            formatted_proprietor["addresses"] += [{
-                "lines": address_utils.get_address_lines(address)
+            formatted_proprietor['addresses'] += [{
+                'lines': address_utils.get_address_lines(address)
             }]
         formatted_proprietors += [formatted_proprietor]
+
     return formatted_proprietors
+
+
+def format_proprietor_name(name):
+    if 'non_private_individual_name' in name:
+        return name['non_private_individual_name']
+    elif 'forename' in name and 'surname' in name:
+        return name['forename'] + ' ' + name['surname']
+    else:
+        raise Exception(
+            'Proprietor has neither forename/surename nor non-private individual name'
+        )
 
 
 # This method attempts to retrieve the index polygon data for the entry
