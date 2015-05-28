@@ -10,6 +10,11 @@ with open('tests/fake_title.json', 'r') as fake_title_json_file:
     fake_title_bytes = str.encode(fake_title_json_string)
     fake_title = FakeResponse(fake_title_bytes)
 
+with open('tests/fake_title_with_charge.json', 'r') as fake_charge_title_json_file:
+    fake_charge_title_json_string = fake_charge_title_json_file.read()
+    fake_charge_title_bytes = str.encode(fake_charge_title_json_string)
+    fake_charge_title = FakeResponse(fake_charge_title_bytes)
+
 fake_no_titles_json_string = '[]'
 fake_no_titles_bytes = str.encode(fake_no_titles_json_string)
 fake_no_titles = FakeResponse(fake_no_titles_bytes)
@@ -111,6 +116,16 @@ class TestViewTitle:
     def test_proprietor_on_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert 'Scott Oakes' in response.data.decode()
+
+    @mock.patch('requests.get', return_value=fake_charge_title)
+    def test_lender_on_title_page_with_charge(self, mock_get):
+        response = self.app.get('/titles/titleref')
+        assert 'National Westminster Home Loans Limited' in response.data.decode()
+
+    @mock.patch('requests.get', return_value=fake_title)
+    def test_lender_not_on_title_page_without_charge(self, mock_get):
+        response = self.app.get('/titles/titleref')
+        assert 'National Westminster Home Loans Limited' not in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_title)
     def test_tenure_on_title_page(self, mock_get):
