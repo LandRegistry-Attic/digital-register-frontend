@@ -154,24 +154,26 @@ class TestLogin:
                 'requests.post',
                 return_value=mock_response(401, lambda: None, 'Not JSON body')
         ):
-            with pytest.raises(InternalServerError):
-                self.app.post(
-                    '/login',
-                    data={'username': 'name', 'password': 'pass'},
-                    follow_redirects=False
-                )
+            response = self.app.post(
+                '/login',
+                data={'username': 'name', 'password': 'pass'},
+                follow_redirects=False
+            )
+            assert response.status_code == 500
+            assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
 
     def test_login_returns_error_when_api_returns_error_response(self):
         with mock.patch(
                 'requests.post',
                 return_value=mock_response(500, lambda: None, None)
         ):
-            with pytest.raises(InternalServerError):
-                self.app.post(
-                    '/login',
-                    data={'username': 'name', 'password': 'pass'},
-                    follow_redirects=False
-                )
+            response = self.app.post(
+                '/login',
+                data={'username': 'name', 'password': 'pass'},
+                follow_redirects=False
+            )
+            assert response.status_code == 500
+            assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
 
     @mock.patch('requests.post', return_value=invalid_credentials_response)
     def test_invalid_credentials(self, mock_post):

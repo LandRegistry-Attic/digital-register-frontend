@@ -5,7 +5,7 @@ import faulthandler
 from flask_login import LoginManager
 
 from config import CONFIG_DICT
-from service import logging_config
+from service import logging_config, error_handler
 
 # This causes the traceback to be written to the fault log file in case of serious faults
 fault_log_file = open(CONFIG_DICT['FAULT_LOG_FILE_PATH'], 'a')
@@ -25,3 +25,4 @@ def format_datetime(value):
 
 app.jinja_env.filters['datetime'] = format_datetime
 logging_config.setup_logging()
+error_handler.setup_errors(app)

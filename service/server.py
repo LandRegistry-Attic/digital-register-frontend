@@ -80,13 +80,6 @@ def sanitise_postcode(postcode_in):
     return postcode
 
 
-@app.errorhandler(Exception)
-def handle_internal_server_error(e):
-    LOGGER.error('An error occurred when processing a request', exc_info=e)
-    # TODO: render custom Internal Server Error page instead or reraising
-    abort(500)
-
-
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id)
