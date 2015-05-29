@@ -47,6 +47,15 @@
                         <dd>
                             <p>{{ title.tenure }}</p>
                         </dd>
+
+                        {% if title.lenders %}
+                            <dt>Lender(s)</dt>
+                            <dd>
+                                {% for lender in title.lenders %}
+                                    <p>{{ lender.name }}</p>
+                                {% endfor %}
+                            </dd>
+                        {% endif %}
                     </dl>
 
                 </div><!-- /summary -->
@@ -60,6 +69,9 @@
                                 <nav>
                                     <ul>
                                         <li><a href="#property-details">Property details</a></li>
+                                        {% if title.lenders %}
+                                            <li><a href="#charge-details">Charge details</a></li>
+                                        {% endif %}
                                     </ul>
                                 </nav>
                         </section>
@@ -79,14 +91,43 @@
                                         <!-- Proprietor, multiple addresses -->
                                         <h4 class="heading-small expand-bottom-half">{{ proprietor.name }}</h4>
                                         {% for address in proprietor.addresses %}
-                                          <div class="grid grid-1-2">
-                                            {{ '<br>'.join(address.lines)|safe }}
-                                          </div>
+                                            {% if loop.index is not divisibleby(2) %}<div class="grid-wrapper">{%- endif %}
+                                                <div class="grid grid-1-2">
+                                                    {{ '<br>'.join(address.lines)|safe }}
+                                                </div>
+                                            {% if loop.index is divisibleby(2) or loop.last %}</div><br>{%- endif %}
                                         {% endfor %}
                                     {% endfor %}
 
                                 </div>
                             </section>
+
+                            {% if title.lenders %}
+                            <br><br>
+
+                            <section id="charge-details" class="text js-faux-details js-faux-details--open">
+
+                                <h2 class="heading-medium collapse-top">Charge details</h2>
+
+                                <div class="group">
+                                    <h3 class="heading-medium">Lender(s)</h3>
+
+                                    {%- for lender in title.lenders %}
+                                        <!-- Lender, multiple addresses -->
+                                        <h4 class="heading-small expand-bottom-half">{{ lender.name }}</h4>
+
+                                        {%- for address in lender.addresses %}
+                                            {% if loop.index is not divisibleby(2) %}<div class="grid-wrapper">{%- endif %}
+                                                <div class="grid grid-1-2">
+                                                    {{ '<br>'.join(address.lines)|safe }}
+                                                </div>
+                                            {% if loop.index is divisibleby(2) or loop.last %}</div><br>{%- endif %}
+                                        {%- endfor %}
+                                    {%- endfor %}
+
+                                </div>
+                            </section>
+                            {% endif %}
 
                         </div>
                     </div><!-- / right col content -->

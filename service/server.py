@@ -230,7 +230,6 @@ def format_display_json(api_response):
         address_lines = address_utils.get_address_lines(title_api['data']['address'])
         indexPolygon = get_property_address_index_polygon(title_api['geometry_data'])
         title = {
-            # ASSUMPTION 1: All titles have a title number
             'number': title_api['title_number'],
             'last_changed': title_api['data'].get('last_application_timestamp', 'No data'),
             'address_lines': address_lines,
@@ -238,6 +237,9 @@ def format_display_json(api_response):
             'tenure': title_api['data'].get('tenure', 'No data'),
             'indexPolygon': indexPolygon
         }
+        if 'lenders' in title_api['data']:
+            lenders = format_proprietors(title_api['data']['lenders'])
+            title['lenders'] = lenders
         return title
     else:
         return None
