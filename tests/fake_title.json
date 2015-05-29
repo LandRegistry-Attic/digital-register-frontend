@@ -27,7 +27,8 @@
               }
           ],
           "last_application_timestamp": "2014-08-28T12:37:13+01:00",
-          "tenure": "Freehold"
+          "tenure": "Freehold",
+          "ppi_data": "Price paid stated data"
     },
     "geometry_data": {
         "extent": {

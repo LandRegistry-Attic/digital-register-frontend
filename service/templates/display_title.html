@@ -35,26 +35,45 @@
 
                     </div>
 
-                    <dl class="definition-tabular">
+                    <dl id="property-summary" class="definition-tabular">
                         <dt>Owner/Proprietor(s)</dt>
                         <dd>
-                        {% for proprietor in title.proprietors %}
-                          <p>{{ proprietor.name }}</p>
-                        {% endfor %}
+                          {% if title.proprietors|length >= 2 %}
+                            <ul>
+                              {% for proprietor in title.proprietors %}
+                                <li>{{ proprietor.name }}</li>
+                              {% endfor %}
+                            </ul>
+                          {% else %}
+                            {{ title.proprietors[0].name }}
+                          {% endif %}
                         </dd>
 
                         <dt>Tenure</dt>
                         <dd>
-                            <p>{{ title.tenure }}</p>
+                          {{ title.tenure }}
                         </dd>
 
                         {% if title.lenders %}
                             <dt>Lender(s)</dt>
                             <dd>
-                                {% for lender in title.lenders %}
-                                    <p>{{ lender.name }}</p>
-                                {% endfor %}
+                              {% if title.lenders|length >= 2 %}
+                                <ul>
+                                  {% for lender in title.lenders %}
+                                    <li>{{ lender.name }}</li>
+                                  {% endfor %}
+                                </ul>
+                              {% else %}
+                                {{ title.lenders[0].name }}
+                              {% endif %}
                             </dd>
+                        {% endif %}
+
+                        {% if title.ppi_data %}
+                          <dt>Price paid/stated</dt>
+                          <dd>
+                            {{ title.ppi_data }}
+                          </dd>
                         {% endif %}
                     </dl>
 
@@ -103,30 +122,30 @@
                             </section>
 
                             {% if title.lenders %}
-                            <br><br>
+                              <br><br>
 
-                            <section id="charge-details" class="text js-faux-details js-faux-details--open">
+                              <section id="charge-details" class="text js-faux-details js-faux-details--open">
 
-                                <h2 class="heading-medium collapse-top">Charge details</h2>
+                                  <h2 class="heading-medium collapse-top">Charge details</h2>
 
-                                <div class="group">
-                                    <h3 class="heading-medium">Lender(s)</h3>
+                                  <div class="group">
+                                      <h3 class="heading-medium">Lender(s)</h3>
 
-                                    {%- for lender in title.lenders %}
-                                        <!-- Lender, multiple addresses -->
-                                        <h4 class="heading-small expand-bottom-half">{{ lender.name }}</h4>
+                                      {%- for lender in title.lenders %}
+                                          <!-- Lender, multiple addresses -->
+                                          <h4 class="heading-small expand-bottom-half">{{ lender.name }}</h4>
 
-                                        {%- for address in lender.addresses %}
-                                            {% if loop.index is not divisibleby(2) %}<div class="grid-wrapper">{%- endif %}
-                                                <div class="grid grid-1-2">
-                                                    {{ '<br>'.join(address.lines)|safe }}
-                                                </div>
-                                            {% if loop.index is divisibleby(2) or loop.last %}</div><br>{%- endif %}
-                                        {%- endfor %}
-                                    {%- endfor %}
+                                          {%- for address in lender.addresses %}
+                                              {% if loop.index is not divisibleby(2) %}<div class="grid-wrapper">{%- endif %}
+                                                  <div class="grid grid-1-2">
+                                                      {{ '<br>'.join(address.lines)|safe }}
+                                                  </div>
+                                              {% if loop.index is divisibleby(2) or loop.last %}</div><br>{%- endif %}
+                                          {%- endfor %}
+                                      {%- endfor %}
 
-                                </div>
-                            </section>
+                                  </div>
+                              </section>
                             {% endif %}
 
                         </div>
