@@ -139,9 +139,8 @@ def display_title(title_ref):
     title = session.pop('title', get_register_title(title_ref))
     if title:
         # If the title was found, display the page
-        LOGGER.info(
-            "VIEW REGISTER: Title number {0} was viewed by '{1}'".format(title_ref,
-                                                                         current_user.get_id()))
+        LOGGER.info("VIEW REGISTER: Title number {} "
+                    "was viewed by '{}'".format(title_ref, current_user.get_id()))
         return render_template('display_title.html', asset_path='/static/', title=title,
                                google_api_key=GOOGLE_ANALYTICS_API_KEY)
     else:
