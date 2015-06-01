@@ -142,3 +142,10 @@ pre code{padding:0;border:none}.alert-flag{display:-moz-inline-stack;display:inl
 .govuk-previous-and-next-navigation > span {
   white-space: nowrap;
 }
+
+.definition-tabular dd {
+  font-weight: bold;
+}
+.definition-tabular ul {
+  margin-top:0px;
+}

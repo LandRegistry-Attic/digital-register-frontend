@@ -240,6 +240,8 @@ def format_display_json(api_response):
         if 'lenders' in title_api['data']:
             lenders = format_proprietors(title_api['data']['lenders'])
             title['lenders'] = lenders
+        if 'ppi_data' in title_api['data']:
+            title['ppi_data'] = title_api['data']['ppi_data']
         return title
     else:
         return None
