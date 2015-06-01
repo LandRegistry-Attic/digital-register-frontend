@@ -133,6 +133,11 @@ class TestViewTitle:
         assert 'Freehold' in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_title)
+    def test_ppi_data_on_title_page(self, mock_get):
+        response = self.app.get('/titles/titleref')
+        assert 'Price paid stated data' in response.data.decode()
+
+    @mock.patch('requests.get', return_value=fake_title)
     def test_index_geometry_on_title_page(self, mock_get):
         coordinate_data = '[[[508263.97, 221692.13],'
         response = self.app.get('/titles/titleref')
