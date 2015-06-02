@@ -241,7 +241,8 @@ def format_display_json(api_response):
             lenders = format_proprietors(title_api['data']['lenders'])
             title['lenders'] = lenders
         if 'ppi_data' in title_api['data']:
-            title['ppi_data'] = title_api['data']['ppi_data']
+            # Remove period from end of PPI text if present
+            title['ppi_data'] = title_api['data']['ppi_data'].rstrip('.')
         return title
     else:
         return None
