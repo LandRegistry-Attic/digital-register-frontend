@@ -42,7 +42,7 @@ class TestAddressUtils:
     def test_uk_address_formatting(self):
         address_dict = {
             "address_type": "UK",
-            "care_of": "care of",
+            "care_of": True,
             "care_of_name": "Aslan",
             "house_no": "42",
             "house_alpha": "A",
