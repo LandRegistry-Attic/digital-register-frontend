@@ -162,7 +162,7 @@
 
 {% block js_additionals %}
 <script type='text/javascript'>
-    var indexData = {{ title.indexPolygon | tojson }}
+    var polygons = {{ polygons | tojson }}
 </script>
 <script src="{{asset_path}}javascripts/map.js"></script>
 {% endblock %}

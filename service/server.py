@@ -14,7 +14,7 @@ import time
 from wtforms.fields import StringField, PasswordField
 from wtforms.validators import Required, Length
 
-from service import app, login_manager, address_utils
+from service import address_utils, app, login_manager, transform
 
 
 REGISTER_TITLE_API = app.config['REGISTER_TITLE_API']
@@ -139,11 +139,15 @@ def display_title(title_ref):
     title = session.pop('title', get_register_title(title_ref))
     if title:
         # If the title was found, display the page
-        LOGGER.info(
-            "VIEW REGISTER: Title number {0} was viewed by '{1}'".format(title_ref,
-                                                                         current_user.get_id()))
+        LOGGER.info("VIEW REGISTER: Title number {} "
+                    "was viewed by '{}'".format(title_ref, current_user.get_id()))
+        osgb36_polygons = title.get('indexPolygon', {}).get('geometry', {}).get('coordinates')
+        wgs84_polygons = []
+        if osgb36_polygons:
+            for polygon in osgb36_polygons:
+                wgs84_polygons += [transform.OSGB36toWGS84(*coords) for coords in polygon]
         return render_template('display_title.html', asset_path='/static/', title=title,
-                               google_api_key=GOOGLE_ANALYTICS_API_KEY)
+                               polygons=wgs84_polygons, google_api_key=GOOGLE_ANALYTICS_API_KEY)
     else:
         abort(404)
 
