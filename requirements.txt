@@ -2,9 +2,10 @@ Flask==0.10.1
 Jinja2==2.7.3
 MarkupSafe==0.23
 Werkzeug==0.9.6
-itsdangerous==0.24
-requests==2.5.1
-python-dateutil==2.4
-flask-wtf==0.9.3
-wtforms==1.0.5
 flask-login==0.2.11
+flask-wtf==0.9.3
+itsdangerous==0.24
+numpy==1.7.1
+python-dateutil==2.4
+requests==2.5.1
+wtforms==1.0.5
