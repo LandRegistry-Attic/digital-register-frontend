@@ -139,12 +139,10 @@ class TestViewTitle:
 
     @mock.patch('requests.get', return_value=fake_title)
     def test_index_geometry_on_title_page(self, mock_get):
-        coordinate_data = '[[[508263.97, 221692.13],'
         response = self.app.get('/titles/titleref')
         page_content = response.data.decode()
-        assert 'geometry' in page_content
-        assert 'coordinates' in page_content
-        assert coordinate_data in page_content
+        # assert polygons variable in javascript isn't empty
+        assert 'var polygons = [[' in page_content
 
     def test_get_title_search_page(self):
         response = self.app.get('/title-search')
