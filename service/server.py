@@ -166,8 +166,8 @@ def sign_out():
 @app.route('/titles/<title_ref>', methods=['GET'])
 @login_required
 def display_title(title_ref):
-    # Check to see if the Title dict is in the session, else try to retrieve it
-    title = session.pop('title', get_register_title(title_ref))
+
+    title = get_register_title(title_ref)
     if title:
         # If the title was found, display the page
         LOGGER.info(
@@ -324,9 +324,6 @@ def _get_search_by_title_number_response(search_term, page_number):
     title_ref = search_term
     title = get_register_title(title_ref)
     if title:
-        # If the title exists store it in the session
-        # TODO: stop storing title in session
-        session['title'] = title
         # Redirect to the display_title method to display the digital register
         return redirect(url_for('display_title', title_ref=title_ref))
     else:
