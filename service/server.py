@@ -2,7 +2,7 @@
 import json
 from flask import abort, render_template, request, redirect, url_for, session
 from flask import Markup
-from flask_login import login_user, login_required, current_user
+from flask_login import login_user, login_required, current_user, logout_user
 from flask_wtf import Form
 from flask_wtf.csrf import CsrfProtect
 import logging
@@ -22,7 +22,8 @@ UNAUTHORISED_WORDING = Markup('There was an error with your Username/Password co
                               'this problem persists please contact us at<br/>'
                               'digital-register-feedback@digital.landregistry.gov.uk')
 GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
-TITLE_NUMBER_REGEX = '^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$'
+TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
+POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 NOF_SECS_BETWEEN_LOGINS = 1
 LOGGER = logging.getLogger(__name__)
 
@@ -87,29 +88,42 @@ def load_user(user_id):
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('home.html', google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='/static/')
+    return render_template(
+        'home.html',
+        google_api_key=GOOGLE_ANALYTICS_API_KEY,
+        asset_path='/static/',
+        username=current_user.get_id(),
+    )
 
 
 @app.route('/cookies', methods=['GET'])
 def cookies():
-    return render_template('cookies.html', google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='/static/')
+    return render_template(
+        'cookies.html',
+        google_api_key=GOOGLE_ANALYTICS_API_KEY,
+        asset_path='/static/',
+        username=current_user.get_id()
+    )
 
 
 @app.route('/login', methods=['GET'])
 def signin_page():
-    return render_template('display_login.html', asset_path='/static/',
-                           google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           form=SigninForm(csrf_enabled=_is_csrf_enabled()))
+    return render_template(
+        'display_login.html', asset_path='/static/',
+        google_api_key=GOOGLE_ANALYTICS_API_KEY,
+        form=SigninForm(csrf_enabled=_is_csrf_enabled()),
+        username=current_user.get_id()
+    )
 
 
 @app.route('/login', methods=['POST'])
-def signin():
+def sign_in():
     form = SigninForm(csrf_enabled=_is_csrf_enabled())
     if not form.validate():
         # entered invalid login form details so send back to same page with form error messages
-        return render_template('display_login.html', asset_path='/static/', form=form)
+        return render_template(
+            'display_login.html', asset_path='/static/', form=form, username=current_user.get_id()
+        )
 
     next_url = request.args.get('next', 'title-search')
 
@@ -127,80 +141,90 @@ def signin():
     if app.config.get('SLEEP_BETWEEN_LOGINS', True):
         time.sleep(NOF_SECS_BETWEEN_LOGINS)
 
-    return render_template('display_login.html', google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='/static/', form=form, unauthorised=UNAUTHORISED_WORDING,
-                           next=next_url)
+    return render_template(
+        'display_login.html',
+        google_api_key=GOOGLE_ANALYTICS_API_KEY,
+        asset_path='/static/',
+        form=form,
+        unauthorised=UNAUTHORISED_WORDING,
+        next=next_url,
+        username=current_user.get_id(),
+    )
+
+
+@app.route('/logout', methods=['GET'])
+def sign_out():
+    user_id = current_user.get_id()
+
+    if user_id:
+        logout_user()
+        LOGGER.info('User {} logged out'.format(user_id))
+
+    return redirect(url_for('sign_in'))
 
 
 @app.route('/titles/<title_ref>', methods=['GET'])
 @login_required
 def display_title(title_ref):
-    # Check to see if the Title dict is in the session, else try to retrieve it
-    title = session.pop('title', get_register_title(title_ref))
+
+    title = get_register_title(title_ref)
     if title:
         # If the title was found, display the page
         LOGGER.info(
             "VIEW REGISTER: Title number {0} was viewed by '{1}'".format(title_ref,
                                                                          current_user.get_id()))
-        return render_template('display_title.html', asset_path='/static/', title=title,
-                               google_api_key=GOOGLE_ANALYTICS_API_KEY)
+        return render_template(
+            'display_title.html',
+            asset_path='/static/',
+            title=title,
+            google_api_key=GOOGLE_ANALYTICS_API_KEY,
+            username=current_user.get_id(),
+        )
     else:
         abort(404)
 
 
-@app.route('/title-search', methods=['GET', 'POST'])
-@app.route('/title-search/<search_term>', methods=['GET', 'POST'])
+@app.route('/title-search', methods=['POST'])
+@app.route('/title-search/<search_term>', methods=['POST'])
 @login_required
-def find_titles(search_term=''):
+def find_titles():
     page_num = int(request.args.get('page', 1))
-    if request.method == 'POST':
-        search_term = request.form['search_term'].strip()
-        if search_term:
-            return redirect(url_for('find_titles', search_term=search_term, page=page_num))
-        else:
-            # display the initial search page
-            return render_template('search.html', asset_path='/static/',
-                                   google_api_key=GOOGLE_ANALYTICS_API_KEY, form=TitleSearchForm())
-    # GET request
+
+    search_term = request.form['search_term'].strip()
+    if search_term:
+        return redirect(url_for('find_titles', search_term=search_term, page=page_num))
+    else:
+        # TODO: we should probably redirect to that page
+        return _render_initial_search_page()
+
+
+@app.route('/title-search', methods=['GET'])
+@app.route('/title-search/<search_term>', methods=['GET'])
+@login_required
+def find_titles_page(search_term=''):
+    page_number = int(request.args.get('page', 1))
+
     search_term = search_term.strip()
     if not search_term:
-        # display the initial search page
-        return render_template('search.html', asset_path='/static/',
-                               google_api_key=GOOGLE_ANALYTICS_API_KEY, form=TitleSearchForm())
-    # search for something
-    LOGGER.info("SEARCH REGISTER: '{0}' was searched by '{1}'".format(search_term,
-                                                                      current_user.get_id()))
-    # Determine search term type and preform search
-    title_number_regex = re.compile(TITLE_NUMBER_REGEX)
-    postcode_regex = re.compile(address_utils.BASIC_POSTCODE_REGEX)
-    search_term = search_term.upper()
-    # If it matches the title number regex...
-    if title_number_regex.match(search_term):
-        title_ref = search_term
-        title = get_register_title(title_ref)
-        if title:
-            # If the title exists store it in the session
-            session['title'] = title
-            # Redirect to the display_title method to display the digital register
-            return redirect(url_for('display_title', title_ref=title_ref))
-        else:
-            # If title not found display 'no title found' screen
-            return render_search_results([], search_term, page_num)
-    # If it matches the postcode regex ...
-    elif postcode_regex.match(search_term):
-        # Short term fix to enable user to search with postcode without spaces
-        postcode = sanitise_postcode(search_term)
-        postcode_search_results = get_register_titles_via_postcode(postcode, page_num)
-        return render_search_results(postcode_search_results, postcode, page_num)
+        return _render_initial_search_page()
     else:
-        address_search_results = get_register_titles_via_address(search_term, page_num)
-        return render_search_results(address_search_results, search_term, page_num)
+        LOGGER.info("SEARCH REGISTER: '{0}' was searched by '{1}'".format(search_term,
+                                                                          current_user.get_id()))
+
+        return _get_address_search_response(search_term, page_number)
 
 
 def render_search_results(results, search_term, page_num):
-    return render_template('search_results.html', asset_path='/static/', search_term=search_term,
-                           page_num=page_num, google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           results=results, form=TitleSearchForm())
+    return render_template(
+        'search_results.html',
+        asset_path='/static/',
+        search_term=search_term,
+        page_num=page_num,
+        google_api_key=GOOGLE_ANALYTICS_API_KEY,
+        results=results,
+        form=TitleSearchForm(),
+        username=current_user.get_id(),
+    )
 
 
 def get_register_title(title_ref):
@@ -274,6 +298,56 @@ def get_property_address_index_polygon(geometry_data):
     if geometry_data and ('index' in geometry_data):
         index_polygon = geometry_data['index']
     return index_polygon
+
+
+def _get_address_search_response(search_term, page_number):
+    search_term = search_term.upper()
+    if _is_title_number(search_term):
+        return _get_search_by_title_number_response(search_term, page_number)
+    elif _is_postcode(search_term):
+        return _get_search_by_postcode_response(search_term, page_number)
+    else:
+        return _get_search_by_address_response(search_term, page_number)
+
+
+def _render_initial_search_page():
+    return render_template(
+        'search.html',
+        asset_path='/static/',
+        google_api_key=GOOGLE_ANALYTICS_API_KEY,
+        form=TitleSearchForm(),
+        username=current_user.get_id(),
+        )
+
+
+def _get_search_by_title_number_response(search_term, page_number):
+    title_ref = search_term
+    title = get_register_title(title_ref)
+    if title:
+        # Redirect to the display_title method to display the digital register
+        return redirect(url_for('display_title', title_ref=title_ref))
+    else:
+        # If title not found display 'no title found' screen
+        return render_search_results([], search_term, page_number)
+
+
+def _get_search_by_postcode_response(search_term, page_number):
+    postcode = sanitise_postcode(search_term)
+    postcode_search_results = get_register_titles_via_postcode(postcode, page_number)
+    return render_search_results(postcode_search_results, postcode, page_number)
+
+
+def _get_search_by_address_response(search_term, page_num):
+    address_search_results = get_register_titles_via_address(search_term, page_num)
+    return render_search_results(address_search_results, search_term, page_num)
+
+
+def _is_title_number(search_term):
+    return TITLE_NUMBER_REGEX.match(search_term)
+
+
+def _is_postcode(search_term):
+    return POSTCODE_REGEX.match(search_term)
 
 
 def _is_invalid_credentials_response(response):

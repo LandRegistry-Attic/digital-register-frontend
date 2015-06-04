@@ -1,16 +1,16 @@
 import mock
 import pytest
 
-from service.server import app, sanitise_postcode
+from service.server import app
 from .fake_response import FakeResponse
 
 
-with open('tests/fake_title.json', 'r') as fake_title_json_file:
+with open('tests/data/fake_title.json', 'r') as fake_title_json_file:
     fake_title_json_string = fake_title_json_file.read()
     fake_title_bytes = str.encode(fake_title_json_string)
     fake_title = FakeResponse(fake_title_bytes)
 
-with open('tests/fake_title_with_charge.json', 'r') as fake_charge_title_json_file:
+with open('tests/data/fake_title_with_charge.json', 'r') as fake_charge_title_json_file:
     fake_charge_title_json_string = fake_charge_title_json_file.read()
     fake_charge_title_bytes = str.encode(fake_charge_title_json_string)
     fake_charge_title = FakeResponse(fake_charge_title_bytes)
@@ -19,24 +19,25 @@ fake_no_titles_json_string = '[]'
 fake_no_titles_bytes = str.encode(fake_no_titles_json_string)
 fake_no_titles = FakeResponse(fake_no_titles_bytes)
 
-with open('tests/fake_postcode_search_result.json', 'r') as fake_postcode_search_results_json_file:
-    fake_postcode_search_results_json_string = fake_postcode_search_results_json_file.read()
+
+with open('tests/data/fake_postcode_search_result.json', 'r') as fake_postcode_results_json_file:
+    fake_postcode_search_results_json_string = fake_postcode_results_json_file.read()
     fake_postcode_search_bytes = str.encode(fake_postcode_search_results_json_string)
     fake_postcode_search = FakeResponse(fake_postcode_search_bytes)
 
 fake_address_search = fake_postcode_search
 
-with open('tests/fake_no_address_title.json', 'r') as fake_no_address_title_file:
+with open('tests/data/fake_no_address_title.json', 'r') as fake_no_address_title_file:
     fake_no_address_title_json_string = fake_no_address_title_file.read()
     fake_no_address_title_bytes = str.encode(fake_no_address_title_json_string)
     fake_no_address_title = FakeResponse(fake_no_address_title_bytes)
 
-with open('tests/address_only_no_regex_match.json', 'r') as address_only_no_regex_match_file:
+with open('tests/data/address_only_no_regex_match.json', 'r') as address_only_no_regex_match_file:
     address_only_no_regex_match_file_string = address_only_no_regex_match_file.read()
     address_only_no_regex_match_file_bytes = str.encode(address_only_no_regex_match_file_string)
     address_only_no_regex_match_title = FakeResponse(address_only_no_regex_match_file_bytes)
 
-with open('tests/fake_partial_address.json', 'r') as fake_partial_address_file:
+with open('tests/data/fake_partial_address.json', 'r') as fake_partial_address_file:
     fake_partial_address_json_string = fake_partial_address_file.read()
     fake_partial_address_bytes = str.encode(fake_partial_address_json_string)
     fake_partial_address = FakeResponse(fake_partial_address_bytes)
@@ -45,7 +46,22 @@ with open('tests/fake_partial_address.json', 'r') as fake_partial_address_file:
 unavailable_title = FakeResponse('', 404)
 
 
-class TestViewTitleUnauthorised:
+class BaseServerTest:
+
+    def _log_in_user(self):
+        with mock.patch(
+                'service.server.LoginApiClient.authenticate_user',
+                return_value=True
+        ):
+            self.app.post(
+                '/login',
+                data={'username': 'username1', 'password': 'password1'},
+                follow_redirects=False
+            )
+
+
+class TestViewTitleUnauthorised(BaseServerTest):
+
     def setup_method(self, method):
         self.app = app.test_client()
 
@@ -57,15 +73,16 @@ class TestViewTitleUnauthorised:
         assert response.headers['Location'].endswith('/login?next=%2Ftitles%2Ftitleref')
 
 
-class TestViewTitle:
+class TestViewTitle(BaseServerTest):
 
     def setup_method(self, method):
         self.app = app.test_client()
+        self._log_in_user()
 
         with mock.patch(
             'service.server.LoginApiClient.authenticate_user',
             return_value=True
-        ) as mock_authorize:
+        ):
             self._log_in_user()
 
     @mock.patch('requests.get', return_value=unavailable_title)
@@ -146,6 +163,20 @@ class TestViewTitle:
         assert 'coordinates' in page_content
         assert coordinate_data in page_content
 
+    @mock.patch('requests.get', return_value=unavailable_title)
+    def test_get_title_page_returns_500_when_error(self, mock_get):
+        mock_get.side_effect = Exception('test exception')
+        response = self.app.get('/titles/titleref')
+        assert response.status_code == 500
+        assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
+
+
+class TestTitleSearch(BaseServerTest):
+
+    def setup_method(self, method):
+        self.app = app.test_client()
+        self._log_in_user()
+
     def test_get_title_search_page(self):
         response = self.app.get('/title-search')
         assert response.status_code == 200
@@ -184,13 +215,6 @@ class TestViewTitle:
         )
         assert 'No result(s) found' in response.data.decode()
 
-    def _log_in_user(self):
-        self.app.post(
-            '/login',
-            data={'username': 'username1', 'password': 'password1'},
-            follow_redirects=False
-        )
-
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_success(self, mock_get):
         response = self.app.post(
@@ -202,16 +226,6 @@ class TestViewTitle:
         page_content = response.data.decode()
         assert 'AGL1000' in page_content
         assert '21 Murhill Lane, Saltram Meadow, Plymouth, (PL9 7FN)' in page_content
-
-    def test_postcode_without_space_search_success(self):
-        search_term = 'PL98TB'
-        postcode = sanitise_postcode(search_term)
-        assert postcode == 'PL9 8TB'
-
-    def test_postcode_bad_space_search_success(self):
-        search_term = 'PL 98TB'
-        postcode = sanitise_postcode(search_term)
-        assert postcode == 'PL9 8TB'
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_with_page_calls_api_correctly(self, mock_get):
@@ -225,13 +239,26 @@ class TestViewTitle:
         mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/PLYMOUTH',
                                     params={'page': 23})
 
-    @mock.patch('requests.get', return_value=unavailable_title)
-    def test_get_title_page_no_title(self, mock_get):
-        mock_get.side_effect = Exception('problem!')
-        response = self.app.get('/titles/titleref')
-        assert response.status_code == 500
-        assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
+    @mock.patch('requests.get', return_value=fake_postcode_search)
+    def test_search_title_passes_postcode_to_api_with_space_added_when_missing(self, mock_get):
+        search_term = 'PL98TB'
+        expected_postcode = 'PL9 8TB'
+        self.app.get('/title-search/{}'.format(search_term))
 
+        assert len(mock_get.mock_calls) == 1
+        actual_call = mock_get.mock_calls[0]
+        url_param = actual_call[1][0]
+        assert url_param.endswith('title_search_postcode/{}'.format(expected_postcode))
+
+    @mock.patch('requests.get', return_value=fake_postcode_search)
+    def test_search_title_passes_postcode_to_api_as_it_is_when_valid(self, mock_get):
+        search_term = 'PL9 8TB'
+        self.app.get('/title-search/{}'.format(search_term))
+
+        assert len(mock_get.mock_calls) == 1
+        actual_call = mock_get.mock_calls[0]
+        url_param = actual_call[1][0]
+        assert url_param.endswith('title_search_postcode/{}'.format(search_term))
 
 if __name__ == '__main__':
     pytest.main()
