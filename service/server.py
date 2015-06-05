@@ -87,19 +87,17 @@ def load_user(user_id):
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('home.html', google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='/static/')
+    return render_template('home.html', google_api_key=GOOGLE_ANALYTICS_API_KEY)
 
 
 @app.route('/cookies', methods=['GET'])
 def cookies():
-    return render_template('cookies.html', google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='/static/')
+    return render_template('cookies.html', google_api_key=GOOGLE_ANALYTICS_API_KEY)
 
 
 @app.route('/login', methods=['GET'])
 def signin_page():
-    return render_template('display_login.html', asset_path='/static/',
+    return render_template('display_login.html',
                            google_api_key=GOOGLE_ANALYTICS_API_KEY,
                            form=SigninForm(csrf_enabled=_is_csrf_enabled()))
 
@@ -109,7 +107,7 @@ def signin():
     form = SigninForm(csrf_enabled=_is_csrf_enabled())
     if not form.validate():
         # entered invalid login form details so send back to same page with form error messages
-        return render_template('display_login.html', asset_path='/static/', form=form)
+        return render_template('display_login.html', form=form)
 
     next_url = request.args.get('next', 'title-search')
 
@@ -128,7 +126,7 @@ def signin():
         time.sleep(NOF_SECS_BETWEEN_LOGINS)
 
     return render_template('display_login.html', google_api_key=GOOGLE_ANALYTICS_API_KEY,
-                           asset_path='/static/', form=form, unauthorised=UNAUTHORISED_WORDING,
+                           form=form, unauthorised=UNAUTHORISED_WORDING,
                            next=next_url)
 
 
@@ -142,7 +140,7 @@ def display_title(title_ref):
         LOGGER.info(
             "VIEW REGISTER: Title number {0} was viewed by '{1}'".format(title_ref,
                                                                          current_user.get_id()))
-        return render_template('display_title.html', asset_path='/static/', title=title,
+        return render_template('display_title.html', title=title,
                                google_api_key=GOOGLE_ANALYTICS_API_KEY)
     else:
         abort(404)
@@ -159,13 +157,13 @@ def find_titles(search_term=''):
             return redirect(url_for('find_titles', search_term=search_term, page=page_num))
         else:
             # display the initial search page
-            return render_template('search.html', asset_path='/static/',
+            return render_template('search.html',
                                    google_api_key=GOOGLE_ANALYTICS_API_KEY, form=TitleSearchForm())
     # GET request
     search_term = search_term.strip()
     if not search_term:
         # display the initial search page
-        return render_template('search.html', asset_path='/static/',
+        return render_template('search.html',
                                google_api_key=GOOGLE_ANALYTICS_API_KEY, form=TitleSearchForm())
     # search for something
     LOGGER.info("SEARCH REGISTER: '{0}' was searched by '{1}'".format(search_term,
@@ -198,7 +196,7 @@ def find_titles(search_term=''):
 
 
 def render_search_results(results, search_term, page_num):
-    return render_template('search_results.html', asset_path='/static/', search_term=search_term,
+    return render_template('search_results.html', search_term=search_term,
                            page_num=page_num, google_api_key=GOOGLE_ANALYTICS_API_KEY,
                            results=results, form=TitleSearchForm())
 
