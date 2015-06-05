@@ -141,6 +141,8 @@ def sign_out():
         LOGGER.info('User {} logged out'.format(user_id))
 
     return redirect(url_for('sign_in'))
+                    form=form, unauthorised=UNAUTHORISED_WORDING,
+                    next=next_url)
 
 
 @app.route('/titles/<title_ref>', methods=['GET'])
@@ -220,14 +222,12 @@ def find_titles_page(search_term=''):
 def render_search_results(results, search_term, page_num):
     return render_template(
         'search_results.html',
-        asset_path='/static/',
         search_term=search_term,
         page_num=page_num,
         results=results,
         form=TitleSearchForm(),
         username=current_user.get_id()
     )
-
 
 def get_register_title(title_ref):
     response = requests.get('{}titles/{}'.format(REGISTER_TITLE_API, title_ref))
