@@ -1,0 +1,686 @@
+{
+    "data": {
+        "address": {
+              "address_string": "17 Hazelbury Crescent, Luton (LU1 1DZ)",
+              "house_no": "17",
+              "postcode": "LU1 1DZ",
+              "street_name": "Hazelbury Crescent",
+              "town": "Luton"
+          },
+          "proprietors": [
+              {
+                  "addresses": [
+                      {
+                          "address_string": "17 Kenilworth Road, Luton LU1 1DQ",
+                          "address_type": "UK",
+                          "house_no": "17",
+                          "postcode": "LU1 1DQ",
+                          "street_name": "Kenilworth Road",
+                          "town": "Luton"
+                      }
+                  ],
+                  "name": {
+                      "forename": "Scott",
+                      "name_category": "PRIVATE INDIVIDUAL",
+                      "surname": "Oakes"
+                  }
+              }
+          ],
+          "last_application_timestamp": "2014-08-28T12:37:13+01:00",
+          "tenure": "Freehold",
+          "ppi_data": "Price paid stated data."
+    },
+    "geometry_data": {
+        "extent": {
+            "crs": {
+                "properties": {
+                    "name": "urn:ogc:def:crs:EPSG::27700"
+                },
+                "type": "name"
+            },
+            "geometry": {
+                "coordinates": [
+                    [
+                        [
+                            508263.97,
+                            221692.13
+                        ],
+                        [
+                            508266.4,
+                            221698.84
+                        ],
+                        [
+                            508266.35,
+                            221700.25
+                        ],
+                        [
+                            508270.3,
+                            221711.15
+                        ],
+                        [
+                            508273.29,
+                            221719.53
+                        ],
+                        [
+                            508271.4,
+                            221721.65
+                        ],
+                        [
+                            508270.68,
+                            221722.44
+                        ],
+                        [
+                            508269.69,
+                            221723.53
+                        ],
+                        [
+                            508263.58,
+                            221706.87
+                        ],
+                        [
+                            508261.346,
+                            221700.587
+                        ],
+                        [
+                            508258.98,
+                            221693.93
+                        ],
+                        [
+                            508258.01,
+                            221691.18
+                        ],
+                        [
+                            508262,
+                            221689.66
+                        ],
+                        [
+                            508262.95,
+                            221689.3
+                        ],
+                        [
+                            508263.97,
+                            221692.13
+                        ]
+                    ]
+                ],
+                "type": "Polygon"
+            },
+            "properties": {
+                "colour": 17,
+                "feature_id": 4013,
+                "graphic_type": "Bordered Polygon",
+                "render_attributes": {
+                    "border_colour": 17,
+                    "border_width": 1000,
+                    "exterior_edge_colour": 17,
+                    "exterior_edge_thickness": 1,
+                    "exterior_edge_thickness_units": "Pixels",
+                    "fill_colour": 28,
+                    "fill_style": 0,
+                    "render_level": "0"
+                },
+                "width": 1000
+            },
+            "type": "Feature"
+        },
+        "index": {
+            "crs": {
+                "properties": {
+                    "name": "urn:ogc:def:crs:EPSG::27700"
+                },
+                "type": "name"
+            },
+            "geometry": {
+                "coordinates": [
+                    [
+                        [
+                            508263.97,
+                            221692.13
+                        ],
+                        [
+                            508266.4,
+                            221698.84
+                        ],
+                        [
+                            508266.35,
+                            221700.25
+                        ],
+                        [
+                            508270.3,
+                            221711.15
+                        ],
+                        [
+                            508273.29,
+                            221719.53
+                        ],
+                        [
+                            508271.4,
+                            221721.65
+                        ],
+                        [
+                            508270.68,
+                            221722.44
+                        ],
+                        [
+                            508269.69,
+                            221723.53
+                        ],
+                        [
+                            508263.58,
+                            221706.87
+                        ],
+                        [
+                            508258.98,
+                            221693.93
+                        ],
+                        [
+                            508258.01,
+                            221691.18
+                        ],
+                        [
+                            508262,
+                            221689.66
+                        ],
+                        [
+                            508262.95,
+                            221689.3
+                        ],
+                        [
+                            508263.97,
+                            221692.13
+                        ]
+                    ]
+                ],
+                "type": "Polygon"
+            },
+            "properties": {
+                "colour": 25,
+                "feature_id": 4019,
+                "graphic_type": "Bordered Polygon",
+                "render_attributes": {
+                    "border_colour": 25,
+                    "border_width": 0,
+                    "exterior_edge_colour": 1,
+                    "exterior_edge_thickness": 2,
+                    "exterior_edge_thickness_units": "Pixels",
+                    "fill_colour": 25,
+                    "fill_style": 9,
+                    "render_level": "0"
+                },
+                "width": 0
+            },
+            "type": "Feature"
+        },
+        "map": {
+            "crs": {
+                "properties": {
+                    "name": "urn:ogc:def:crs:EPSG::27700"
+                },
+                "type": "name"
+            },
+            "features": [
+                {
+                    "geometry": {
+                        "coordinates": [
+                            [
+                                508235.35,
+                                221720.2
+                            ],
+                            [
+                                508230.9,
+                                221712.5
+                            ]
+                        ],
+                        "type": "LineString"
+                    },
+                    "properties": {
+                        "feature_id": 10018,
+                        "graphic_type": "Poly Line",
+                        "render_attributes": {
+                            "render_level": "0"
+                        }
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508296.75,
+                            221743.4
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10169,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": null,
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": null,
+                            "text_vertical_alignment": "Middle"
+                        },
+                        "rotation": -0.9705304697353966,
+                        "value": "AVONDALE ROAD",
+                        "vertical_alignment": "Middle"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508298.7,
+                            221672.85
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10169,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": null,
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": null,
+                            "text_vertical_alignment": "Middle"
+                        },
+                        "rotation": -0.2810061055808009,
+                        "value": "HAZELBURY CRESCENT",
+                        "vertical_alignment": "Middle"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508261.71,
+                            221765.2
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Left",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Left",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": 2.1307951881723985,
+                        "value": "35",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508259.63,
+                            221763.9
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Left",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Left",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": 2.1307951881723985,
+                        "value": "33",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508257.48,
+                            221762.54
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Left",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Left",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": 2.1307951881723985,
+                        "value": "31",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508302.6,
+                            221662.6
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Centre",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Centre",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": 2.9999870521081,
+                        "value": "21",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508282.3,
+                            221747.9
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Centre",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Centre",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": 2.205960246778795,
+                        "value": "27",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508223.04,
+                            221718.34
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Left",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Left",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": 2.6231071472844465,
+                        "value": "1 to 8",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508222.34,
+                            221738.99
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Left",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Left",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": 0,
+                        "value": "Hazelbury",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508287.9,
+                            221685.45
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Centre",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Centre",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": -0.26892600687620144,
+                        "value": "6",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508266.35,
+                            221750.95
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Centre",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Centre",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": -0.9478083793148405,
+                        "value": "1 to 6",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508311.3,
+                            221738.9
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Centre",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Centre",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": -0.9829940636369674,
+                        "value": "30",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                },
+                {
+                    "geometry": {
+                        "coordinates": [
+                            508238.3,
+                            221682.4
+                        ],
+                        "type": "Point"
+                    },
+                    "properties": {
+                        "feature_id": 10026,
+                        "graphic_type": "Text",
+                        "height": 1000,
+                        "horizontal_alignment": "Centre",
+                        "render_attributes": {
+                            "render_level": "0",
+                            "text_horizontal_alignment": "Centre",
+                            "text_vertical_alignment": "Baseline"
+                        },
+                        "rotation": 2.773053769300268,
+                        "value": "47",
+                        "vertical_alignment": "Baseline"
+                    },
+                    "type": "Feature"
+                }
+            ],
+            "properties": {
+                "map_reference": "TL0821NW",
+                "orientation_code": "P",
+                "print_size": "A4",
+                "scale": "500  ",
+                "stamp_code_1": " ",
+                "stamp_code_2": " ",
+                "stamp_code_3": " ",
+                "stamp_code_4": " ",
+                "stamp_code_5": " ",
+                "stamp_text_1": " ",
+                "stamp_text_2": " ",
+                "stamp_text_3": " ",
+                "stamp_text_4": " ",
+                "stamp_text_5": " "
+            },
+            "type": "FeatureCollection"
+        },
+        "references": [
+            {
+                "crs": {
+                    "properties": {
+                        "name": "urn:ogc:def:crs:EPSG::27700"
+                    },
+                    "type": "name"
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                [
+                                    508264.15,
+                                    221699.65
+                                ],
+                                [
+                                    508261.346,
+                                    221700.587
+                                ]
+                            ],
+                            "type": "LineString"
+                        },
+                        "properties": {
+                            "feature_id": 4002,
+                            "graphic_type": "Poly Line",
+                            "render_attributes": {
+                                "edge_colour": 7,
+                                "edge_style": 7,
+                                "edge_thickness": 1,
+                                "render_level": "0"
+                            }
+                        },
+                        "type": "Feature"
+                    }
+                ],
+                "properties": {
+                    "colour_code": 2,
+                    "description": "black pecked line",
+                    "graphic_code": 2,
+                    "text_code": 0
+                },
+                "type": "FeatureCollection"
+            },
+            {
+                "crs": {
+                    "properties": {
+                        "name": "urn:ogc:def:crs:EPSG::27700"
+                    },
+                    "type": "name"
+                },
+                "features": [
+                    {
+                        "geometry": {
+                            "coordinates": [
+                                [
+                                    [
+                                        508264.15,
+                                        221699.65
+                                    ],
+                                    [
+                                        508266.35,
+                                        221705.9
+                                    ],
+                                    [
+                                        508263.58,
+                                        221706.87
+                                    ],
+                                    [
+                                        508261.346,
+                                        221700.587
+                                    ],
+                                    [
+                                        508264.15,
+                                        221699.65
+                                    ]
+                                ]
+                            ],
+                            "type": "Polygon"
+                        },
+                        "properties": {
+                            "colour": 0,
+                            "feature_id": 4011,
+                            "graphic_type": "Bordered Polygon",
+                            "render_attributes": {
+                                "border_colour": 0,
+                                "border_width": 0,
+                                "exterior_edge_colour": 9,
+                                "exterior_edge_thickness": 1,
+                                "exterior_edge_thickness_units": "Pixels",
+                                "fill_colour": 28,
+                                "fill_style": 9,
+                                "render_level": "0"
+                            },
+                            "width": 0
+                        },
+                        "type": "Feature"
+                    }
+                ],
+                "properties": {
+                    "colour_code": 5,
+                    "description": "tinted blue",
+                    "graphic_code": 15,
+                    "text_code": 0
+                },
+                "type": "FeatureCollection"
+            }
+        ]
+    },
+    "title_number": "DN1000"
+}

@@ -59,8 +59,7 @@ def get_address_lines(address_data):
         if address_type == "DX":
             if ('care_of' in address_data or 'care_of_name' in address_data):
                 lines.append(
-                    "{0} {1}".format(
-                        address_data.get('care_of', ''),
+                    "care of {0}".format(
                         address_data.get('care_of_name', ''))
                 )
             lines.append(address_data.get('dx_no', None))
@@ -70,8 +69,7 @@ def get_address_lines(address_data):
         elif address_type == "BFPO" or address_type == "FOREIGN":
             if ('care_of' in address_data or 'care_of_name' in address_data):
                 lines.append(
-                    "{0} {1}".format(
-                        address_data.get('care_of', ''),
+                    "care of {0}".format(
                         address_data.get('care_of_name', ''))
                 )
             lines.append(address_data.get('foreign_bfpo_address1', None))
@@ -82,10 +80,9 @@ def get_address_lines(address_data):
             lines.append(address_data.get('foreign_bfpo_address6', None))
             lines.append(address_data.get('country', None))
         else:
-            if 'care_of' in address_data or 'care_of_name' in address_data:
+            if ('care_of' in address_data or 'care_of_name' in address_data):
                 lines.append(
-                    "{0} {1}".format(
-                        address_data.get('care_of', ''),
+                    "care of {0}".format(
                         address_data.get('care_of_name', ''))
                 )
             lines.append(address_data.get('leading_info', None))

@@ -77,14 +77,10 @@
 
         </div>
     </main>
+    <script src="{{asset_path}}javascripts/ga_search_results.js"></script>
     <script type="text/javascript">
-        function recordSearchTerm() {
-
-        resultFound = ({{results['titles']|length}} > 0) ? 'Yes' : 'No'
-            ga('send', 'pageview', {
-                        'anonymizeIp': true,
-                        'page': 'title-search?searchText=' + document.getElementById('search_term').value + '&resultFound=' + resultFound});
-        }
-        window.onload = recordSearchTerm;
+        number_results = {{ results['titles']|length }};
+        page_number = {{ results['page_number'] or 0 }};
+        window.onload = ga_search_results(number_results, page_number);
     </script>
 {% endblock %}

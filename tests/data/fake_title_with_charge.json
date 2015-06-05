@@ -6,28 +6,63 @@
               "postcode": "LU1 1DZ",
               "street_name": "Hazelbury Crescent",
               "town": "Luton"
-          },
-          "proprietors": [
-              {
-                  "addresses": [
-                      {
-                          "address_string": "17 Kenilworth Road, Luton LU1 1DQ",
-                          "address_type": "UK",
-                          "house_no": "17",
-                          "postcode": "LU1 1DQ",
-                          "street_name": "Kenilworth Road",
-                          "town": "Luton"
-                      }
-                  ],
-                  "name": {
-                      "forename": "Scott",
-                      "name_category": "PRIVATE INDIVIDUAL",
-                      "surname": "Oakes"
-                  }
-              }
-          ],
-          "last_application_timestamp": "2014-08-28T12:37:13+01:00",
-          "tenure": "Freehold"
+        },
+        "proprietors": [
+            {
+                "addresses": [
+                    {
+                        "address_string": "17 Kenilworth Road, Luton LU1 1DQ",
+                        "address_type": "UK",
+                        "house_no": "17",
+                        "postcode": "LU1 1DQ",
+                        "street_name": "Kenilworth Road",
+                        "town": "Luton"
+                    }
+                ],
+                "name": {
+                    "forename": "Scott",
+                    "name_category": "PRIVATE INDIVIDUAL",
+                    "surname": "Oakes"
+                }
+            }
+        ],
+        "last_application_timestamp": "2014-08-28T12:37:13+01:00",
+        "tenure": "Freehold",
+        "lenders": [
+            {
+                "addresses": [
+                    {
+                        "address_string": "P.O. Box 156, Priory House, 38 Colmore Circus, Queensway, Birmingham B4 6AL",
+                        "address_type": "UK"
+                    }
+                ],
+                "name": {
+                    "non_private_individual_name": "National Westminster Home Loans Limited"
+                }
+            },
+            {
+                "addresses": [
+                    {
+                        "address_string": "Dept. No. 2134 Tombstone Regional Securities Centre, P.O. Box 999, 21 New Road, Tombstone, Exeter EX22 0AW.",
+                        "address_type": "UK"
+                    }
+                ],
+                "name": {
+                    "non_private_individual_name": "The Bank PLC"
+                }
+            },
+            {
+                "addresses": [
+                    {
+                        "address_string": "P.O. Box 333, One Thousand Church Quay, Wales BS99 7AX",
+                        "address_type": "UK"
+                    }
+                ],
+                "name": {
+                    "non_private_individual_name": "Plymouth & Wales PLC"
+                }
+            }
+        ]
     },
     "geometry_data": {
         "extent": {
