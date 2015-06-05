@@ -1,47 +1,40 @@
 {% extends "layout.html" %}
 
-{% block content %}
-<main id="wrapper" role="main">
-    <div id="content">
+{% block body %}
+<div class="inner-block">
 
-        {% include "beta_banner.html" %}
+    <h1 class="heading-large">Digital Register Login</h1>
 
-        <div class="inner-block">
-
-            <h1 class="heading-large">Digital Register Login</h1>
-
-            <form action="{{ url_for('sign_in') }}" method="post" class="form">
-                {{ form.hidden_tag() }}
-                <div class="form-group">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username">
-                </div>
-                <div class="errors">
-                    {% for message in form.username.errors %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
-
-                <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password">
-                </div>
-                <div class="errors">
-                    {% for message in form.password.errors %}
-                        {{ message }}
-                    {% endfor %}
-                    
-                    {% if unauthorised %}
-                        {{ unauthorised }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="button" id="signin">Sign In</button>
-                </div>
-
-            </form>
+    <form action="{{ url_for('signin') }}" method="post" class="form">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username">
         </div>
-    </div>
-</main>
+        <div class="errors">
+            {% for message in form.username.errors %}
+                {{ message }}
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password">
+        </div>
+        <div class="errors">
+            {% for message in form.password.errors %}
+                {{ message }}
+            {% endfor %}
+
+            {% if unauthorised %}
+                {{ unauthorised }}
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="button" id="signin">Sign In</button>
+        </div>
+
+    </form>
+</div>
 {% endblock %}

@@ -88,32 +88,19 @@ def load_user(user_id):
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template(
-        'home.html',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        asset_path='/static/',
-        username=current_user.get_id(),
-    )
+    return render_template('home.html', username=current_user.get_id())
 
 
 @app.route('/cookies', methods=['GET'])
 def cookies():
-    return render_template(
-        'cookies.html',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        asset_path='/static/',
-        username=current_user.get_id()
-    )
+    return render_template('cookies.html', username=current_user.get_id())
 
 
 @app.route('/login', methods=['GET'])
 def signin_page():
-    return render_template(
-        'display_login.html', asset_path='/static/',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        form=SigninForm(csrf_enabled=_is_csrf_enabled()),
-        username=current_user.get_id()
-    )
+    return render_template('display_login.html',
+                           form=SigninForm(csrf_enabled=_is_csrf_enabled()),
+                           username=current_user.get_id())
 
 
 @app.route('/login', methods=['POST'])
@@ -121,9 +108,7 @@ def sign_in():
     form = SigninForm(csrf_enabled=_is_csrf_enabled())
     if not form.validate():
         # entered invalid login form details so send back to same page with form error messages
-        return render_template(
-            'display_login.html', asset_path='/static/', form=form, username=current_user.get_id()
-        )
+        return render_template('display_login.html', form=form, username=current_user.get_id())
 
     next_url = request.args.get('next', 'title-search')
 
@@ -141,15 +126,10 @@ def sign_in():
     if app.config.get('SLEEP_BETWEEN_LOGINS', True):
         time.sleep(NOF_SECS_BETWEEN_LOGINS)
 
-    return render_template(
-        'display_login.html',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        asset_path='/static/',
-        form=form,
-        unauthorised=UNAUTHORISED_WORDING,
-        next=next_url,
-        username=current_user.get_id(),
-    )
+    return render_template('display_login.html',
+                            form=form,
+                            unauthorised=UNAUTHORISED_WORDING,
+                            next=next_url)
 
 
 @app.route('/logout', methods=['GET'])
@@ -173,13 +153,8 @@ def display_title(title_ref):
         LOGGER.info(
             "VIEW REGISTER: Title number {0} was viewed by '{1}'".format(title_ref,
                                                                          current_user.get_id()))
-        return render_template(
-            'display_title.html',
-            asset_path='/static/',
-            title=title,
-            google_api_key=GOOGLE_ANALYTICS_API_KEY,
-            username=current_user.get_id(),
-        )
+        return render_template('display_title.html', title=title,
+                               username=current_user.get_id())
     else:
         abort(404)
 
@@ -189,7 +164,6 @@ def display_title(title_ref):
 @login_required
 def find_titles():
     page_num = int(request.args.get('page', 1))
-
     search_term = request.form['search_term'].strip()
     if search_term:
         return redirect(url_for('find_titles', search_term=search_term, page=page_num))
@@ -207,6 +181,35 @@ def find_titles_page(search_term=''):
     search_term = search_term.strip()
     if not search_term:
         return _render_initial_search_page()
+    search_term = search_term.strip()
+    if not search_term:
+        # display the initial search page
+        return render_template('search.html', form=TitleSearchForm())
+    # search for something
+    LOGGER.info("SEARCH REGISTER: '{0}' was searched by '{1}'".format(search_term,
+                                                                      current_user.get_id()))
+    # Determine search term type and preform search
+    title_number_regex = re.compile(TITLE_NUMBER_REGEX)
+    postcode_regex = re.compile(address_utils.BASIC_POSTCODE_REGEX)
+    search_term = search_term.upper()
+    # If it matches the title number regex...
+    if title_number_regex.match(search_term):
+        title_ref = search_term
+        title = get_register_title(title_ref)
+        if title:
+            # If the title exists store it in the session
+            session['title'] = title
+            # Redirect to the display_title method to display the digital register
+            return redirect(url_for('display_title', title_ref=title_ref))
+        else:
+            # If title not found display 'no title found' screen
+            return render_search_results([], search_term, page_num)
+    # If it matches the postcode regex ...
+    elif postcode_regex.match(search_term):
+        # Short term fix to enable user to search with postcode without spaces
+        postcode = sanitise_postcode(search_term)
+        postcode_search_results = get_register_titles_via_postcode(postcode, page_num)
+        return render_search_results(postcode_search_results, postcode, page_num)
     else:
         LOGGER.info("SEARCH REGISTER: '{0}' was searched by '{1}'".format(search_term,
                                                                           current_user.get_id()))
@@ -220,10 +223,9 @@ def render_search_results(results, search_term, page_num):
         asset_path='/static/',
         search_term=search_term,
         page_num=page_num,
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
         results=results,
         form=TitleSearchForm(),
-        username=current_user.get_id(),
+        username=current_user.get_id()
     )
 
 
@@ -314,7 +316,6 @@ def _render_initial_search_page():
     return render_template(
         'search.html',
         asset_path='/static/',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
         form=TitleSearchForm(),
         username=current_user.get_id(),
         )
