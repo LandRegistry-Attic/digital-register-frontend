@@ -23,7 +23,6 @@ def setup_errors(app, error_template="error.html"):
             error_title = GENERIC_ERROR_WORDING
             description = GENERIC_ERROR_DESCRIPTION
         return render_template(error_template,
-                               google_api_key=google_analytics_api_key,
                                error=error_title,
                                code=code,
                                description=Markup(description)), code
