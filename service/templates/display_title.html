@@ -23,35 +23,35 @@
 
     <dl class="definition-tabular">
       <dt>Owner(s)</dt>
-      {% for proprietor in title.proprietors %}
       <dd>
-        <h5 class="heading-small collapse-top expand-bottom-half">{{ proprietor.name }}</h5>
-        {% for address in proprietor.addresses %}
-          <div class="grid-row expand-bottom-half">
-            <div class="column-half">
-              {{ '<br>'.join(address.lines)|safe }}
+        {% for proprietor in title.proprietors %}
+          <h5 class="heading-small collapse-top expand-bottom-half">{{ proprietor.name }}</h5>
+          {% for address in proprietor.addresses %}
+            <div class="grid-row expand-bottom-half">
+              <div class="column-half">
+                {{ '<br>'.join(address.lines)|safe }}
+              </div>
             </div>
-          </div>
+          {% endfor %}
         {% endfor %}
       </dd>
-      {% endfor %}
 
       {% if title.lenders %}
         <dt>Lender(s)</dt>
-        {% for lender in title.lenders %}
-          <dd>
-            <h5 class="heading-small collapse-top expand-bottom-half">
-              {{ lender.name }}
-            </h5>
-            {% for address in lender.addresses %}
-              <div class="grid-row expand-bottom-half">
-                <div class="column-half">
-                  {{ '<br>'.join(address.lines)|safe }}
+        <dd>
+          {% for lender in title.lenders %}
+              <h5 class="heading-small collapse-top expand-bottom-half">
+                {{ lender.name }}
+              </h5>
+              {% for address in lender.addresses %}
+                <div class="grid-row expand-bottom-half">
+                  <div class="column-half">
+                    {{ '<br>'.join(address.lines)|safe }}
+                  </div>
                 </div>
-              </div>
-            {% endfor %}
-          </dd>
-        {% endfor %}
+              {% endfor %}
+          {% endfor %}
+        </dd>
       {% endif %}
 
       <dt>Tenure type</dt>
