@@ -1,11 +1,12 @@
-from flask import Flask
+from flask import Flask, render_template
+from flask.ext.assets import Environment, Bundle
 import dateutil
 import dateutil.parser
 import faulthandler
 from flask_login import LoginManager
 
 from config import CONFIG_DICT
-from service import logging_config, error_handler
+from service import logging_config, error_handler, static
 
 # This causes the traceback to be written to the fault log file in case of serious faults
 fault_log_file = open(CONFIG_DICT['FAULT_LOG_FILE_PATH'], 'a')
@@ -13,6 +14,8 @@ faulthandler.enable(file=fault_log_file)
 
 app = Flask(__name__)
 app.config.update(CONFIG_DICT)
+
+static.register_assets(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)

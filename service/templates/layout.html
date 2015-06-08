@@ -1,14 +1,17 @@
-{% set asset_path = './static/govuk_template/' %}
+{% set asset_path = '../static/govuk_template/' %}
 {% set google_api_key = GOOGLE_ANALYTICS_API_KEY %}
 
 {% extends "govuk_template.html" %}
 
 {% block head %}
+{% assets "sass" %}
+<link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
+{% endassets %}
 <!-- Google Analytics -->
 <script type="text/javascript">
   var googleAnalyticsApiKey = '{{ google_api_key }}';
 </script>
-<script src="./static/javascripts/googleanalytics.js"></script>
+<script src="../static/javascripts/googleanalytics.js"></script>
 {% block head_additionals %}{% endblock %}
 {% block js_additionals %}{% endblock %}
 {% endblock %}

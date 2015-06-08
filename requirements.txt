@@ -8,3 +8,5 @@ python-dateutil==2.4
 flask-wtf==0.9.3
 wtforms==1.0.5
 flask-login==0.2.11
+Flask-Assets==0.10
+libsass==0.8.2

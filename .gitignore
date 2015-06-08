@@ -60,3 +60,8 @@ target/
 
 # IntelliJ Idea files
 .idea
+
+# Compiled CSS
+service/static/gen/
+service/static/.webassets-cache/
+
