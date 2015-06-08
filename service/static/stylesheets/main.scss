@@ -49,3 +49,15 @@
   background-origin: content-box;
   text-indent: 1.8em;
 }
+
+.legal-division--top {
+  margin-top: $gutter;
+  padding-top: $gutter;
+  border-top: 4px solid $light-blue;
+}
+
+.legal-division--bottom {
+  margin-bottom: $gutter;
+  padding-bottom: $gutter;
+  border-bottom: 4px solid $light-blue;
+}
