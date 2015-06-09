@@ -224,7 +224,11 @@ def render_search_results(results, search_term, page_num):
         page_num=page_num,
         results=results,
         form=TitleSearchForm(),
-        username=current_user.get_id()
+        username=current_user.get_id(),
+        breadcrumbs = [
+          {"text": "Find a Title", "url": url_for('find_titles')},
+          {"text": "Search results", "url": ""}
+         ]
     )
 
 def get_register_title(title_ref):
