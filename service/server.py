@@ -141,8 +141,6 @@ def sign_out():
         LOGGER.info('User {} logged out'.format(user_id))
 
     return redirect(url_for('sign_in'))
-                    form=form, unauthorised=UNAUTHORISED_WORDING,
-                    next=next_url)
 
 
 @app.route('/titles/<title_ref>', methods=['GET'])
