@@ -94,9 +94,13 @@ def cookies():
 
 @app.route('/login', methods=['GET'])
 def signin_page():
-    return render_template('display_login.html',
-                           form=SigninForm(csrf_enabled=_is_csrf_enabled()),
-                           username=current_user.get_id())
+    user_id = current_user.get_id()
+    if user_id:
+        return redirect(url_for('find_titles_page'))
+    else:
+        return render_template('display_login.html',
+                               form=SigninForm(csrf_enabled=_is_csrf_enabled()),
+                               username=current_user.get_id())
 
 
 @app.route('/login', methods=['POST'])

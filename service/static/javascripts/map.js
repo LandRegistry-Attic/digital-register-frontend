@@ -2,7 +2,6 @@ window.onload = function() {
 
   // Remove default 'no javascript' message
   document.getElementById('map').innerHTML = '';
-  document.getElementById('map').style.height = '420px';
 
   // Check that cooridinate data is present
   if (indexData &&
@@ -11,6 +10,7 @@ window.onload = function() {
         (indexData.features && indexData.features[0].geometry && indexData.features[0].geometry.coordinates && indexData.features[0].geometry.coordinates.length > 0)
       )
   ) {
+    document.getElementById('map').style.height = '420px';
 
     // Define coordinate system using PROJ4 standards
     projection_name = 'EPSG:27700'
