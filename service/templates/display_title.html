@@ -3,7 +3,7 @@
 {% block body %}
 
 <h1 class="heading-xlarge collapse-bottom">Summary of title {{ title.number }}</h1>
-<p class="expand-bottom">This title was last changed on <b>{{ title.last_changed | datetime}}</b></p>
+<p class="expand-bottom">This title was last changed on <b>{{ title.last_changed | date }}</b> at <b>{{ title.last_changed | time }}</b></p>
 
 <div class="grid-row">
 

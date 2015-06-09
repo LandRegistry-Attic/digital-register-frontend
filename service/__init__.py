@@ -23,8 +23,12 @@ login_manager.login_view = '/login'
 login_manager.session_protection = "strong"
 
 
-def format_datetime(value):
-    return dateutil.parser.parse(value).strftime("%d %B %Y at %H:%M:%S")
+def format_date(value):
+    return dateutil.parser.parse(value).strftime("%d %B %Y")
+
+
+def format_time(value):
+    return dateutil.parser.parse(value).strftime("%H:%M:%S")
 
 
 def pluralize(number, singular = '', plural = 's'):
@@ -33,7 +37,8 @@ def pluralize(number, singular = '', plural = 's'):
     else:
         return plural
 
-app.jinja_env.filters['datetime'] = format_datetime
+app.jinja_env.filters['date'] = format_date
+app.jinja_env.filters['time'] = format_time
 app.jinja_env.filters['pluralize'] = pluralize
 logging_config.setup_logging()
 error_handler.setup_errors(app)
