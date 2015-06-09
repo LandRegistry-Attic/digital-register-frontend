@@ -27,8 +27,7 @@ def setup_errors(app, error_template="error.html"):
                                code=code,
                                description=Markup(description),
                                breadcrumbs=[
-                                   {"text": "Find a Title", "url": "/title-search"},
-                                   {"text": error, "url": ""}
+                                   {"text": "Find a Title", "url": "/title-search"}
                                ]), code
 
     for exception in default_exceptions:
