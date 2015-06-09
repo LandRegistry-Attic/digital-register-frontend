@@ -169,8 +169,7 @@ def find_titles():
     if search_term:
         return redirect(url_for('find_titles', search_term=search_term, page=page_num))
     else:
-        # TODO: we should probably redirect to that page
-        return _render_initial_search_page()
+        return redirect(url_for('find_titles'))
 
 
 @app.route('/', methods=['GET'])
