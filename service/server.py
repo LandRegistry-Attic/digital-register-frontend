@@ -18,9 +18,10 @@ from service import app, login_manager, address_utils
 
 
 REGISTER_TITLE_API = app.config['REGISTER_TITLE_API']
-UNAUTHORISED_WORDING = Markup('There was an error with your Username/Password combination. If '
-                              'this problem persists please contact us at<br/>'
-                              'digital-register-feedback@digital.landregistry.gov.uk')
+UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
+                              '<a rel="external" href="mailto:digital-register-feedback@digital.landregistry.gov.uk">'
+                              'digital-register-feedback@digital.landregistry.gov.uk</a>.')
+UNAUTHORISED_TITLE = Markup('There was an error with your Username/Password combination.')
 GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
 TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
 POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
@@ -128,7 +129,8 @@ def sign_in():
 
     return render_template('display_login.html',
                             form=form,
-                            unauthorised=UNAUTHORISED_WORDING,
+                            unauthorised_title=UNAUTHORISED_TITLE,
+                            unauthorised_description=UNAUTHORISED_WORDING,
                             next=next_url)
 
 

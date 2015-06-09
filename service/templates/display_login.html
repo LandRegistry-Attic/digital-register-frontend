@@ -20,10 +20,15 @@
                   </li>
                 {% endfor %}
               {% endfor %}
-              {% if unauthorised %}
-                <li>{{ unauthorised }}</li>
-              {% endif %}
             </ul>
+          </div>
+        {% endif %}
+        {% if unauthorised_title %}
+          <div class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+            <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+              {{ unauthorised_title }}
+            </h1>
+            <p>{{unauthorised_description}}</p>
           </div>
         {% endif %}
         {% if form.username.errors %}
