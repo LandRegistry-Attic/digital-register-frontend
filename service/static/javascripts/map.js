@@ -1,7 +1,7 @@
 window.onload = function() {
 
   // Remove default 'no javascript' message
-  document.getElementById('map').innerText = '';
+  document.getElementById('map').innerHTML = '';
 
   // Check that cooridinate data is present
   if (indexData &&
@@ -29,7 +29,6 @@ window.onload = function() {
       worldCopyJump: false,
       minZoom: 15,
       maxZoom: 19,
-
       // controls
       dragging: false,
       touchZoom: false,
@@ -46,7 +45,7 @@ window.onload = function() {
     var map = new L.Map('map', options);
 
     // create the tile layer with correct attribution
-    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var osmUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     var osm = new L.TileLayer(osmUrl);
     map.addLayer(osm);
 
@@ -73,6 +72,6 @@ window.onload = function() {
     map.fitBounds(bounds, {maxZoom: 18, animate: false});
     document.getElementById('map').style.height = '420px';
   } else {
-    document.getElementById('map').innerText = 'No map information available';
+    document.getElementById('map').innerHTML = '<div class="summary">No map information available</div>';
   }
 };

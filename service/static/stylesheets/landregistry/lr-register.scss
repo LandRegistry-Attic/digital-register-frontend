@@ -6,3 +6,7 @@
 .phase-tag {
   @include phase-tag(beta);
 }
+
+#map {
+  margin-bottom: $gutter*2;
+}
