@@ -2,6 +2,7 @@ window.onload = function() {
 
   // Remove default 'no javascript' message
   document.getElementById('map').innerHTML = '';
+  document.getElementById('map').style.height = '420px';
 
   // Check that cooridinate data is present
   if (indexData &&
@@ -70,7 +71,6 @@ window.onload = function() {
     var bounds = indexGeoJson.getBounds();
 
     map.fitBounds(bounds, {maxZoom: 18, animate: false});
-    document.getElementById('map').style.height = '420px';
   } else {
     document.getElementById('map').innerHTML = '<div class="summary">No map information available</div>';
   }
