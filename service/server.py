@@ -191,10 +191,10 @@ def find_titles_page(search_term=''):
     # Determine search term type and preform search
     title_number_regex = re.compile(TITLE_NUMBER_REGEX)
     postcode_regex = re.compile(address_utils.BASIC_POSTCODE_REGEX)
-    search_term = search_term.upper()
+    search_term_caps = search_term.upper()
     # If it matches the title number regex...
-    if title_number_regex.match(search_term):
-        title_ref = search_term
+    if title_number_regex.match(search_term_caps):
+        title_ref = search_term_caps
         title = get_register_title(title_ref)
         if title:
             # If the title exists store it in the session
@@ -205,9 +205,9 @@ def find_titles_page(search_term=''):
             # If title not found display 'no title found' screen
             return render_search_results([], search_term, page_num)
     # If it matches the postcode regex ...
-    elif postcode_regex.match(search_term):
+    elif postcode_regex.match(search_term_caps):
         # Short term fix to enable user to search with postcode without spaces
-        postcode = sanitise_postcode(search_term)
+        postcode = sanitise_postcode(search_term_caps)
         postcode_search_results = get_register_titles_via_postcode(postcode, page_num)
         return render_search_results(postcode_search_results, postcode, page_num)
     else:
@@ -305,7 +305,6 @@ def get_property_address_index_polygon(geometry_data):
 
 
 def _get_address_search_response(search_term, page_number):
-    search_term = search_term.upper()
     if _is_title_number(search_term):
         return _get_search_by_title_number_response(search_term, page_number)
     elif _is_postcode(search_term):
