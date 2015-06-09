@@ -17,7 +17,7 @@
 
 <div class="grid-row">
   <div class="column-two-thirds">
-    <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result(s) found</h2>
+    <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
     {% if results %}
       <ol>
         {% for title in results['titles'] %}

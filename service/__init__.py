@@ -26,6 +26,14 @@ login_manager.session_protection = "strong"
 def format_datetime(value):
     return dateutil.parser.parse(value).strftime("%d %B %Y at %H:%M:%S")
 
+
+def pluralize(number, singular = '', plural = 's'):
+    if number == 1:
+        return singular
+    else:
+        return plural
+
 app.jinja_env.filters['datetime'] = format_datetime
+app.jinja_env.filters['pluralize'] = pluralize
 logging_config.setup_logging()
 error_handler.setup_errors(app)
