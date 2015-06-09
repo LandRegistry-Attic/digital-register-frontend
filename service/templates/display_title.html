@@ -22,7 +22,7 @@
     </div>
 
     <dl class="definition-tabular">
-      <dt>Owner(s)</dt>
+      <dt>Owner{{ title.proprietors|length|pluralize }}</dt>
       <dd>
         {% for proprietor in title.proprietors %}
           <h5 class="heading-small collapse-top expand-bottom-half">{{ proprietor.name }}</h5>
@@ -37,7 +37,7 @@
       </dd>
 
       {% if title.lenders %}
-        <dt>Lender(s)</dt>
+        <dt>Lender{{ title.lenders|length|pluralize }}</dt>
         <dd>
           {% for lender in title.lenders %}
               <h5 class="heading-small collapse-top expand-bottom-half">
