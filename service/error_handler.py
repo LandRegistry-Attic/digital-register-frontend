@@ -25,7 +25,11 @@ def setup_errors(app, error_template="error.html"):
         return render_template(error_template,
                                error=error_title,
                                code=code,
-                               description=Markup(description)), code
+                               description=Markup(description),
+                               breadcrumbs=[
+                                   {"text": "Find a Title", "url": "/title-search"},
+                                   {"text": error, "url": ""}
+                               ]), code
 
     for exception in default_exceptions:
         app.register_error_handler(exception, error_handler)
