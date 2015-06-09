@@ -363,7 +363,7 @@ def _is_invalid_credentials_response(response):
 
 class SigninForm(Form):
     username = StringField('username', [Required(message='Username is required'),
-                                        Length(min=4, max=70, message='Username is incorrect')])
+                                        Length(min=4, max=70, message='Username must contain at least 4 and at most 70 characters')])
     password = PasswordField('password', [Required(message='Password is required')])
 
     def __init__(self, *args, **kwargs):
