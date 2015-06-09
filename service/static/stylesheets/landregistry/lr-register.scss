@@ -3,10 +3,6 @@
   padding-bottom: 0.15em;
 }
 
-.phase-tag {
-  @include phase-tag(beta);
-}
-
 #map {
   margin-bottom: $gutter*2;
 }

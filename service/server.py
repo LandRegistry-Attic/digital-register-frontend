@@ -87,11 +87,6 @@ def load_user(user_id):
     return User(user_id)
 
 
-@app.route('/', methods=['GET'])
-def home():
-    return render_template('home.html', username=current_user.get_id())
-
-
 @app.route('/cookies', methods=['GET'])
 def cookies():
     return render_template('cookies.html', username=current_user.get_id())
@@ -174,6 +169,7 @@ def find_titles():
         return _render_initial_search_page()
 
 
+@app.route('/', methods=['GET'])
 @app.route('/title-search', methods=['GET'])
 @app.route('/title-search/<search_term>', methods=['GET'])
 @login_required

@@ -45,3 +45,7 @@
 @import "lr-breadcrumbs";
 @import "lr-register";
 @import "lr-navigation";
+
+.phase-banner {
+  @include phase-banner(beta);
+}
