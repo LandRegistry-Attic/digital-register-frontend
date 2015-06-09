@@ -278,11 +278,31 @@ def format_proprietors(proprietors_data):
         name = proprietor.get('name') or ''
         addresses = proprietor.get('addresses') or []
         formatted_proprietor = {}
-        # TODO: proprietor names have potentially a lot more fields to display
-        if 'forename' in name and 'surname' in name:
-            formatted_proprietor["name"] = name['forename'] + ' ' + name['surname']
+        if 'name_information' in name:
+            formatted_proprietor["name_information"] =  ', ' + name['name_information']
+        if 'name_supplimentary' in name:
+            formatted_proprietor["name_supplimentary"] = ', ' + name['name_supplimentary']
+        if 'charity_name' in name:
+            charity_name = ' of '
+            if name['charity_name'].endswith(")"):
+                charity_name += '('
+            charity_name += name['charity_name']
+            formatted_proprietor["charity_name"] = charity_name
+        if 'trading_name' in name:
+            formatted_proprietor["trading_name"] = ' trading as ' + name['trading_name']
+        if 'forename' in name or 'surname' in name:
+            formatted_proprietor["name"] = format_pi_name(name)
         if 'non_private_individual_name' in name:
             formatted_proprietor["name"] = name['non_private_individual_name']
+            if 'company_reg_num' in name:
+                formatted_proprietor["co_reg_no"] = 'Company registration number ' +\
+                                                    name['company_reg_num']
+            if 'company_location'in name and 'country_incorporation' in name:
+                if name['company_location'] != '':
+                    # if company location has a value other than blank ,
+                    # then it isn't an England or Wales company
+                    formatted_proprietor["country_incorporation"] = 'incorporated in ' +\
+                                                               name['country_incorporation']
         formatted_proprietor["addresses"] = []
         for address in addresses:
             formatted_proprietor["addresses"] += [{
@@ -290,6 +310,19 @@ def format_proprietors(proprietors_data):
             }]
         formatted_proprietors += [formatted_proprietor]
     return formatted_proprietors
+
+
+def format_pi_name(name):
+    name_list = []
+    if 'title' in name:
+        name_list.append(name['title'])
+    if 'forename' in name:
+        name_list.append(name['forename'])
+    if 'surname' in name:
+        name_list.append(name['surname'])
+    if 'decoration' in name:
+        name_list.append(', ' + name['decoration'])
+    return ' '.join(name_list)
 
 
 # This method attempts to retrieve the index polygon data for the entry

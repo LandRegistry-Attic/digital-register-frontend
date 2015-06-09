@@ -108,7 +108,8 @@
 
                                     {% for proprietor in title.proprietors %}
                                         <!-- Proprietor, multiple addresses -->
-                                        <h4 class="heading-small expand-bottom-half">{{ proprietor.name }}</h4>
+                                        <h4 class="heading-small expand-bottom-half">{{ proprietor.name }}{{proprietor.name_supplimentary}}{{proprietor.name_information}}{{proprietor.charity_name}}{{proprietor.trading_name}}{{proprietor.country_incorporation}}</h4>
+                                            {{proprietor.co_reg_no}}
                                         {% for address in proprietor.addresses %}
                                             {% if loop.index is not divisibleby(2) %}<div class="grid-wrapper">{%- endif %}
                                                 <div class="grid grid-1-2">
