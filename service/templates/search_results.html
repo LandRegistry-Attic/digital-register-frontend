@@ -58,8 +58,10 @@
     </div>
   </div>
 </div>
+{% endblock %}
 
-<script src="/static/javascripts/ga_search_results.js"></script>
+{% block js_bottom %}
+<script src="../static/javascripts/ga_search_results.js"></script>
 <script type="text/javascript">
     number_results = {{ results['titles']|length }};
     page_number = {{ results['page_number'] or 0 }};
