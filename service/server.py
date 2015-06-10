@@ -22,7 +22,6 @@ UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
                               '<a rel="external" href="mailto:digital-register-feedback@digital.landregistry.gov.uk">'
                               'digital-register-feedback@digital.landregistry.gov.uk</a>.')
 UNAUTHORISED_TITLE = Markup('There was an error with your Username/Password combination.')
-GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
 TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
 POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 NOF_SECS_BETWEEN_LOGINS = 1
@@ -289,7 +288,6 @@ def _get_address_search_response(search_term, page_number):
 def _render_initial_search_page():
     return render_template(
         'search.html',
-        asset_path='/static/',
         form=TitleSearchForm(),
         username=current_user.get_id(),
         )

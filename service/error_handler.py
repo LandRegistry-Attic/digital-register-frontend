@@ -10,7 +10,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 def setup_errors(app, error_template="error.html"):
-    google_analytics_api_key = app.config['GOOGLE_ANALYTICS_API_KEY']
 
     def error_handler(error):
         LOGGER.error('An error occurred when processing a request', exc_info=error)

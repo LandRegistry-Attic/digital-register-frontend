@@ -40,5 +40,13 @@ def pluralize(number, singular = '', plural = 's'):
 app.jinja_env.filters['date'] = format_date
 app.jinja_env.filters['time'] = format_time
 app.jinja_env.filters['pluralize'] = pluralize
+GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
+
+
+@app.context_processor
+def inject_google_analytics():
+    return dict(google_api_key=GOOGLE_ANALYTICS_API_KEY)
+
+
 logging_config.setup_logging()
 error_handler.setup_errors(app)
