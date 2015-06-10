@@ -19,7 +19,8 @@ from service import app, login_manager, address_utils
 
 REGISTER_TITLE_API = app.config['REGISTER_TITLE_API']
 UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
-                              '<a rel="external" href="mailto:digital-register-feedback@digital.landregistry.gov.uk">'
+                              '<a rel="external" href="mailto:digital-register-'
+                              'feedback@digital.landregistry.gov.uk">'
                               'digital-register-feedback@digital.landregistry.gov.uk</a>.')
 UNAUTHORISED_TITLE = Markup('There was an error with your Username/Password combination.')
 TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
@@ -125,11 +126,13 @@ def sign_in():
     if app.config.get('SLEEP_BETWEEN_LOGINS', True):
         time.sleep(NOF_SECS_BETWEEN_LOGINS)
 
-    return render_template('display_login.html',
-                            form=form,
-                            unauthorised_title=UNAUTHORISED_TITLE,
-                            unauthorised_description=UNAUTHORISED_WORDING,
-                            next=next_url)
+    return render_template(
+        'display_login.html',
+        form=form,
+        unauthorised_title=UNAUTHORISED_TITLE,
+        unauthorised_description=UNAUTHORISED_WORDING,
+        next=next_url
+    )
 
 
 @app.route('/logout', methods=['GET'])
@@ -197,11 +200,12 @@ def render_search_results(results, search_term, page_number):
         results=results,
         form=TitleSearchForm(),
         username=current_user.get_id(),
-        breadcrumbs = [
-          {"text": "Find a Title", "url": url_for('find_titles')},
-          {"text": "Search results", "url": ""}
-         ]
+        breadcrumbs=[
+            {"text": "Find a Title", "url": url_for('find_titles')},
+            {"text": "Search results", "url": ""}
+        ]
     )
+
 
 def get_register_title(title_ref):
     response = requests.get('{}titles/{}'.format(REGISTER_TITLE_API, title_ref))

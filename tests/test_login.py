@@ -28,7 +28,7 @@ class TestLogin:
 
     def test_get_home_page(self):
         response = self.app.get('/')
-        #Redirects to Login page
+        # Redirects to Login page
         assert response.status_code == 302
 
     @mock.patch('requests.post', return_value=successful_response)

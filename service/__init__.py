@@ -31,7 +31,7 @@ def format_time(value):
     return dateutil.parser.parse(value).strftime("%H:%M:%S")
 
 
-def pluralize(number, singular = '', plural = 's'):
+def pluralize(number, singular='', plural='s'):
     if number == 1:
         return singular
     else:

@@ -19,7 +19,7 @@
   <div class="column-two-thirds">
     <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
     {% if results %}
-      <ol>
+      <ol class="results">
         {% for title in results['titles'] %}
           <li>
             <h2 class="heading-small collapse-bottom">
@@ -52,7 +52,7 @@
               <li class="next-page">
                 <a href="{{ url_for('find_titles', search_term=search_term, page=results['page_number'] + 1) }}">
                   <span class="pagination-label">Next <span class="visuallyhidden">page</span></span>
-                  <span>{{ results['page_number'] + 1 }} of {{ results['number_pages'] }}</span>
+                  <span class="pagination-next-number">{{ results['page_number'] + 1 }} of {{ results['number_pages'] }}</span>
                 </a>
               </li>
             {% endif %}
