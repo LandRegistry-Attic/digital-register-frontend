@@ -169,7 +169,8 @@ def find_titles():
     if search_term:
         return redirect(url_for('find_titles', search_term=search_term, page=page_num))
     else:
-        return redirect(url_for('find_titles'))
+        # TODO: we should probably redirect to that page
+        return _render_initial_search_page()
 
 
 @app.route('/', methods=['GET'])
@@ -182,35 +183,6 @@ def find_titles_page(search_term=''):
     search_term = search_term.strip()
     if not search_term:
         return _render_initial_search_page()
-    search_term = search_term.strip()
-    if not search_term:
-        # display the initial search page
-        return render_template('search.html', form=TitleSearchForm())
-    # search for something
-    LOGGER.info("SEARCH REGISTER: '{0}' was searched by '{1}'".format(search_term,
-                                                                      current_user.get_id()))
-    # Determine search term type and preform search
-    title_number_regex = re.compile(TITLE_NUMBER_REGEX)
-    postcode_regex = re.compile(address_utils.BASIC_POSTCODE_REGEX)
-    search_term_caps = search_term.upper()
-    # If it matches the title number regex...
-    if title_number_regex.match(search_term_caps):
-        title_ref = search_term_caps
-        title = get_register_title(title_ref)
-        if title:
-            # If the title exists store it in the session
-            session['title'] = title
-            # Redirect to the display_title method to display the digital register
-            return redirect(url_for('display_title', title_ref=title_ref))
-        else:
-            # If title not found display 'no title found' screen
-            return render_search_results([], search_term, page_num)
-    # If it matches the postcode regex ...
-    elif postcode_regex.match(search_term_caps):
-        # Short term fix to enable user to search with postcode without spaces
-        postcode = sanitise_postcode(search_term_caps)
-        postcode_search_results = get_register_titles_via_postcode(postcode, page_num)
-        return render_search_results(postcode_search_results, postcode, page_num)
     else:
         LOGGER.info("SEARCH REGISTER: '{0}' was searched by '{1}'".format(search_term,
                                                                           current_user.get_id()))
@@ -218,11 +190,11 @@ def find_titles_page(search_term=''):
         return _get_address_search_response(search_term, page_number)
 
 
-def render_search_results(results, search_term, page_num):
+def render_search_results(results, search_term, page_number):
     return render_template(
         'search_results.html',
         search_term=search_term,
-        page_num=page_num,
+        page_num=page_number,
         results=results,
         form=TitleSearchForm(),
         username=current_user.get_id(),
@@ -363,7 +335,7 @@ def _is_invalid_credentials_response(response):
 
 class SigninForm(Form):
     username = StringField('username', [Required(message='Username is required'),
-                                        Length(min=4, max=70, message='Username must contain at least 4 and at most 70 characters')])
+                                        Length(min=4, max=70, message='Username is incorrect')])
     password = PasswordField('password', [Required(message='Password is required')])
 
     def __init__(self, *args, **kwargs):

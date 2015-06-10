@@ -99,7 +99,8 @@ class TestViewTitle(BaseServerTest):
     @mock.patch('requests.get', return_value=fake_title)
     def test_date_formatting_on_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
-        assert '28 August 2014 at 12:37:13' in response.data.decode()
+        assert '28 August 2014' in response.data.decode()
+        assert '12:37:13' in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_title)
     def test_address_on_title_page(self, mock_get):
@@ -192,7 +193,8 @@ class TestTitleSearch(BaseServerTest):
         assert response.status_code == 200
         page_content = response.data.decode()
         assert 'DN1000' in page_content
-        assert '28 August 2014 at 12:37:13' in page_content
+        assert '28 August 2014' in page_content
+        assert '12:37:13' in page_content
         assert '17 Hazelbury Crescent' in page_content
         assert 'Luton' in page_content
         assert 'LU1 1DZ' in page_content
@@ -204,7 +206,7 @@ class TestTitleSearch(BaseServerTest):
             data=dict(search_term='some text'),
             follow_redirects=True
         )
-        assert 'No result(s) found' in response.data.decode()
+        assert 'No results found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=unavailable_title)
     def test_title_search_title_not_found(self, mock_get):
@@ -213,7 +215,7 @@ class TestTitleSearch(BaseServerTest):
             data=dict(search_term='DT1000'),
             follow_redirects=True
         )
-        assert 'No result(s) found' in response.data.decode()
+        assert 'No results found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_success(self, mock_get):
@@ -236,7 +238,7 @@ class TestTitleSearch(BaseServerTest):
     @mock.patch('requests.get', return_value=fake_address_search)
     def test_address_search_with_page_calls_api_correctly(self, mock_get):
         self.app.get('/title-search/Plymouth?page=23')
-        mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/PLYMOUTH',
+        mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/Plymouth',
                                     params={'page': 23})
 
     @mock.patch('requests.get', return_value=fake_postcode_search)

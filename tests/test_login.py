@@ -28,8 +28,8 @@ class TestLogin:
 
     def test_get_home_page(self):
         response = self.app.get('/')
-        assert response.status_code == 200
-        assert 'Home' in str(response.data)
+        #Redirects to Login page
+        assert response.status_code == 302
 
     @mock.patch('requests.post', return_value=successful_response)
     def test_login_calls_api(self, mock_post):
