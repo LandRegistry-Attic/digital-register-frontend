@@ -281,6 +281,7 @@ def get_property_address_index_polygon(geometry_data):
 
 
 def _get_address_search_response(search_term, page_number):
+    earch_term = search_term.upper()
     if _is_title_number(search_term):
         return _get_search_by_title_number_response(search_term, page_number)
     elif _is_postcode(search_term):
