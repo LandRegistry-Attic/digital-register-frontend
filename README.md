@@ -56,6 +56,21 @@ We use three separate builds:
 - [master](http://52.16.47.1/job/digital-register-frontend-unit-tests%20(Master)/)
 - [acceptance](http://52.16.47.1/job/digital-register-frontend-acceptance-tests/)
 
+## SASS libraries
+
+### GOV.UK template
+
+[govuk_template](http://alphagov.github.io/govuk_template/)
+
+In order to update:
+* download the 'plain HTML' version and replace the `static/govuk_template` folder with its assets
+* replace the `govuk_template.html` file in the `static/templates` folder with its HTML file
+
+### GOV.UK frontend toolkit
+
+[govuk_frontend_toolkit](https://github.com/alphagov/govuk_frontend_toolkit)
+
+It is included in our `static` folder as a gitsubmodule. It can be updated by bumping up its commit hash.
 
 ## Third Party Tools
 
@@ -63,6 +78,3 @@ We use three separate builds:
 
 <p>This repo is being tested using browserstack</p>
 <p><i>Rapid Selenium webdriver testing with 100% reliability</i></p>
-
-
-

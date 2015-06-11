@@ -1,47 +1,72 @@
 {% extends "layout.html" %}
 
-{% block content %}
-<main id="wrapper" role="main">
-    <div id="content">
+{% block body %}
+<div class="inner-block">
 
-        {% include "beta_banner.html" %}
+    <h1 class="heading-large">Digital Register Login</h1>
 
-        <div class="inner-block">
-
-            <h1 class="heading-large">Digital Register Login</h1>
-
-            <form action="{{ url_for('sign_in') }}" method="post" class="form">
-                {{ form.hidden_tag() }}
-                <div class="form-group">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username">
-                </div>
-                <div class="errors">
-                    {% for message in form.username.errors %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
-
-                <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password">
-                </div>
-                <div class="errors">
-                    {% for message in form.password.errors %}
-                        {{ message }}
-                    {% endfor %}
-                    
-                    {% if unauthorised %}
-                        {{ unauthorised }}
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="button" id="signin">Sign In</button>
-                </div>
-
-            </form>
+    <form action="{{ url_for('sign_in') }}" method="post" class="form">
+        {{ form.hidden_tag() }}
+        {% if form.errors %}
+          <div class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+            <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+              There was a problem submitting the form
+            </h1>
+            <ul class="error-summary-list">
+              {% for field, messages in form.errors.items() %}
+                {% for message in messages %}
+                  <li>
+                    <a href="#{{ field }}">{{ message }}</a>
+                  </li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% if unauthorised_title %}
+          <div class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+            <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+              {{ unauthorised_title }}
+            </h1>
+            <p>{{ unauthorised_description }}</p>
+          </div>
+        {% endif %}
+        {% if form.username.errors %}
+          <div class="form-group error">
+        {% else %}
+          <div class="form-group">
+        {% endif %}
+            <label for="username" class="form-label-bold">Username</label>
+            {% if form.username.errors %}
+              {% for message in form.username.errors %}
+                <span class="error-message">
+                  {{ message }}
+                </span>
+              {% endfor %}
+            {% endif %}
+            <input type="text" class="form-control" id="username" name="username" required pattern=".{4,70}" title="Username must contain at least 4 and at most 70 characters">
         </div>
-    </div>
-</main>
+
+        {% if form.password.errors %}
+          <div class="form-group error">
+        {% else %}
+          <div class="form-group">
+        {% endif %}
+            <label for="password" class="form-label-bold">Password</label>
+            {% if form.password.errors %}
+              {% for message in form.password.errors %}
+                <span class="error-message">
+                  {{ message }}
+                </span>
+              {% endfor %}
+            {% endif %}
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="button" id="signin">Sign In</button>
+        </div>
+
+    </form>
+</div>
 {% endblock %}

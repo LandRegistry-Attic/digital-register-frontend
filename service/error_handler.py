@@ -10,7 +10,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 def setup_errors(app, error_template="error.html"):
-    google_analytics_api_key = app.config['GOOGLE_ANALYTICS_API_KEY']
 
     def error_handler(error):
         LOGGER.error('An error occurred when processing a request', exc_info=error)
@@ -23,11 +22,12 @@ def setup_errors(app, error_template="error.html"):
             error_title = GENERIC_ERROR_WORDING
             description = GENERIC_ERROR_DESCRIPTION
         return render_template(error_template,
-                               google_api_key=google_analytics_api_key,
-                               asset_path='../static/',
                                error=error_title,
                                code=code,
-                               description=Markup(description)), code
+                               description=Markup(description),
+                               breadcrumbs=[
+                                   {"text": "Find a Title", "url": "/title-search"}
+                               ]), code
 
     for exception in default_exceptions:
         app.register_error_handler(exception, error_handler)

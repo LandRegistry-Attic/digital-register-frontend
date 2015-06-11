@@ -1,168 +1,105 @@
 {% extends "imports.html" %}
 
-{% block content %}
+{% block body %}
 
-<main id="wrapper" role="main">
-    <div id="content">
+<h1 class="heading-xlarge collapse-bottom">Summary of title {{ title.number }}</h1>
+<p class="expand-bottom">This title was last changed on <b>{{ title.last_changed | date }}</b> at <b>{{ title.last_changed | time }}</b></p>
 
-        {% include "beta_banner.html" %}
+<div class="grid-row">
 
-        <div class="outer-block">
-            <div class="inner-block">
-                <div class="callout callout--summary">
-                    <h1 class="heading-large first-heading">
-                        Register of title <span class="title-flag">{{ title.number }}</span>
-                    </h1>
-                    <p>
-                        This register was last changed on <b>{{ title.last_changed | datetime}}</b>
-                    </p>
+  <div class="column-two-thirds">
 
-                    <div class="lede">
+    <p class="lede collapse-top">
+      {% if title.address_lines %}
+        {{ '<br>'.join(title.address_lines)|safe }}
+      {% else %}
+        Not Available
+      {% endif %}
+    </p>
 
-                        <div class="grid grid-1-3">
-                            {% if title.address_lines %}
-                              {{ '<br>'.join(title.address_lines)|safe }}
-                            {% else %}
-                              Not Available
-                            {% endif %}
-                        </div>
+    <div id="map">
+      <div class="summary">
+        The map relies on JavaScript being enabled in your browser.
+      </div>
+    </div>
 
-                        <figure class="grid grid-1-3">
-                            <div id="map" class="title-plan" style="width:300px; height:200px;">
-                              The map relies on JavaScript being enabled in your browser.
-                            </div>
-                        </figure>
+    <dl class="definition-tabular">
+      <dt>Owner{{ title.proprietors|length|pluralize }}</dt>
+      <dd>
+        {% for proprietor in title.proprietors %}
+          <h5 class="heading-small collapse-top expand-bottom-half">{{ proprietor.name }}</h5>
+          {% for address in proprietor.addresses %}
+            <div class="grid-row expand-bottom-half">
+              <div class="column-half">
+                {{ '<br>'.join(address.lines)|safe }}
+              </div>
+            </div>
+          {% endfor %}
+        {% endfor %}
+      </dd>
 
-                    </div>
+      {% if title.lenders %}
+        <dt>Lender{{ title.lenders|length|pluralize }}</dt>
+        <dd>
+          {% for lender in title.lenders %}
+              <h5 class="heading-small collapse-top expand-bottom-half">
+                {{ lender.name }}
+              </h5>
+              {% for address in lender.addresses %}
+                <div class="grid-row expand-bottom-half">
+                  <div class="column-half">
+                    {{ '<br>'.join(address.lines)|safe }}
+                  </div>
+                </div>
+              {% endfor %}
+          {% endfor %}
+        </dd>
+      {% endif %}
 
-                    <dl id="property-summary" class="definition-tabular">
-                        <dt>Owner/Proprietor(s)</dt>
-                        <dd>
-                          {% if title.proprietors|length >= 2 %}
-                            <ul>
-                              {% for proprietor in title.proprietors %}
-                                <li>{{ proprietor.name }}</li>
-                              {% endfor %}
-                            </ul>
-                          {% else %}
-                            {{ title.proprietors[0].name }}
-                          {% endif %}
-                        </dd>
+      <dt>Tenure type</dt>
+      <dd><b>{{ title.tenure }}</b></dd>
 
-                        <dt>Tenure</dt>
-                        <dd>
-                          {{ title.tenure }}
-                        </dd>
+      {% if title.ppi_data %}
+        <dt>Price paid/stated</dt>
+        <dd>
+          <b>{{ title.ppi_data }}</b>
+        </dd>
+      {% endif %}
+    </dl>
 
-                        {% if title.lenders %}
-                            <dt>Lender(s)</dt>
-                            <dd>
-                              {% if title.lenders|length >= 2 %}
-                                <ul>
-                                  {% for lender in title.lenders %}
-                                    <li>{{ lender.name }}</li>
-                                  {% endfor %}
-                                </ul>
-                              {% else %}
-                                {{ title.lenders[0].name }}
-                              {% endif %}
-                            </dd>
-                        {% endif %}
+  </div>
 
-                        {% if title.ppi_data %}
-                          <dt>Price paid/stated</dt>
-                          <dd>
-                            {{ title.ppi_data }}
-                          </dd>
-                        {% endif %}
-                    </dl>
+  <div class="column-third printhidden">
 
-                </div><!-- /summary -->
+    <div class="summary js-stick-at-top-when-scrolling">
+      <div class="icon-print">
+        <a href="javascript:window.print();">Print this page</a>
+      </div>
+    </div>
 
+  </div>
+</div>
 
-                <div class="grid-wrapper">
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <div class="legal-division--top legal-division--bottom">
+      <div class="text printhidden">
 
-                    <div class="grid grid-1-4"><!-- left col nav -->
-                        <section class="inner-block page-contents js-stick-at-top-when-scrolling">
-                            <h2 class="visuallyhidden">Register contents</h2>
-                                <nav>
-                                    <ul>
-                                        <li><a href="#property-details">Property details</a></li>
-                                        {% if title.lenders %}
-                                            <li><a href="#charge-details">Charge details</a></li>
-                                        {% endif %}
-                                    </ul>
-                                </nav>
-                        </section>
-                    </div><!-- / left col nav -->
-
-                    <div class="grid grid-3-4"><!-- right col content -->
-                        <div class="inner-block">
-
-                            <section id="property-details" class="text js-faux-details js-faux-details--open">
-
-                                <h2 class="heading-medium collapse-top">Property details</h2>
-
-                                <div class="group">
-                                    <h3 class="heading-medium">Owner(s)</h3>
-
-                                    {% for proprietor in title.proprietors %}
-                                        <!-- Proprietor, multiple addresses -->
-                                        <h4 class="heading-small expand-bottom-half">{{ proprietor.name }}</h4>
-                                        {% for address in proprietor.addresses %}
-                                            {% if loop.index is not divisibleby(2) %}<div class="grid-wrapper">{%- endif %}
-                                                <div class="grid grid-1-2">
-                                                    {{ '<br>'.join(address.lines)|safe }}
-                                                </div>
-                                            {% if loop.index is divisibleby(2) or loop.last %}</div><br>{%- endif %}
-                                        {% endfor %}
-                                    {% endfor %}
-
-                                </div>
-                            </section>
-
-                            {% if title.lenders %}
-                              <br><br>
-
-                              <section id="charge-details" class="text js-faux-details js-faux-details--open">
-
-                                  <h2 class="heading-medium collapse-top">Charge details</h2>
-
-                                  <div class="group">
-                                      <h3 class="heading-medium">Lender(s)</h3>
-
-                                      {%- for lender in title.lenders %}
-                                          <!-- Lender, multiple addresses -->
-                                          <h4 class="heading-small expand-bottom-half">{{ lender.name }}</h4>
-
-                                          {%- for address in lender.addresses %}
-                                              {% if loop.index is not divisibleby(2) %}<div class="grid-wrapper">{%- endif %}
-                                                  <div class="grid grid-1-2">
-                                                      {{ '<br>'.join(address.lines)|safe }}
-                                                  </div>
-                                              {% if loop.index is divisibleby(2) or loop.last %}</div><br>{%- endif %}
-                                          {%- endfor %}
-                                      {%- endfor %}
-
-                                  </div>
-                              </section>
-                            {% endif %}
-
-                        </div>
-                    </div><!-- / right col content -->
-                </div><!-- / grid wrapper -->
-
-            </div><!-- end inner-block -->
-        </div><!-- end outer-block -->
-
-    </div><!-- end content -->
-</main>
+        <h6 class="heading-medium">What next</h6>
+        <ul>
+          <li><a href="/title-search">Search for another title using this service</a></li>
+          <li><a href="https://gov.uk">Return to GOV.UK</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
 
-{% block js_additionals %}
+{% block js_bottom %}
 <script type='text/javascript'>
     var indexData = {{ title.indexPolygon | tojson }}
 </script>
-<script src="{{asset_path}}javascripts/map.js"></script>
+<script src="../static/javascripts/map.js"></script>
 {% endblock %}
