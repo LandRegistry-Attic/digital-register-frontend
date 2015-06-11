@@ -237,8 +237,8 @@ class TestTitleSearch(BaseServerTest):
 
     @mock.patch('requests.get', return_value=fake_address_search)
     def test_address_search_with_page_calls_api_correctly(self, mock_get):
-        self.app.get('/title-search/Plymouth?page=23')
-        mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/Plymouth',
+        self.app.get('/title-search/PLYMOUTH?page=23')
+        mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/PLYMOUTH',
                                     params={'page': 23})
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
