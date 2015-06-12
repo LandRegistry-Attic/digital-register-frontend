@@ -98,9 +98,11 @@ def signin_page():
     if user_id:
         return redirect(url_for('find_titles_page'))
     else:
+        service_interrupt_warning = app.config.get('SERVICE_INTERRUPT_WARNING', None)
         return render_template('display_login.html',
                                form=SigninForm(csrf_enabled=_is_csrf_enabled()),
-                               username=current_user.get_id())
+                               username=current_user.get_id(),
+                               service_interrupt_warning=service_interrupt_warning)
 
 
 @app.route('/login', methods=['POST'])
