@@ -22,7 +22,28 @@
                   "name": {
                       "forename": "Scott",
                       "name_category": "PRIVATE INDIVIDUAL",
-                      "surname": "Oakes"
+                      "surname": "Oakes",
+                      "title": "Dr",
+                      "trading_name": "RKJ Machinists PLC"
+                  }
+              },
+              {
+                  "addresses": [
+                      {
+                          "address_string": "18 Kenilworth Road, Luton LU1 1DQ",
+                          "address_type": "UK",
+                          "house_no": "18",
+                          "postcode": "LU1 1DQ",
+                          "street_name": "Kenilworth Road",
+                          "town": "Luton"
+                      }
+                  ],
+                  "name": {
+                      "forename": "Leslie",
+                      "name_category": "PRIVATE INDIVIDUAL",
+                      "surname": "Oakes",
+                      "title": "Lady",
+                      "charity_name": "looking after dogs for life charity)"
                   }
               }
           ],
