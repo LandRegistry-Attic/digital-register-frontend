@@ -18,10 +18,11 @@ from service import app, login_manager, address_utils
 
 
 REGISTER_TITLE_API = app.config['REGISTER_TITLE_API']
-UNAUTHORISED_WORDING = Markup('There was an error with your Username/Password combination. If '
-                              'this problem persists please contact us at<br/>'
-                              'digital-register-feedback@digital.landregistry.gov.uk')
-GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
+UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
+                              '<a rel="external" href="mailto:digital-register-'
+                              'feedback@digital.landregistry.gov.uk">'
+                              'digital-register-feedback@digital.landregistry.gov.uk</a>.')
+UNAUTHORISED_TITLE = Markup('There was an error with your Username/Password combination.')
 TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
 POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 NOF_SECS_BETWEEN_LOGINS = 1
@@ -86,34 +87,20 @@ def load_user(user_id):
     return User(user_id)
 
 
-@app.route('/', methods=['GET'])
-def home():
-    return render_template(
-        'home.html',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        asset_path='/static/',
-        username=current_user.get_id(),
-    )
-
-
 @app.route('/cookies', methods=['GET'])
 def cookies():
-    return render_template(
-        'cookies.html',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        asset_path='/static/',
-        username=current_user.get_id()
-    )
+    return render_template('cookies.html', username=current_user.get_id())
 
 
 @app.route('/login', methods=['GET'])
 def signin_page():
-    return render_template(
-        'display_login.html', asset_path='/static/',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        form=SigninForm(csrf_enabled=_is_csrf_enabled()),
-        username=current_user.get_id()
-    )
+    user_id = current_user.get_id()
+    if user_id:
+        return redirect(url_for('find_titles_page'))
+    else:
+        return render_template('display_login.html',
+                               form=SigninForm(csrf_enabled=_is_csrf_enabled()),
+                               username=current_user.get_id())
 
 
 @app.route('/login', methods=['POST'])
@@ -121,9 +108,7 @@ def sign_in():
     form = SigninForm(csrf_enabled=_is_csrf_enabled())
     if not form.validate():
         # entered invalid login form details so send back to same page with form error messages
-        return render_template(
-            'display_login.html', asset_path='/static/', form=form, username=current_user.get_id()
-        )
+        return render_template('display_login.html', form=form, username=current_user.get_id())
 
     next_url = request.args.get('next', 'title-search')
 
@@ -143,12 +128,10 @@ def sign_in():
 
     return render_template(
         'display_login.html',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        asset_path='/static/',
         form=form,
-        unauthorised=UNAUTHORISED_WORDING,
-        next=next_url,
-        username=current_user.get_id(),
+        unauthorised_title=UNAUTHORISED_TITLE,
+        unauthorised_description=UNAUTHORISED_WORDING,
+        next=next_url
     )
 
 
@@ -173,13 +156,8 @@ def display_title(title_ref):
         LOGGER.info(
             "VIEW REGISTER: Title number {0} was viewed by '{1}'".format(title_ref,
                                                                          current_user.get_id()))
-        return render_template(
-            'display_title.html',
-            asset_path='/static/',
-            title=title,
-            google_api_key=GOOGLE_ANALYTICS_API_KEY,
-            username=current_user.get_id(),
-        )
+        return render_template('display_title.html', title=title,
+                               username=current_user.get_id())
     else:
         abort(404)
 
@@ -189,7 +167,6 @@ def display_title(title_ref):
 @login_required
 def find_titles():
     page_num = int(request.args.get('page', 1))
-
     search_term = request.form['search_term'].strip()
     if search_term:
         return redirect(url_for('find_titles', search_term=search_term, page=page_num))
@@ -198,6 +175,7 @@ def find_titles():
         return _render_initial_search_page()
 
 
+@app.route('/', methods=['GET'])
 @app.route('/title-search', methods=['GET'])
 @app.route('/title-search/<search_term>', methods=['GET'])
 @login_required
@@ -214,16 +192,18 @@ def find_titles_page(search_term=''):
         return _get_address_search_response(search_term, page_number)
 
 
-def render_search_results(results, search_term, page_num):
+def render_search_results(results, search_term, page_number):
     return render_template(
         'search_results.html',
-        asset_path='/static/',
         search_term=search_term,
-        page_num=page_num,
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
+        page_num=page_number,
         results=results,
         form=TitleSearchForm(),
         username=current_user.get_id(),
+        breadcrumbs=[
+            {"text": "Find a Title", "url": url_for('find_titles')},
+            {"text": "Search results", "url": ""}
+        ]
     )
 
 
@@ -278,11 +258,28 @@ def format_proprietors(proprietors_data):
         name = proprietor.get('name') or ''
         addresses = proprietor.get('addresses') or []
         formatted_proprietor = {}
-        # TODO: proprietor names have potentially a lot more fields to display
-        if 'forename' in name and 'surname' in name:
-            formatted_proprietor["name"] = name['forename'] + ' ' + name['surname']
+        if 'name_information' in name:
+            formatted_proprietor["name_information"] = ', ' + name['name_information']
+        if 'name_supplimentary' in name:
+            formatted_proprietor["name_supplimentary"] = ', ' + name['name_supplimentary']
+        if 'charity_name' in name:
+            charity_name = ' of '
+            if name['charity_name'].endswith(")"):
+                charity_name += '('
+            charity_name += name['charity_name']
+            formatted_proprietor["charity_name"] = charity_name
+        if 'trading_name' in name:
+            formatted_proprietor["trading_name"] = ' trading as ' + name['trading_name']
+        if 'forename' in name or 'surname' in name:
+            formatted_proprietor["name"] = format_pi_name(name)
         if 'non_private_individual_name' in name:
             formatted_proprietor["name"] = name['non_private_individual_name']
+            if 'company_reg_num' in name:
+                formatted_proprietor["co_reg_no"] = 'Company registration number '\
+                                                    + name['company_reg_num']
+            if 'country_incorporation' in name:
+                formatted_proprietor["country_incorporation"] = 'incorporated in '\
+                                                                + name['country_incorporation']
         formatted_proprietor["addresses"] = []
         for address in addresses:
             formatted_proprietor["addresses"] += [{
@@ -290,6 +287,20 @@ def format_proprietors(proprietors_data):
             }]
         formatted_proprietors += [formatted_proprietor]
     return formatted_proprietors
+
+
+def format_pi_name(name):
+    name_list = []
+    if 'title' in name:
+        name_list.append(name['title'])
+    if 'forename' in name:
+        name_list.append(name['forename'])
+    if 'surname' in name:
+        name_list.append(name['surname'])
+    formatted_name = ' '.join(name_list)
+    if 'decoration' in name:
+        formatted_name += ', ' + name['decoration']
+    return formatted_name
 
 
 # This method attempts to retrieve the index polygon data for the entry
@@ -313,8 +324,6 @@ def _get_address_search_response(search_term, page_number):
 def _render_initial_search_page():
     return render_template(
         'search.html',
-        asset_path='/static/',
-        google_api_key=GOOGLE_ANALYTICS_API_KEY,
         form=TitleSearchForm(),
         username=current_user.get_id(),
         )

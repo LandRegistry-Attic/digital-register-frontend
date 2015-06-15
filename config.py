@@ -19,7 +19,7 @@ CONFIG_DICT = {
     'LOGIN_API': login_api,
     'PERMANENT_SESSION_LIFETIME': datetime.timedelta(minutes=15),
     'SECRET_KEY': secret_key,
-    'SESSION_COOKIE_SECURE': session_cookie_secure,
+    'SESSION_COOKIE_SECURE': session_cookie_secure
 }
 
 settings = os.environ.get('SETTINGS')

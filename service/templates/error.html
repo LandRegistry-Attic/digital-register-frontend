@@ -1,27 +1,16 @@
 {% extends "layout.html" %}
 
-{% block page_title %}{{error}}{% endblock %}
+{% block page_title %}{{ error }}{% endblock %}
 
-{% block content %}
-<main id="wrapper" role="main">
-    <div id="content">
-        {% include "beta_banner.html" %}
-        <div id="global-breadcrumb">
-            <ol>
-                <li><a href="/title-search/">Find a Title</a></li>
-                <li>{{ error }}</li>
-            </ol>
-        </div>
-        <div class="outer-block">
-            <div class="inner-block">
-                <h1 class="heading-xlarge">
-                    {{error}}
-                </h1>
-                <div class="text">
-                    <p>{{description}}</p><br/>
-                </div>
-            </div>
+{% block body %}
+<div class="outer-block">
+    <div class="inner-block">
+        <h1 class="heading-xlarge">
+            {{ error }}
+        </h1>
+        <div class="text">
+            <p>{{ description }}</p><br/>
         </div>
     </div>
-</main>
+</div>
 {% endblock %}

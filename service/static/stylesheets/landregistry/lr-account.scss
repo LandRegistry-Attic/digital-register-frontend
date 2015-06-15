@@ -1,0 +1,15 @@
+.account {
+  @include core-16;
+  padding: 0.75em 0 0 0;
+
+  @include media(tablet) {
+    padding: 0.75em 0 $gutter 0;
+    text-align: right;
+  }
+}
+
+.login-signout-header {
+  margin-top: $gutter;
+  font-size: 16px;
+  text-align: right;
+}
