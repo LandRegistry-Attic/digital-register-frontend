@@ -171,6 +171,14 @@ class TestViewTitle(BaseServerTest):
         assert response.status_code == 500
         assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
 
+    @mock.patch('requests.get', return_value=fake_title)
+    def test_get_more_proprietor_data(self, mock_get):
+        response = self.app.get('/titles/AGL1000')
+        page_content = response.data.decode()
+        assert 'trading as RKJ Machinists PLC' in page_content
+        assert 'Dr' in page_content
+        assert 'of (looking after dogs for life charity)' in page_content
+
 
 class TestTitleSearch(BaseServerTest):
 

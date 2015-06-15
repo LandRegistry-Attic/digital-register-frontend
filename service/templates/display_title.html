@@ -27,7 +27,8 @@
       <dt>Owner{{ title.proprietors|length|pluralize }}</dt>
       <dd>
         {% for proprietor in title.proprietors %}
-          <h5 class="heading-small collapse-top expand-bottom-half">{{ proprietor.name }}</h5>
+          <h5 class="heading-small collapse-top expand-bottom-half">{{ proprietor.name }}{{ proprietor.name_supplimentary }}{{ proprietor.name_information }}{{ proprietor.charity_name }}{{ proprietor.trading_name }}{{ proprietor.country_incorporation }}</h5>
+          {{ proprietor.co_reg_no }}
           {% for address in proprietor.addresses %}
             <div class="grid-row expand-bottom-half">
               <div class="column-half">
