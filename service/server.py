@@ -337,7 +337,8 @@ def _get_search_by_title_number_response(search_term, page_number):
         return redirect(url_for('display_title', title_ref=title_ref))
     else:
         # If title not found display 'no title found' screen
-        return render_search_results([], search_term, page_number)
+        results = {'number_results': 0}
+        return render_search_results(results, search_term, page_number)
 
 
 def _get_search_by_postcode_response(search_term, page_number):
