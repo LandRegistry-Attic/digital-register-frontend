@@ -282,6 +282,14 @@ def format_proprietors(proprietors_data):
             if 'country_incorporation' in name:
                 formatted_proprietor["name_extra_info"] += ' incorporated in '\
                                                                 + name['country_incorporation']
+            if 'company_location' in name:
+                if name['company_location'] == 'SC':
+                    formatted_location = 'in Scotland'
+                elif name['company_location'] == 'NI':
+                    formatted_location = 'in Northern Ireland'
+                else:
+                    formatted_location = 'overseas'
+                formatted_proprietor["company_location"] = 'Registered '+formatted_location
 
         formatted_proprietor["addresses"] = []
         for address in addresses:

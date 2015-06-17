@@ -35,6 +35,11 @@
               <div class="address">
                 {{ proprietor.co_reg_no }}
               </div>
+              {% if proprietor.company_location %}
+                <div class="sub-address">
+                  {{ proprietor.company_location }}
+                </div>
+              {% endif %}
             </div>
           {% endif %}
           {% for address in proprietor.addresses %}
@@ -58,6 +63,13 @@
                 <div class="grid-row expand-bottom-half">
                   <div class="address">
                     {{ lender.co_reg_no }}
+                  </div>
+                </div>
+              {% endif %}
+              {% if lender.company_location %}
+                <div class="grid-row expand-bottom-half">
+                  <div class="sub-address">
+                    {{ lender.company_location }}
                   </div>
                 </div>
               {% endif %}

@@ -178,6 +178,8 @@ class TestViewTitle(BaseServerTest):
         assert 'trading as RKJ Machinists PLC' in page_content
         assert 'Dr' in page_content
         assert '(looking after dogs for life charity)' in page_content
+        assert 'Registered overseas' in page_content
+        assert 'Company registration number 999888999' in page_content
 
 
 class TestTitleSearch(BaseServerTest):
