@@ -8,5 +8,5 @@ export LOGGING_CONFIG_FILE_PATH='logging_config.json'
 export LOGIN_API='http://landregistry.local:8005/'
 export PYTHONPATH=.
 export REGISTER_TITLE_API='http://landregistry.local:8004/'
-export SERVICE_INTERRUPT_WARNING=''
+export SERVICE_NOTICE_HTML='' # eg '<h2>Downtime notice</h2><p>This service will be offline between 2.00&ndash;5.00 on 31st July</p>'
 export SESSION_COOKIE_SECURE='False'

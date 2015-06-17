@@ -98,19 +98,21 @@ def signin_page():
     if user_id:
         return redirect(url_for('find_titles_page'))
     else:
-        service_interrupt_warning = app.config.get('SERVICE_INTERRUPT_WARNING', None)
+        service_notice_html = app.config.get('SERVICE_NOTICE_HTML', None)
         return render_template('display_login.html',
                                form=SigninForm(csrf_enabled=_is_csrf_enabled()),
                                username=current_user.get_id(),
-                               service_interrupt_warning=service_interrupt_warning)
+                               service_notice_html=service_notice_html)
 
 
 @app.route('/login', methods=['POST'])
 def sign_in():
     form = SigninForm(csrf_enabled=_is_csrf_enabled())
+    service_notice_html = app.config.get('SERVICE_NOTICE_HTML', None)
     if not form.validate():
         # entered invalid login form details so send back to same page with form error messages
-        return render_template('display_login.html', form=form, username=current_user.get_id())
+        return render_template('display_login.html', form=form, username=current_user.get_id(),
+                               service_notice_html=service_notice_html)
 
     next_url = request.args.get('next', 'title-search')
 
@@ -128,13 +130,9 @@ def sign_in():
     if app.config.get('SLEEP_BETWEEN_LOGINS', True):
         time.sleep(NOF_SECS_BETWEEN_LOGINS)
 
-    return render_template(
-        'display_login.html',
-        form=form,
-        unauthorised_title=UNAUTHORISED_TITLE,
-        unauthorised_description=UNAUTHORISED_WORDING,
-        next=next_url
-    )
+    return render_template('display_login.html', form=form, unauthorised_title=UNAUTHORISED_TITLE,
+                           unauthorised_description=UNAUTHORISED_WORDING, next=next_url,
+                           service_notice_html=service_notice_html)
 
 
 @app.route('/logout', methods=['GET'])

@@ -3,15 +3,13 @@
 {% block body %}
 <div class="inner-block">
 
-    {% if service_interrupt_warning %}
-      <div class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
-        <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
-          {{ service_interrupt_warning }}
-        </h1>
+    <h1 class="heading-large">Digital Register Login</h1>
+
+    {% if service_notice_html %}
+      <div class="service-notice">
+        {{ service_notice_html | safe }}
       </div>
     {% endif %}
-
-    <h1 class="heading-large">Digital Register Login</h1>
 
     <form action="{{ url_for('sign_in') }}" method="post" class="form">
         {{ form.hidden_tag() }}

@@ -7,7 +7,7 @@ register_title_api = os.environ['REGISTER_TITLE_API']
 logging_config_file_path = os.environ['LOGGING_CONFIG_FILE_PATH']
 login_api = os.environ['LOGIN_API']
 secret_key = os.environ['APPLICATION_SECRET_KEY']
-service_interrupt_warning = os.environ['SERVICE_INTERRUPT_WARNING']
+service_notice_html = os.environ['SERVICE_NOTICE_HTML']
 session_cookie_secure = os.environ['SESSION_COOKIE_SECURE'].lower() != 'false'
 
 CONFIG_DICT = {
@@ -20,7 +20,7 @@ CONFIG_DICT = {
     'PERMANENT_SESSION_LIFETIME': datetime.timedelta(minutes=15),
     'REGISTER_TITLE_API': register_title_api,
     'SECRET_KEY': secret_key,
-    'SERVICE_INTERRUPT_WARNING': service_interrupt_warning,
+    'SERVICE_NOTICE_HTML': service_notice_html,
     'SESSION_COOKIE_SECURE': session_cookie_secure,
 }
 
