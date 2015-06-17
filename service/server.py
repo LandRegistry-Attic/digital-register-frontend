@@ -257,29 +257,32 @@ def format_proprietors(proprietors_data):
     for proprietor in proprietors_data:
         name = proprietor.get('name') or ''
         addresses = proprietor.get('addresses') or []
-        formatted_proprietor = {}
-        if 'name_information' in name:
-            formatted_proprietor["name_information"] = ', ' + name['name_information']
+        formatted_proprietor = {"name_extra_info": ""}
+        if 'forename' in name or 'surname' in name:
+            formatted_proprietor["name"] = format_pi_name(name)
         if 'name_supplimentary' in name:
-            formatted_proprietor["name_supplimentary"] = ', ' + name['name_supplimentary']
+            formatted_proprietor["name_extra_info"] += ', ' + name['name_supplimentary']
+        if 'name_information' in name:
+            formatted_proprietor["name_extra_info"] += ', ' + name['name_information']
         if 'charity_name' in name:
             charity_name = ' of '
             if name['charity_name'].endswith(")"):
-                charity_name += '('
+                charity_name = ' ('
+            else:
+                charity_name = ' of '
             charity_name += name['charity_name']
-            formatted_proprietor["charity_name"] = charity_name
+            formatted_proprietor["name_extra_info"] += charity_name
         if 'trading_name' in name:
-            formatted_proprietor["trading_name"] = ' trading as ' + name['trading_name']
-        if 'forename' in name or 'surname' in name:
-            formatted_proprietor["name"] = format_pi_name(name)
+            formatted_proprietor["name_extra_info"] += ' trading as ' + name['trading_name']
         if 'non_private_individual_name' in name:
             formatted_proprietor["name"] = name['non_private_individual_name']
             if 'company_reg_num' in name:
                 formatted_proprietor["co_reg_no"] = 'Company registration number '\
                                                     + name['company_reg_num']
             if 'country_incorporation' in name:
-                formatted_proprietor["country_incorporation"] = 'incorporated in '\
+                formatted_proprietor["name_extra_info"] += ' incorporated in '\
                                                                 + name['country_incorporation']
+
         formatted_proprietor["addresses"] = []
         for address in addresses:
             formatted_proprietor["addresses"] += [{

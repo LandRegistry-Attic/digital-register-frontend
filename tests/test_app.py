@@ -177,7 +177,7 @@ class TestViewTitle(BaseServerTest):
         page_content = response.data.decode()
         assert 'trading as RKJ Machinists PLC' in page_content
         assert 'Dr' in page_content
-        assert 'of (looking after dogs for life charity)' in page_content
+        assert '(looking after dogs for life charity)' in page_content
 
 
 class TestTitleSearch(BaseServerTest):
