@@ -5,12 +5,6 @@
 
     <h1 class="heading-large">Digital Register Login</h1>
 
-    {% if service_notice_html %}
-      <div class="service-notice">
-        {{ service_notice_html | safe }}
-      </div>
-    {% endif %}
-
     <form action="{{ url_for('sign_in') }}" method="post" class="form">
         {{ form.hidden_tag() }}
         {% if form.errors %}
