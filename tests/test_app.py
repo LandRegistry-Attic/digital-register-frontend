@@ -15,10 +15,10 @@ with open('tests/data/fake_title_with_charge.json', 'r') as fake_charge_title_js
     fake_charge_title_bytes = str.encode(fake_charge_title_json_string)
     fake_charge_title = FakeResponse(fake_charge_title_bytes)
 
-fake_no_titles_json_string = '[]'
-fake_no_titles_bytes = str.encode(fake_no_titles_json_string)
-fake_no_titles = FakeResponse(fake_no_titles_bytes)
-
+with open('tests/data/fake_no_titles.json', 'r') as fake_no_titles_json_file:
+    fake_no_titles_json_string = fake_no_titles_json_file.read()
+    fake_no_titles_bytes = str.encode(fake_no_titles_json_string)
+    fake_no_titles = FakeResponse(fake_no_titles_bytes)
 
 with open('tests/data/fake_postcode_search_result.json', 'r') as fake_postcode_results_json_file:
     fake_postcode_search_results_json_string = fake_postcode_results_json_file.read()
@@ -216,7 +216,7 @@ class TestTitleSearch(BaseServerTest):
             data=dict(search_term='some text'),
             follow_redirects=True
         )
-        assert 'No results found' in response.data.decode()
+        assert '0 results found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=unavailable_title)
     def test_title_search_title_not_found(self, mock_get):
@@ -225,7 +225,7 @@ class TestTitleSearch(BaseServerTest):
             data=dict(search_term='DT1000'),
             follow_redirects=True
         )
-        assert 'No results found' in response.data.decode()
+        assert '0 results found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_success(self, mock_get):
