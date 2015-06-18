@@ -18,23 +18,19 @@
 <div class="grid-row">
   <div class="column-two-thirds">
     <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
-    {% if results %}
-      <ol class="results">
-        {% for title in results['titles'] %}
-          <li>
-            <h2 class="heading-small collapse-bottom">
-              <a href="{{ url_for('display_title', title_ref=title['title_number']) }}">{{ title['data']['address']['address_string'] }}</a>
-            </h2>
-            <div class="font-xsmall">
-              Title number {{ title['title_number'] }}<br>
-              <b>{{ title['data']['tenure'] }}</b>
-            </div>
-          </li>
-        {% endfor %}
-      </ol>
-    {% else %}
-      <p>No results found</p>
-    {% endif %}
+    <ol class="results">
+      {% for title in results['titles'] %}
+        <li>
+          <h2 class="heading-small collapse-bottom">
+            <a href="{{ url_for('display_title', title_ref=title['title_number']) }}">{{ title['data']['address']['address_string'] }}</a>
+          </h2>
+          <div class="font-xsmall">
+            Title number {{ title['title_number'] }}<br>
+            <b>{{ title['data']['tenure'] }}</b>
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
 
     {% if results['page_number'] %}
       <div class="govuk-previous-and-next-navigation">
