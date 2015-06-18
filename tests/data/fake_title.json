@@ -45,6 +45,23 @@
                       "title": "Lady",
                       "charity_name": "looking after dogs for life charity)"
                   }
+              },
+              {
+                  "addresses": [
+                      {
+                          "address_string": "11 Fore Street, Plymouth PL8 6TG",
+                          "address_type": "UNKNOWN",
+                          "auto_uppercase_override": true
+                      }
+                  ],
+                  "name": {
+                      "name_category": "LIMITED COMPANY OR PUBLIC LIMITED COMPANY",
+                      "auto_uppercase_override": true,
+                      "non_private_individual_name": "Babel Fish",
+                      "company_reg_num": "999888999",
+                      "company_location": "OV",
+                      "country_incorporation": "Narnia"
+                  }
               }
           ],
           "last_application_timestamp": "2014-08-28T12:37:13+01:00",
