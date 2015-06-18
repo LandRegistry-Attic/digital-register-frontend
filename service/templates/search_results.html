@@ -1,86 +1,69 @@
 {% extends "layout.html" %}
 
-{% block content %}
-    <main id="wrapper" role="main">
-        <div id="content">
+{% block body %}
 
-            {% include "beta_banner.html" %}
+<form class="form" action="{{ url_for('find_titles') }}" method="post" role="form">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        <h1 class="heading-medium">
+            <label for="search_term">
+            Search results for <span class="visuallyhidden">{% if search_term %}{{ search_term }}{% endif %}</span>
+            </label>
+        </h1>
+        <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}">
+        <input type="submit" value="Search" class="button search-button">
+    </div>
+</form>
 
-            <div id="global-breadcrumb">
-                <ol>
-                    <li><a href="{{ url_for('find_titles') }}">Find a Title</a></li>
-                    <li>Search results</li>
-                </ol>
-            </div>
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
+    <ol class="results">
+      {% for title in results['titles'] %}
+        <li>
+          <h2 class="heading-small collapse-bottom">
+            <a href="{{ url_for('display_title', title_ref=title['title_number']) }}">{{ title['data']['address']['address_string'] }}</a>
+          </h2>
+          <div class="font-xsmall">
+            Title number {{ title['title_number'] }}<br>
+            <b>{{ title['data']['tenure'] }}</b>
+          </div>
+        </li>
+      {% endfor %}
+    </ol>
 
-            <div class="outer-block">
-                <div class="inner-block">
-                    <form class="form" action="{{ url_for('find_titles') }}" method="post" role="form">
-                        {{ form.hidden_tag() }}
-                        <div class="form-group">
-                            <h1 class="heading-medium">
-                                <label for="search_term">
-                                Search results for <span class="visuallyhidden">{% if search_term %}{{ search_term }}{% endif %}</span>
-                                </label>
-                            </h1>
-                            <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}">
-                            <input type="submit" value="Search" class="button search-button">
-                        </div>
-                    </form>
+    {% if results['page_number'] %}
+      <div class="govuk-previous-and-next-navigation">
+        {% if results['page_number'] > 1 or results['page_number'] < results['number_pages'] %}
+          <ul>
+            {% if results['page_number'] > 1 %}
+              <li class="previous-page">
+                <a href="{{ url_for('find_titles', search_term=search_term, page=results['page_number'] - 1) }}">
+                  <span class="pagination-label">Previous <span class="visuallyhidden">page</span></span>
+                  <span>{{ results['page_number'] - 1 }} of {{ results['number_pages'] }}</span>
+                </a>
+              </li>
+            {% endif %}
+            {% if results['page_number'] < results['number_pages'] %}
+              <li class="next-page">
+                <a href="{{ url_for('find_titles', search_term=search_term, page=results['page_number'] + 1) }}">
+                  <span class="pagination-label">Next <span class="visuallyhidden">page</span></span>
+                  <span class="pagination-next-number">{{ results['page_number'] + 1 }} of {{ results['number_pages'] }}</span>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
 
-                    <div class="column-two-thirds">
-                        {% if results %}
-                            <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result(s) found</h2>
-                            <ol class="result">
-                                {% for title in results['titles'] %}
-                                    <li class="postal">
-                                        <h2 class="heading-small collapse-bottom">
-                                            <a href="{{ url_for('display_title', title_ref=title['title_number']) }}">{{ title['data']['address']['address_string'] }}</a>
-                                        </h2>
-                                        <div class="font-xsmall">
-                                            Title number {{ title['title_number'] }}<br>
-                                            <b>{{ title['data']['tenure'] }}</b>
-                                        </div>
-                                    </li>
-                                {% endfor %}
-                            </ol>
-                            {% if results['page_number'] and results['number_pages'] %}
-                                <div class="govuk-previous-and-next-navigation">
-                                    {% if results['page_number'] > 1 or results['page_number'] < results['number_pages'] %}
-                                        <ul>
-                                            {% if results['page_number'] > 1 %}
-                                                <li class="previous-page">
-                                                    <a href="{{ url_for('find_titles', search_term=search_term, page=results['page_number'] - 1) }}">
-                                                        <span class="pagination-label">Previous <span class="visuallyhidden">page</span></span>
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                            {% if results['page_number'] < results['number_pages'] %}
-                                                <li class="next-page">
-                                                    <a href="{{ url_for('find_titles', search_term=search_term, page=results['page_number'] + 1) }}">
-                                                        <span class="pagination-label">Next <span class="visuallyhidden">page</span></span>
-                                                    </a>
-                                                </li>
-                                            {% endif %}
-                                        </ul>
-                                    {% endif %}
-                                    <span>{{ results['page_number'] }} of {{ results['number_pages'] }}</span>
-                                </div>
-                            {% endif %}
-                        {% else %}
-                            <h2 class="font-xsmall expand-bottom-half">No result(s) found</h2>
-                        {% endif %}
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    </main>
-    <script src="{{asset_path}}javascripts/ga_search_results.js"></script>
-    <script type="text/javascript">
-        number_results = {{ results['titles']|length }};
-        page_number = {{ results['page_number'] or 0 }};
-        window.onload = ga_search_results(number_results, page_number);
-    </script>
+{% block js_bottom %}
+<script type="text/javascript">
+    number_results = {{ results['titles']|length }};
+    page_number = {{ results['page_number'] or 0 }};
+</script>
+<script src="../static/javascripts/ga_search_results.js"></script>
 {% endblock %}

@@ -1,21 +1,56 @@
+{% set asset_path = '../static/govuk_template/' %}
+
 {% extends "govuk_template.html" %}
 
 {% block head %}
-
+{% assets "sass" %}
+<link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
+{% endassets %}
 <!-- Google Analytics -->
 <script type="text/javascript">
   var googleAnalyticsApiKey = '{{ google_api_key }}';
 </script>
-<script src="{{ asset_path }}javascripts/googleanalytics.js"></script>
-
+<script src="../static/javascripts/googleanalytics.js"></script>
 {% block head_additionals %}{% endblock %}
 {% block js_additionals %}{% endblock %}
 {% endblock %}
 
 {% block cookie_message %}
-
 <p>Land Registry uses cookies to make the site simpler. <a href="/cookies">Find out more about cookies</a></p>
+{% endblock %}
 
+{% block content %}
+
+<main id="content" role="main">
+  <div class="phase-banner">
+    <p>
+      <strong class="phase-tag">BETA</strong>
+      <span>This service is in private beta. Please give us your <a rel="external" href="mailto:digital-register-feedback@digital.landregistry.gov.uk">Feedback</a>.</span>
+    </p>
+  </div>
+  <div class="grid-row">
+    {% if breadcrumbs %}
+      <div id="global-breadcrumb" class="header-context column-three-quarters">
+        <nav role="navigation" class="expand-top-half expand-bottom-half">
+          <ol class="group">
+            {% for breadcrumb in breadcrumbs %}
+              <li><a href="{{ breadcrumb["url"] }}">{{ breadcrumb["text"] }}</a></li>
+            {% endfor %}
+          </ol>
+        </nav>
+      </div>
+    {% endif %}
+    <div class="column-quarter column-flip">
+      <div class="account" style="text-align:right;">
+        {% if username %}
+          <a href="{{ url_for('sign_out') }}" id="signout">Sign out</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% block body %}{% endblock %}
+  {% block js_bottom %}{% endblock %}
+</main>
 {% endblock %}
 
 {% block footer_support_links %}
