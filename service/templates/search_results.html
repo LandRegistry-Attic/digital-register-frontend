@@ -18,10 +18,10 @@
 <div class="grid-row">
   <div class="column-two-thirds">
     <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
-    <ol class="results">
+    <ol class="search-results-listing">
       {% for title in results['titles'] %}
         <li>
-          <h2 class="heading-small collapse-bottom">
+          <h2 class="heading-small">
             <a href="{{ url_for('display_title', title_ref=title['title_number'], page_number=results['page_number'], search_term=search_term) }}">{{ title['data']['address']['address_string'] }}</a>
           </h2>
           <div class="font-xsmall">
@@ -33,7 +33,7 @@
     </ol>
 
     {% if results['page_number'] %}
-      <div class="govuk-previous-and-next-navigation">
+      <div class="pagination-prev-next">
         {% if results['page_number'] > 1 or results['page_number'] < results['number_pages'] %}
           <ul>
             {% if results['page_number'] > 1 %}
@@ -48,7 +48,7 @@
               <li class="next-page">
                 <a href="{{ url_for('find_titles', search_term=search_term, page=results['page_number'] + 1) }}">
                   <span class="pagination-label">Next <span class="visuallyhidden">page</span></span>
-                  <span class="pagination-next-number">{{ results['page_number'] + 1 }} of {{ results['number_pages'] }}</span>
+                  <span>{{ results['page_number'] + 1 }} of {{ results['number_pages'] }}</span>
                 </a>
               </li>
             {% endif %}

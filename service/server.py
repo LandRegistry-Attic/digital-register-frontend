@@ -117,17 +117,21 @@ def signin_page():
     if user_id:
         return redirect(url_for('find_titles_page'))
     else:
+        service_notice_html = app.config.get('SERVICE_NOTICE_HTML', None)
         return render_template('display_login.html',
                                form=SigninForm(csrf_enabled=_is_csrf_enabled()),
-                               username=current_user.get_id())
+                               username=current_user.get_id(),
+                               service_notice_html=service_notice_html)
 
 
 @app.route('/login', methods=['POST'])
 def sign_in():
     form = SigninForm(csrf_enabled=_is_csrf_enabled())
+    service_notice_html = app.config.get('SERVICE_NOTICE_HTML', None)
     if not form.validate():
         # entered invalid login form details so send back to same page with form error messages
-        return render_template('display_login.html', form=form, username=current_user.get_id())
+        return render_template('display_login.html', form=form, username=current_user.get_id(),
+                               service_notice_html=service_notice_html)
 
     next_url = request.args.get('next', 'title-search')
 
@@ -145,13 +149,9 @@ def sign_in():
     if app.config.get('SLEEP_BETWEEN_LOGINS', True):
         time.sleep(NOF_SECS_BETWEEN_LOGINS)
 
-    return render_template(
-        'display_login.html',
-        form=form,
-        unauthorised_title=UNAUTHORISED_TITLE,
-        unauthorised_description=UNAUTHORISED_WORDING,
-        next=next_url
-    )
+    return render_template('display_login.html', form=form, unauthorised_title=UNAUTHORISED_TITLE,
+                           unauthorised_description=UNAUTHORISED_WORDING, next=next_url,
+                           service_notice_html=service_notice_html)
 
 
 @app.route('/logout', methods=['GET'])
@@ -187,7 +187,7 @@ def display_title(title_ref):
                                 "url": url_for('find_titles_page',
                                                search_term=search_term,
                                                page=page_number)})
-        breadcrumbs.append({"text": "Viewing {}".format(title_ref), "url": ""})
+        breadcrumbs.append({"current": "Viewing {}".format(title_ref)})
         return render_template('display_title.html',
                                title=title,
                                username=current_user.get_id(),
@@ -238,8 +238,8 @@ def render_search_results(results, search_term, page_number):
         form=TitleSearchForm(),
         username=current_user.get_id(),
         breadcrumbs=[
-            {"text": "Find a title", "url": url_for('find_titles')},
-            {"text": "Search results", "url": ""}
+            {"text": "Find a Title", "url": url_for('find_titles')},
+            {"current": "Search results"}
         ]
     )
 
