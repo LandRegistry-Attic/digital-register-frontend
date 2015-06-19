@@ -151,13 +151,31 @@ def sign_out():
 def display_title(title_ref):
 
     title = get_register_title(title_ref)
+    page_number = int(request.args.get('page_number', 1))
+    search_term = request.args.get('search_term', title_ref)
     if title:
         # If the title was found, display the page
         LOGGER.info(
             "VIEW REGISTER: Title number {0} was viewed by '{1}'".format(title_ref,
                                                                          current_user.get_id()))
-        return render_template('display_title.html', title=title,
-                               username=current_user.get_id())
+        breadcrumbs = [
+            {"text": "Find a title", "url": url_for('find_titles')}
+        ]
+        if title_ref != search_term:
+            # this means the user has used a search result to find the title so
+            # provide a link back to the search result
+            breadcrumbs.append({"text": "Search results",
+                                "url": url_for('find_titles_page',
+                                               search_term=search_term,
+                                               page=page_number)})
+        breadcrumbs.append({"text": "Viewing {}".format(title_ref), "url": ""})
+        return render_template('display_title.html',
+                               title=title,
+                               username=current_user.get_id(),
+                               search_term=search_term,
+                               page_number=page_number,
+                               breadcrumbs=breadcrumbs
+                               )
     else:
         abort(404)
 
@@ -166,10 +184,10 @@ def display_title(title_ref):
 @app.route('/title-search/<search_term>', methods=['POST'])
 @login_required
 def find_titles():
-    page_num = int(request.args.get('page', 1))
+    page_number = int(request.args.get('page', 1))
     search_term = request.form['search_term'].strip()
     if search_term:
-        return redirect(url_for('find_titles', search_term=search_term, page=page_num))
+        return redirect(url_for('find_titles', search_term=search_term, page=page_number))
     else:
         # TODO: we should probably redirect to that page
         return _render_initial_search_page()
@@ -201,7 +219,7 @@ def render_search_results(results, search_term, page_number):
         form=TitleSearchForm(),
         username=current_user.get_id(),
         breadcrumbs=[
-            {"text": "Find a Title", "url": url_for('find_titles')},
+            {"text": "Find a title", "url": url_for('find_titles')},
             {"text": "Search results", "url": ""}
         ]
     )
@@ -345,7 +363,8 @@ def _get_search_by_title_number_response(search_term, page_number):
     title = get_register_title(title_ref)
     if title:
         # Redirect to the display_title method to display the digital register
-        return redirect(url_for('display_title', title_ref=title_ref))
+        return redirect(url_for('display_title', title_ref=title_ref, page_number=page_number,
+                                search_term=search_term))
     else:
         # If title not found display 'no title found' screen
         results = {'number_results': 0}
