@@ -172,6 +172,23 @@ class TestViewTitle(BaseServerTest):
         assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_title)
+    def test_breadcrumbs_search_results_do_not_appear(self, mock_get):
+        # This tests that when going directly to a title the search results breadcrumb doesn't show
+        response = self.app.get('/titles/DN1000')
+        page_content = response.data.decode()
+        assert 'Find a title' in page_content
+        assert 'Search results' not in page_content
+        assert 'Viewing DN1000' in page_content
+
+    @mock.patch('requests.get', return_value=fake_title)
+    def test_breadcrumbs_search_results_appear(self, mock_get):
+        response = self.app.get('/titles/DN1000?search_term="testing"')
+        page_content = response.data.decode()
+        assert 'Find a title' in page_content
+        assert 'Search results' in page_content
+        assert 'Viewing DN1000' in page_content
+
+    @mock.patch('requests.get', return_value=fake_title)
     def test_get_more_proprietor_data(self, mock_get):
         response = self.app.get('/titles/AGL1000')
         page_content = response.data.decode()

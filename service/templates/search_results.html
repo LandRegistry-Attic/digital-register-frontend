@@ -22,7 +22,7 @@
       {% for title in results['titles'] %}
         <li>
           <h2 class="heading-small collapse-bottom">
-            <a href="{{ url_for('display_title', title_ref=title['title_number']) }}">{{ title['data']['address']['address_string'] }}</a>
+            <a href="{{ url_for('display_title', title_ref=title['title_number'], page_number=results['page_number'], search_term=search_term) }}">{{ title['data']['address']['address_string'] }}</a>
           </h2>
           <div class="font-xsmall">
             Title number {{ title['title_number'] }}<br>
