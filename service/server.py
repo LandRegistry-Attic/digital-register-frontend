@@ -278,10 +278,12 @@ def format_proprietors(proprietors_data):
         formatted_proprietor = {"name_extra_info": ""}
         if 'forename' in name or 'surname' in name:
             formatted_proprietor["name"] = format_pi_name(name)
-        if 'name_supplimentary' in name:
-            formatted_proprietor["name_extra_info"] += ', ' + name['name_supplimentary']
-        if 'name_information' in name:
-            formatted_proprietor["name_extra_info"] += ', ' + name['name_information']
+        # TODO: US149 - awaiting legal signoff
+        if False:
+            if 'name_supplimentary' in name:
+                formatted_proprietor["name_extra_info"] += ', ' + name['name_supplimentary']
+            if 'name_information' in name:
+                formatted_proprietor["name_extra_info"] += ', ' + name['name_information']
         if 'charity_name' in name:
             charity_name = ' of '
             if name['charity_name'].endswith(")"):
@@ -290,24 +292,28 @@ def format_proprietors(proprietors_data):
                 charity_name = ' of '
             charity_name += name['charity_name']
             formatted_proprietor["name_extra_info"] += charity_name
-        if 'trading_name' in name:
-            formatted_proprietor["name_extra_info"] += ' trading as ' + name['trading_name']
+        # TODO: US149 - awaiting legal signoff
+        if False:
+            if 'trading_name' in name:
+                formatted_proprietor["name_extra_info"] += ' trading as ' + name['trading_name']
         if 'non_private_individual_name' in name:
             formatted_proprietor["name"] = name['non_private_individual_name']
-            if 'company_reg_num' in name:
-                formatted_proprietor["co_reg_no"] = 'Company registration number '\
-                                                    + name['company_reg_num']
-            if 'country_incorporation' in name:
-                formatted_proprietor["name_extra_info"] += ' incorporated in '\
-                                                                + name['country_incorporation']
-            if 'company_location' in name:
-                if name['company_location'] == 'SC':
-                    formatted_location = 'in Scotland'
-                elif name['company_location'] == 'NI':
-                    formatted_location = 'in Northern Ireland'
-                else:
-                    formatted_location = 'overseas'
-                formatted_proprietor["company_location"] = 'Registered '+formatted_location
+            # TODO: US149 - awaiting legal signoff
+            if False:
+                if 'company_reg_num' in name:
+                    formatted_proprietor["co_reg_no"] = 'Company registration number '\
+                                                        + name['company_reg_num']
+                if 'country_incorporation' in name:
+                    formatted_proprietor["name_extra_info"] += ' incorporated in '\
+                                                                    + name['country_incorporation']
+                if 'company_location' in name:
+                    if name['company_location'] == 'SC':
+                        formatted_location = 'in Scotland'
+                    elif name['company_location'] == 'NI':
+                        formatted_location = 'in Northern Ireland'
+                    else:
+                        formatted_location = 'overseas'
+                    formatted_proprietor["company_location"] = 'Registered '+formatted_location
 
         formatted_proprietor["addresses"] = []
         for address in addresses:
