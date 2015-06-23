@@ -1,5 +1,8 @@
+import json
 import mock
 import pytest
+from unittest.mock import call
+from config import CONFIG_DICT
 
 from service.server import app
 from .fake_response import FakeResponse
@@ -288,6 +291,65 @@ class TestTitleSearch(BaseServerTest):
         actual_call = mock_get.mock_calls[0]
         url_param = actual_call[1][0]
         assert url_param.endswith('title_search_postcode/{}'.format(search_term))
+
+
+class TestHealthcheck(BaseServerTest):
+
+    def setup_method(self, method):
+        self.app = app.test_client()
+
+    @mock.patch('requests.get', return_value=FakeResponse())
+    def test_health_calls_health_endpoints_of_apis(self, mock_get):
+        self.app.get('/health')
+        assert mock_get.mock_calls == [
+            call('{}health'.format(CONFIG_DICT['REGISTER_TITLE_API'])),
+            call('{}health'.format(CONFIG_DICT['LOGIN_API'])),
+        ]
+
+    @mock.patch('requests.get', return_value=FakeResponse(b'{"status": "ok"}', 200))
+    def test_health_returns_ok_status_when_both_apis_healthy(self, mock_get):
+        response = self.app.get('/health')
+
+        assert response.data.decode() == '{"status": "ok"}'
+        assert response.status_code == 200
+
+    def test_health_returns_errors_from_both_api_health_endpoints(self):
+        with mock.patch('requests.get') as mock_get:
+            mock_get.side_effect = [
+                FakeResponse(b'{"status": "error", "errors": ["e1", "e2"]}', 500),
+                FakeResponse(b'{"status": "error", "errors": ["e3", "e4"]}', 500),
+            ]
+
+            response = self.app.get('/health')
+        response_json = json.loads(response.data.decode())
+
+        assert response_json['status'] == 'error'
+        errors = response_json['errors']
+
+        assert len(errors) == 2
+        assert "digital-register-api health endpoint returned errors: ['e1', 'e2']" in errors
+        assert "login-api health endpoint returned errors: ['e3', 'e4']" in errors
+
+        assert response.status_code == 500
+
+    def test_health_returns_handles_invalid_responses_from_apis(self):
+        with mock.patch('requests.get') as mock_get:
+            mock_get.side_effect = [
+                FakeResponse(b'{"status": "error"}', 500),
+                FakeResponse(b'not a json', 500),
+            ]
+
+            response = self.app.get('/health')
+        response_json = json.loads(response.data.decode())
+
+        assert response_json['status'] == 'error'
+        errors = response_json['errors']
+
+        assert len(errors) == 2
+        assert ("digital-register-api health endpoint returned "
+                "an invalid response: {'status': 'error'}") in errors
+        assert "login-api health endpoint returned an invalid response: not a json" in errors
+        assert response.status_code == 500
 
 if __name__ == '__main__':
     pytest.main()
