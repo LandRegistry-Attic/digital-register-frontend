@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import json
-from flask import abort, render_template, request, redirect, url_for, session
+from flask import abort, render_template, request, redirect, url_for, Response
 from flask import Markup
 from flask_login import login_user, login_required, current_user, logout_user
 from flask_wtf import Form
@@ -17,7 +17,8 @@ from wtforms.validators import Required, Length
 from service import app, login_manager, address_utils
 
 
-REGISTER_TITLE_API = app.config['REGISTER_TITLE_API']
+REGISTER_TITLE_API_URL = app.config['REGISTER_TITLE_API']
+LOGIN_API_URL = app.config['LOGIN_API']
 UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
                               '<a rel="external" href="mailto:digital-register-'
                               'feedback@digital.landregistry.gov.uk">'
@@ -26,6 +27,7 @@ UNAUTHORISED_TITLE = Markup('There was an error with your Username/Password comb
 TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
 POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 NOF_SECS_BETWEEN_LOGINS = 1
+MORE_PROPRIETOR_DETAILS = (app.config['MORE_PROPRIETOR_DETAILS'] == 'true')
 LOGGER = logging.getLogger(__name__)
 
 
@@ -85,6 +87,23 @@ def sanitise_postcode(postcode_in):
 @login_manager.user_loader
 def load_user(user_id):
     return User(user_id)
+
+
+@app.route('/health', methods=['GET'])
+def healthcheck():
+    errors = _check_title_api_health() + _check_login_api_health()
+    status = 'error' if errors else 'ok'
+    http_status = 500 if errors else 200
+
+    response_body = {'status': status}
+    if errors:
+        response_body['errors'] = errors
+
+    return Response(
+        json.dumps(response_body),
+        status=http_status,
+        mimetype='application/json',
+    )
 
 
 @app.route('/cookies', methods=['GET'])
@@ -226,20 +245,20 @@ def render_search_results(results, search_term, page_number):
 
 
 def get_register_title(title_ref):
-    response = requests.get('{}titles/{}'.format(REGISTER_TITLE_API, title_ref))
+    response = requests.get('{}titles/{}'.format(REGISTER_TITLE_API_URL, title_ref))
     title = format_display_json(response)
     return title
 
 
 def get_register_titles_via_postcode(postcode, page_num):
-    response = requests.get('{}title_search_postcode/{}'.format(REGISTER_TITLE_API, postcode),
+    response = requests.get('{}title_search_postcode/{}'.format(REGISTER_TITLE_API_URL, postcode),
                             params={'page': page_num})
     results = response.json()
     return results
 
 
 def get_register_titles_via_address(address, page_num):
-    response = requests.get('{}title_search_address/{}'.format(REGISTER_TITLE_API, address),
+    response = requests.get('{}title_search_address/{}'.format(REGISTER_TITLE_API_URL, address),
                             params={'page': page_num})
     results = response.json()
     return results
@@ -279,7 +298,7 @@ def format_proprietors(proprietors_data):
         if 'forename' in name or 'surname' in name:
             formatted_proprietor["name"] = format_pi_name(name)
         # TODO: US149 - awaiting legal signoff
-        if False:
+        if MORE_PROPRIETOR_DETAILS:
             if 'name_supplimentary' in name:
                 formatted_proprietor["name_extra_info"] += ', ' + name['name_supplimentary']
             if 'name_information' in name:
@@ -293,13 +312,13 @@ def format_proprietors(proprietors_data):
             charity_name += name['charity_name']
             formatted_proprietor["name_extra_info"] += charity_name
         # TODO: US149 - awaiting legal signoff
-        if False:
+        if MORE_PROPRIETOR_DETAILS:
             if 'trading_name' in name:
                 formatted_proprietor["name_extra_info"] += ' trading as ' + name['trading_name']
         if 'non_private_individual_name' in name:
             formatted_proprietor["name"] = name['non_private_individual_name']
             # TODO: US149 - awaiting legal signoff
-            if False:
+            if MORE_PROPRIETOR_DETAILS:
                 if 'company_reg_num' in name:
                     formatted_proprietor["co_reg_no"] = 'Company registration number '\
                                                         + name['company_reg_num']
@@ -402,6 +421,46 @@ def _is_invalid_credentials_response(response):
 
     response_json = response.json()
     return response_json and response_json['error'] == 'Invalid credentials'
+
+
+def _get_json_from_response(response):
+    try:
+        return response.json()
+    except Exception:
+        return None
+
+
+def _check_title_api_health():
+    return _check_application_health(REGISTER_TITLE_API_URL, 'digital-register-api')
+
+
+def _check_login_api_health():
+    return _check_application_health(LOGIN_API_URL, 'login-api')
+
+
+def _check_application_health(application_url, application_name):
+    try:
+        health_response = requests.get('{0}health'.format(application_url))
+        response_json = _get_json_from_response(health_response)
+
+        if response_json:
+            return _extract_errors_from_health_response_json(response_json, application_name)
+        else:
+            return ['{0} health endpoint returned an invalid response: {1}'.format(
+                application_name, health_response.text)]
+    except Exception as e:
+        return ['Problem talking to {0}: {1}'.format(application_name, str(e))]
+
+
+def _extract_errors_from_health_response_json(response_json, application_name):
+    if response_json.get('status') == 'ok':
+        return []
+    elif response_json.get('errors'):
+        return ['{0} health endpoint returned errors: {1}'.format(
+            application_name, response_json['errors'])]
+    else:
+        return ['{0} health endpoint returned an invalid response: {1}'.format(
+            application_name, response_json)]
 
 
 class SigninForm(Form):
