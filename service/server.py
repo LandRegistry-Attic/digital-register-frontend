@@ -27,6 +27,7 @@ UNAUTHORISED_TITLE = Markup('There was an error with your Username/Password comb
 TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
 POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 NOF_SECS_BETWEEN_LOGINS = 1
+MORE_PROPRIETOR_DETAILS = (app.config['MORE_PROPRIETOR_DETAILS'] == 'true')
 LOGGER = logging.getLogger(__name__)
 
 
@@ -297,7 +298,7 @@ def format_proprietors(proprietors_data):
         if 'forename' in name or 'surname' in name:
             formatted_proprietor["name"] = format_pi_name(name)
         # TODO: US149 - awaiting legal signoff
-        if False:
+        if MORE_PROPRIETOR_DETAILS:
             if 'name_supplimentary' in name:
                 formatted_proprietor["name_extra_info"] += ', ' + name['name_supplimentary']
             if 'name_information' in name:
@@ -311,13 +312,13 @@ def format_proprietors(proprietors_data):
             charity_name += name['charity_name']
             formatted_proprietor["name_extra_info"] += charity_name
         # TODO: US149 - awaiting legal signoff
-        if False:
+        if MORE_PROPRIETOR_DETAILS:
             if 'trading_name' in name:
                 formatted_proprietor["name_extra_info"] += ' trading as ' + name['trading_name']
         if 'non_private_individual_name' in name:
             formatted_proprietor["name"] = name['non_private_individual_name']
             # TODO: US149 - awaiting legal signoff
-            if False:
+            if MORE_PROPRIETOR_DETAILS:
                 if 'company_reg_num' in name:
                     formatted_proprietor["co_reg_no"] = 'Company registration number '\
                                                         + name['company_reg_num']

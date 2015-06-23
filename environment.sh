@@ -8,3 +8,4 @@ export APPLICATION_SECRET_KEY='secretkeyshouldberandom'
 export LOGIN_API='http://landregistry.local:8005/'
 export SESSION_COOKIE_SECURE='False'
 export PYTHONPATH=.
+export MORE_PROPRIETOR_DETAILS='true'

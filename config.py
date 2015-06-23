@@ -8,6 +8,7 @@ google_analytics_api_key = os.environ['GOOGLE_ANALYTICS_API_KEY']
 secret_key = os.environ['APPLICATION_SECRET_KEY']
 session_cookie_secure = os.environ['SESSION_COOKIE_SECURE'].lower() != 'false'
 fault_log_file_path = os.environ['FAULT_LOG_FILE_PATH']
+more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 
 CONFIG_DICT = {
     'DEBUG': False,
@@ -19,7 +20,8 @@ CONFIG_DICT = {
     'LOGIN_API': login_api,
     'PERMANENT_SESSION_LIFETIME': datetime.timedelta(minutes=15),
     'SECRET_KEY': secret_key,
-    'SESSION_COOKIE_SECURE': session_cookie_secure
+    'SESSION_COOKIE_SECURE': session_cookie_secure,
+    'MORE_PROPRIETOR_DETAILS': more_proprietor_details
 }
 
 settings = os.environ.get('SETTINGS')
