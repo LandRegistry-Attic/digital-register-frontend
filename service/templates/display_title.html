@@ -18,67 +18,58 @@
     </p>
 
     <div id="map">
-      <div class="summary">
-        The map relies on JavaScript being enabled in your browser.
+      <div class="panel-simple">
+        <p>
+          The map relies on JavaScript being enabled in your browser.
+        </p>
       </div>
     </div>
 
-    <dl class="definition-tabular">
+    <dl class="definition-tabular expand-top-half">
       <dt>Owner{{ title.proprietors|length|pluralize }}</dt>
       <dd>
         {% for proprietor in title.proprietors %}
-          <h5 class="collapse-top expand-bottom-half">
+          <h5 class="expand-bottom-half {% if loop.index != 1 %} expand-top-half {% endif %}">
             <span class="heading-small">{{ proprietor.name }}</span>{{ proprietor.name_extra_info }}
           </h5>
           {% if proprietor.co_reg_no %}
-            <div class="grid-row expand-bottom-half">
-              <div class="address">
+              <div>
                 {{ proprietor.co_reg_no }}
               </div>
               {% if proprietor.company_location %}
-                <div class="sub-address">
+                <div>
                   {{ proprietor.company_location }}
                 </div>
               {% endif %}
-            </div>
           {% endif %}
           {% for address in proprietor.addresses %}
-            <div class="grid-row expand-bottom-half">
-              <div class="address">
+              <div>
                 {{ '<br>'.join(address.lines)|safe }}
               </div>
-            </div>
           {% endfor %}
         {% endfor %}
       </dd>
-
       {% if title.lenders %}
         <dt>Lender{{ title.lenders|length|pluralize }}</dt>
         <dd>
           {% for lender in title.lenders %}
-              <h5 class="collapse-top expand-bottom-half">
+              <h5 class="expand-bottom-half {% if loop.index != 1 %} expand-top-half {% endif %}">
                 <span class="heading-small">{{ lender.name }}</span>{{ lender.name_extra_info }}
               </h5>
               {% if lender.co_reg_no %}
-                <div class="grid-row expand-bottom-half">
-                  <div class="address">
+                  <div>
                     {{ lender.co_reg_no }}
                   </div>
-                </div>
               {% endif %}
               {% if lender.company_location %}
-                <div class="grid-row expand-bottom-half">
-                  <div class="sub-address">
+                  <div>
                     {{ lender.company_location }}
                   </div>
-                </div>
               {% endif %}
               {% for address in lender.addresses %}
-                <div class="grid-row expand-bottom-half">
-                  <div class="address">
+                  <div>
                     {{ '<br>'.join(address.lines)|safe }}
                   </div>
-                </div>
               {% endfor %}
           {% endfor %}
         </dd>
@@ -97,28 +88,19 @@
 
   </div>
 
-  <div class="column-third printhidden">
-
-    <div class="summary js-stick-at-top-when-scrolling">
-      <div class="icon-print">
-        <a href="javascript:window.print();">Print this page</a>
-      </div>
-    </div>
-
+  <div class="column-third printhidden panel-simple">
+      <span class="print-page"></span>
   </div>
 </div>
 
 <div class="grid-row">
   <div class="column-two-thirds">
-    <div class="legal-division--top legal-division--bottom">
-      <div class="text printhidden">
-
-        <h6 class="heading-medium">What next</h6>
-        <ul>
-          <li><a href="/title-search">Search for another title using this service</a></li>
-          <li><a href="https://gov.uk">Return to GOV.UK</a></li>
-        </ul>
-      </div>
+    <div class="text printhidden">
+      <h6 class="heading-medium">What next</h6>
+      <ul>
+        <li><a href="/title-search">Search for another title using this service</a></li>
+        <li><a href="https://gov.uk">Return to GOV.UK</a></li>
+      </ul>
     </div>
   </div>
 </div>

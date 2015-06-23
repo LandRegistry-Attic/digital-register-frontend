@@ -2,7 +2,13 @@ from flask.ext.assets import Environment
 from . import pipeline
 
 assets = Environment()
-assets.register('sass', pipeline.sass)
+assets.register('styleguide_js', pipeline.js)
+assets.register('styleguide', pipeline.sass)
+assets.register('styleguide_ie8', pipeline.sass_ie8)
+assets.register('styleguide_ie7', pipeline.sass_ie7)
+assets.register('styleguide_ie6', pipeline.sass_ie6)
+assets.register('print', pipeline.print)
+assets.register('beta', pipeline.beta)
 
 
 def register_assets(app):
