@@ -303,14 +303,6 @@ def format_proprietors(proprietors_data):
                 formatted_proprietor["name_extra_info"] += ', ' + name['name_supplimentary']
             if 'name_information' in name:
                 formatted_proprietor["name_extra_info"] += ', ' + name['name_information']
-        if 'charity_name' in name:
-            charity_name = ' of '
-            if name['charity_name'].endswith(")"):
-                charity_name = ' ('
-            else:
-                charity_name = ' of '
-            charity_name += name['charity_name']
-            formatted_proprietor["name_extra_info"] += charity_name
         # TODO: US149 - awaiting legal signoff
         if MORE_PROPRIETOR_DETAILS:
             if 'trading_name' in name:
@@ -319,20 +311,9 @@ def format_proprietors(proprietors_data):
             formatted_proprietor["name"] = name['non_private_individual_name']
             # TODO: US149 - awaiting legal signoff
             if MORE_PROPRIETOR_DETAILS:
-                if 'company_reg_num' in name:
-                    formatted_proprietor["co_reg_no"] = 'Company registration number '\
-                                                        + name['company_reg_num']
                 if 'country_incorporation' in name:
                     formatted_proprietor["name_extra_info"] += ' incorporated in '\
                                                                     + name['country_incorporation']
-                if 'company_location' in name:
-                    if name['company_location'] == 'SC':
-                        formatted_location = 'in Scotland'
-                    elif name['company_location'] == 'NI':
-                        formatted_location = 'in Northern Ireland'
-                    else:
-                        formatted_location = 'overseas'
-                    formatted_proprietor["company_location"] = 'Registered '+formatted_location
 
         formatted_proprietor["addresses"] = []
         for address in addresses:
