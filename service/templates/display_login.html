@@ -5,6 +5,12 @@
 
     <h1 class="heading-large">Digital Register Login</h1>
 
+    {% if service_notice_html %}
+      <div class="service-notice expand-bottom">
+        {{ service_notice_html | safe }}
+      </div>
+    {% endif %}
+
     <form action="{{ url_for('sign_in') }}" method="post" class="form">
         {{ form.hidden_tag() }}
         {% if form.errors %}
@@ -34,7 +40,7 @@
         {% if form.username.errors %}
           <div class="form-group error">
         {% else %}
-          <div class="form-group">
+          <div class="form-group expand-top-half">
         {% endif %}
             <label for="username" class="form-label-bold">Username</label>
             {% if form.username.errors %}

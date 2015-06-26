@@ -1,0 +1,5 @@
+@import "design-patterns/alpha-beta";
+
+.phase-banner {
+  @include phase-banner(beta);
+}
