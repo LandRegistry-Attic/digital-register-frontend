@@ -1,12 +1,14 @@
-from flask import Flask, render_template
-from flask.ext.assets import Environment, Bundle
+from flask import Flask
 import dateutil
 import dateutil.parser
 import faulthandler
 from flask_login import LoginManager
+import re
 
 from config import CONFIG_DICT
 from service import logging_config, error_handler, static
+
+pattern = re.compile(r'[^a-zA-Z0-9_ ;:\-,\.()&£]+', re.UNICODE)
 
 # This causes the traceback to be written to the fault log file in case of serious faults
 fault_log_file = open(CONFIG_DICT['FAULT_LOG_FILE_PATH'], 'a')
@@ -37,9 +39,24 @@ def pluralize(number, singular='', plural='s'):
     else:
         return plural
 
+
+def checkexistence(value):
+    if not value:
+        return ' Not Dated '
+    else:
+        return value
+
+
+def strip_non_alpha_numeric_vales(value):
+    return re.sub(pattern, '', value)
+
+
 app.jinja_env.filters['date'] = format_date
 app.jinja_env.filters['time'] = format_time
 app.jinja_env.filters['pluralize'] = pluralize
+app.jinja_env.filters['checkexistence'] = checkexistence
+app.jinja_env.filters['strip_non_alpha_numeric_vales'] = strip_non_alpha_numeric_vales
+
 GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
 
 

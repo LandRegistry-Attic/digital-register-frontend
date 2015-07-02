@@ -113,22 +113,25 @@ def sign_out():
     return redirect(url_for('sign_in'))
 
 
-@app.route('/titles/<title_ref>', methods=['GET'])
+@app.route('/titles/<title_number>', methods=['GET'])
 @login_required
-def display_title(title_ref):
-    title = _get_register_title(title_ref)
+def get_title(title_number):
+    title = _get_register_title(title_number)
 
     if title:
         page_number = int(request.args.get('page_number', 1))
-        search_term = request.args.get('search_term', title_ref)
-        breadcrumbs = _breadcumbs_for_title_details(title_ref, search_term, page_number)
+        search_term = request.args.get('search_term', title_number)
+        breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, page_number)
+        full_title_data = (
+            api_client.get_official_copy_data(title_number) if _show_full_title_data() else None
+        )
 
         LOGGER.info("VIEW REGISTER: Title number {0} was viewed by '{1}'".format(
-            title_ref,
+            title_number,
             current_user.get_id())
         )
 
-        return _title_details_page(title, search_term, page_number, breadcrumbs)
+        return _title_details_page(title, search_term, page_number, breadcrumbs, full_title_data)
     else:
         abort(404)
 
@@ -162,8 +165,8 @@ def find_titles_page(search_term=''):
         return _get_address_search_response(search_term, page_number)
 
 
-def _get_register_title(title_ref):
-    title = api_client.get_title(title_ref)
+def _get_register_title(title_number):
+    title = api_client.get_title(title_number)
     return title_formatter.format_display_json(title) if title else None
 
 
@@ -193,11 +196,11 @@ def _get_address_search_response(search_term, page_number):
 
 
 def _get_search_by_title_number_response(search_term, page_number):
-    title_ref = search_term
-    title = _get_register_title(title_ref)
+    title_number = search_term
+    title = _get_register_title(title_number)
     if title:
         # Redirect to the display_title method to display the digital register
-        return redirect(url_for('display_title', title_ref=title_ref, page_number=page_number,
+        return redirect(url_for('get_title', title_number=title_number, page_number=page_number,
                                 search_term=search_term))
     else:
         # If title not found display 'no title found' screen
@@ -228,15 +231,19 @@ def _is_csrf_enabled():
     return app.config.get('DISABLE_CSRF_PREVENTION') is not True
 
 
+def _show_full_title_data():
+    return app.config.get('SHOW_FULL_TITLE_DATA')
+
+
 def _introduce_wait_between_login_attempts():
     if app.config.get('SLEEP_BETWEEN_LOGINS', True):
         time.sleep(NOF_SECS_BETWEEN_LOGINS)
 
 
-def _breadcumbs_for_title_details(title_ref, search_term, page_number):
+def _breadcumbs_for_title_details(title_number, search_term, page_number):
     common_breadcrumbs = [
         {"text": "Find a title", "url": url_for('find_titles')},
-        {"current": "Viewing {}".format(title_ref)},
+        {"current": "Viewing {}".format(title_number)},
     ]
 
     search_breadcrumbs = [
@@ -246,7 +253,7 @@ def _breadcumbs_for_title_details(title_ref, search_term, page_number):
         }
     ]
 
-    found_title_by_number = title_ref.lower() == search_term.lower()
+    found_title_by_number = title_number.lower() == search_term.lower()
 
     if found_title_by_number:
         return common_breadcrumbs
@@ -276,14 +283,15 @@ def _login_page(form=None, show_unauthorised_message=False, next_url=None):
     )
 
 
-def _title_details_page(title, search_term, page_number, breadcrumbs):
+def _title_details_page(title, search_term, page_number, breadcrumbs, full_title_data):
     return render_template(
         'display_title.html',
         title=title,
         username=current_user.get_id(),
         search_term=search_term,
         page_number=page_number,
-        breadcrumbs=breadcrumbs
+        breadcrumbs=breadcrumbs,
+        full_title_data=full_title_data,
     )
 
 

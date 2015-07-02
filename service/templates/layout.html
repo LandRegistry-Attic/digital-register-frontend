@@ -1,4 +1,4 @@
-{% set asset_path = '../static/govuk_template/' %}
+{% set asset_path = '/static/govuk_template/' %}
 
 {% extends "govuk_template.html" %}
 
@@ -14,7 +14,7 @@
 <script type="text/javascript">
   var googleAnalyticsApiKey = '{{ google_api_key }}';
 </script>
-<script src="../static/javascripts/googleanalytics.js"></script>
+<script src="/static/javascripts/googleanalytics.js"></script>
 <!-- Consumable assets -->
   {% assets "styleguide_js" %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
 {% block head_additionals %}{% endblock %}
