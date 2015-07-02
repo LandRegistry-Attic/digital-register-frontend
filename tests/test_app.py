@@ -3,6 +3,7 @@ import mock
 import pytest
 from unittest.mock import call
 from config import CONFIG_DICT
+import service
 
 from service.server import app
 from .fake_response import FakeResponse
@@ -53,7 +54,7 @@ class BaseServerTest:
 
     def _log_in_user(self):
         with mock.patch(
-                'service.server.LoginApiClient.authenticate_user',
+                'service.login_api_client.authenticate_user',
                 return_value=True
         ):
             self.app.post(
@@ -82,30 +83,27 @@ class TestViewTitle(BaseServerTest):
         self.app = app.test_client()
         self._log_in_user()
 
-        with mock.patch(
-            'service.server.LoginApiClient.authenticate_user',
-            return_value=True
-        ):
+        with mock.patch('service.login_api_client.authenticate_user', return_value=True):
             self._log_in_user()
 
-    @mock.patch('requests.get', return_value=unavailable_title)
+    @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
     def test_get_title_page_no_title(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert response.status_code == 404
         assert 'Page not found' in response.data.decode()
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_get_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert response.status_code == 200
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_date_formatting_on_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert '28 August 2014' in response.data.decode()
         assert '12:37:13' in response.data.decode()
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_address_on_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
         page_content = response.data.decode()
@@ -113,7 +111,7 @@ class TestViewTitle(BaseServerTest):
         assert 'Luton' in page_content
         assert 'LU1 1DZ' in page_content
 
-    @mock.patch('requests.get', return_value=fake_partial_address)
+    @mock.patch('service.api_client.requests.get', return_value=fake_partial_address)
     def test_partial_address_on_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
         page_content = response.data.decode()
@@ -121,44 +119,44 @@ class TestViewTitle(BaseServerTest):
         assert 'Luton' in page_content
         assert 'LU1 1DZ' in page_content
 
-    @mock.patch('requests.get', return_value=fake_no_address_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_no_address_title)
     def test_address_string_only_on_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert '17 Hazelbury Crescent<br>Luton<br>LU1 1DZ' in str(response.data)
 
-    @mock.patch('requests.get', return_value=address_only_no_regex_match_title)
+    @mock.patch('service.api_client.requests.get', return_value=address_only_no_regex_match_title)
     def test_address_string_500(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert response.status_code == 200
         assert 'West side of Narnia Road' in response.data.decode()
         assert 'MagicalTown' in response.data.decode()
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_proprietor_on_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert 'Scott Oakes' in response.data.decode()
 
-    @mock.patch('requests.get', return_value=fake_charge_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_charge_title)
     def test_lender_on_title_page_with_charge(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert 'National Westminster Home Loans Limited' in response.data.decode()
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_lender_not_on_title_page_without_charge(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert 'National Westminster Home Loans Limited' not in response.data.decode()
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_tenure_on_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert 'Freehold' in response.data.decode()
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_ppi_data_on_title_page(self, mock_get):
         response = self.app.get('/titles/titleref')
         assert 'Price paid stated data' in response.data.decode()
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_index_geometry_on_title_page(self, mock_get):
         coordinate_data = '[[[508263.97, 221692.13],'
         response = self.app.get('/titles/titleref')
@@ -167,14 +165,14 @@ class TestViewTitle(BaseServerTest):
         assert 'coordinates' in page_content
         assert coordinate_data in page_content
 
-    @mock.patch('requests.get', return_value=unavailable_title)
+    @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
     def test_get_title_page_returns_500_when_error(self, mock_get):
         mock_get.side_effect = Exception('test exception')
         response = self.app.get('/titles/titleref')
         assert response.status_code == 500
         assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_breadcrumbs_search_results_do_not_appear(self, mock_get):
         # This tests that when going directly to a title the search results breadcrumb doesn't show
         response = self.app.get('/titles/DN1000')
@@ -183,7 +181,7 @@ class TestViewTitle(BaseServerTest):
         assert 'Search results' not in page_content
         assert 'Viewing DN1000' in page_content
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_breadcrumbs_search_results_appear(self, mock_get):
         response = self.app.get('/titles/DN1000?search_term="testing"')
         page_content = response.data.decode()
@@ -191,7 +189,7 @@ class TestViewTitle(BaseServerTest):
         assert 'Search results' in page_content
         assert 'Viewing DN1000' in page_content
 
-    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
     def test_get_more_proprietor_data(self, mock_get):
         response = self.app.get('/titles/AGL1000')
         page_content = response.data.decode()
@@ -295,16 +293,18 @@ class TestHealthcheck(BaseServerTest):
     def setup_method(self, method):
         self.app = app.test_client()
 
-    @mock.patch('requests.get', return_value=FakeResponse())
-    def test_health_calls_health_endpoints_of_apis(self, mock_get):
+    @mock.patch('service.api_client.requests.get', return_value=FakeResponse())
+    @mock.patch('service.login_api_client.requests.get', return_value=FakeResponse())
+    def test_health_calls_health_endpoints_of_apis(self, mock_login_api_get, mock_api_get):
         self.app.get('/health')
-        assert mock_get.mock_calls == [
-            call('{}health'.format(CONFIG_DICT['REGISTER_TITLE_API'])),
-            call('{}health'.format(CONFIG_DICT['LOGIN_API'])),
-        ]
 
-    @mock.patch('requests.get', return_value=FakeResponse(b'{"status": "ok"}', 200))
-    def test_health_returns_ok_status_when_both_apis_healthy(self, mock_get):
+        mock_login_api_get.assert_called_once_wth('{}health'.format(CONFIG_DICT['LOGIN_API']))
+        mock_api_get.assert_called_once_wth('{}health'.format(CONFIG_DICT['REGISTER_TITLE_API']))
+
+    @mock.patch('service.health_checker.perform_healthchecks', return_value=[])
+    def test_health_returns_ok_when_health_checker_returns_no_errors(
+            self, mock_perform_healthchecks):
+
         response = self.app.get('/health')
 
         assert response.data.decode() == '{"status": "ok"}'
