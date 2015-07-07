@@ -11,6 +11,7 @@ service_notice_html = os.environ['SERVICE_NOTICE_HTML']
 session_cookie_secure = os.environ['SESSION_COOKIE_SECURE'].lower() != 'false'
 more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
+show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
 
 
 CONFIG_DICT = {
@@ -27,6 +28,7 @@ CONFIG_DICT = {
     'SESSION_COOKIE_SECURE': session_cookie_secure,
     'MORE_PROPRIETOR_DETAILS': more_proprietor_details,
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
+    'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
 }
 
 settings = os.environ.get('SETTINGS')
