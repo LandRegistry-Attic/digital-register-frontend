@@ -1,4 +1,5 @@
 import mock
+from unittest.mock import call, MagicMock, patch
 
 import service
 from service.server import app
@@ -9,12 +10,12 @@ class TestAuthentication:
     def setup_method(self, method):
         self.app = app.test_client()
 
-    @mock.patch.object(service.server.Form, 'validate')
-    def test_sign_in_validates_user_input(self, mock_validate):
-        self.app.post('/login')
-        mock_validate.assert_called_once_with()
+    def test_sign_in_validates_user_input(self):
+        with patch('service.server.SigninForm') as mock_signin_form:
+            self.app.post('/login')
+            mock_signin_form().validate.assert_called_once_with()
 
-    @mock.patch('service.server.LOGIN_API_CLIENT.authenticate_user', return_value=False)
+    @mock.patch.object(service.login_api_client, 'authenticate_user', return_value=False)
     def test_sign_in_calls_api_to_authenticate_user_when_form_valid(self, mock_authenticate):
         username = 'username1'
         password = 'password1'
@@ -23,13 +24,13 @@ class TestAuthentication:
 
         mock_authenticate.assert_called_once_with(username, password)
 
-    @mock.patch('service.server.LOGIN_API_CLIENT.authenticate_user', return_value=False)
+    @mock.patch.object(service.login_api_client, 'authenticate_user', return_value=False)
     def test_sign_in_does_not_call_api_when_form_invalid(self, mock_authenticate):
         self.app.post('/login', data={'username': '', 'password': ''})
         assert mock_authenticate.mock_calls == []
 
     @mock.patch('service.server.login_user')
-    @mock.patch('service.server.LOGIN_API_CLIENT.authenticate_user', return_value=True)
+    @mock.patch.object(service.login_api_client, 'authenticate_user', return_value=True)
     def test_sign_in_logs_user_in_when_authentication_successful(
             self, mock_authenticate, mock_login):
         username = 'username1'
@@ -41,7 +42,7 @@ class TestAuthentication:
         assert logged_in_user.user_id == username
 
     @mock.patch('service.server.login_user')
-    @mock.patch('service.server.LOGIN_API_CLIENT.authenticate_user', return_value=False)
+    @mock.patch.object(service.login_api_client, 'authenticate_user', return_value=False)
     def test_sign_in_does_not_log_user_in_when_authentication_unsuccessful(
             self, mock_authenticate, mock_login):
 

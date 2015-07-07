@@ -93,6 +93,12 @@
   </div>
 </div>
 
+{% if full_title_data %}
+  <div class="service-notice expand-bottom">
+    {% include 'display_full_title_details.html' %}
+  </div>
+{% endif %}
+
 <div class="grid-row">
   <div class="column-two-thirds">
     <div class="text printhidden">
