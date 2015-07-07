@@ -1,0 +1,46 @@
+<html lang="en">
+  <head>
+    <style type="text/css">
+      @page {
+        @bottom-center {
+          content: "Page " counter(page) " of " counter(pages);
+        }
+      }
+      body {
+        font-family: 'GDSTransportWebsite';
+      }
+      #crown {
+        width: 30mm;
+        height: 30mm;
+      }
+    </style>
+
+
+  </head>
+
+  <body>
+
+    <p><strong>Official copy</strong> of register of title</p>
+    <h1>Title Number: {{ title_ref }}</h1>
+
+    <h2>date: {{ publication_date.strftime('%d %b, %Y') }}</h2>
+
+    <div>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+    </div>
+
+    <img src="{{ url_for('static', filename='images/crown.svg') }}">
+
+    <div>
+      {% for sub_register in sub_registers %}
+        <h2>{% if sub_register['sub_register_name'] == 'A' %}A: Property register{% elif sub_register['sub_register_name'] == 'B' %}B: Proprietorship register{% elif sub_register['sub_register_name'] == 'C' %}C: Charges register{% else %}{{ sub_register['sub_register_name'] }}{% endif %}</h2>
+        {% for entry in sub_register['entries'] %}
+          <p><strong>{{ entry['sequence_number'] }}</strong> {% if 'entry_date' in entry %}<em>{{ entry['entry_date'] }}</em> {% endif %}{{ entry['full_text'] }}</p>
+        {% endfor %}
+      {% endfor %}
+    </div>
+
+  </body>
+</html>
