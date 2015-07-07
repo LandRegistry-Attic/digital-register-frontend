@@ -131,64 +131,21 @@ def get_title(title_number):
         abort(404)
 
 
-@app.route('/titles/<title_ref>.pdf', methods=['GET'])
+@app.route('/titles/<title_number>.pdf', methods=['GET'])
 @login_required
-def display_title_pdf(title_ref):
-    official_copy_data = {
-       'sub_registers': [
-           {
-               'entries': [
-                   {
-                       'full_text': 'A yearly rentcharge of ... payable yearly on 1 January',
-                       'sequence_number': 1
-                   },
-                   {
-                       'entry_date': '1995-11-06',
-                       'full_text': 'The land has the benefit...',
-                       'sequence_number': 2
-                   }
-               ],
-               'sub_register_name': 'A'
-           },
-           {
-               'entries': [
-                   {
-                       'entry_date': '1996-07-01',
-                       'full_text': 'PROPRIETOR: #HEATHER POOLE PLC#',
-                       'sequence_number': 1
-                   },
-                   {
-                       'entry_date': '1996-07-01',
-                       'full_text': 'RESTRICTION: Except under an order of...',
-                       'sequence_number': 2
-                   }
-               ],
-               'sub_register_name': 'B'
-           },
-           {
-               'entries': [
-                   {
-                       'entry_date': '1996-07-01',
-                       'full_text': 'REGISTERED CHARGE dated 3 July 1995...',
-                       'sequence_number': 7
-                   },
-                   {
-                       'entry_date': '1996-07-01',
-                       'full_text': 'Proprietor: #WESTMINSTER HOME...',
-                       'sequence_number': 8
-                   }
-               ],
-               'sub_register_name': 'C'
-           }
-       ]
-    }
+def display_title_pdf(title_number):
+    if _show_full_title_data():
+        full_title_data = api_client.get_official_copy_data(title_number)
+        if full_title_data:
+            sub_registers = full_title_data.get('sub_registers')
+            if sub_registers:
+                publication_date = datetime.datetime(3001, 2, 3, 4, 5, 6)  #TODO: get real date
+                html = render_template('official_copy.html', title_number=title_number,
+                                       publication_date=publication_date,
+                                       sub_registers=sub_registers)
 
-    sub_registers = official_copy_data['sub_registers']
-    publication_date = datetime.datetime(3001, 2, 3, 4, 5, 6)  #TODO: replace with real date
-    html = render_template('official_copy.html', title_ref=title_ref,
-                           publication_date=publication_date, sub_registers=sub_registers)
-
-    return render_pdf(HTML(string=html))
+                return render_pdf(HTML(string=html))
+    abort(404)
 
 
 @app.route('/title-search', methods=['POST'])
