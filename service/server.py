@@ -13,17 +13,8 @@ import os
 import re
 import time
 
-from service import (
-    app,
-    login_manager,
-    address_utils,
-    api_client,
-    login_api_client,
-    health_checker,
-    title_formatter,
-    auditing,
-)
-
+from service import (address_utils, api_client, app, auditing, health_checker, login_api_client,
+                     login_manager, title_formatter)
 from service.forms import TitleSearchForm, SigninForm
 
 
