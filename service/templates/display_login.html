@@ -50,7 +50,7 @@
                 </span>
               {% endfor %}
             {% endif %}
-            <input type="text" class="form-control" id="username" name="username" required pattern=".{4,70}" title="Username must contain at least 4 and at most 70 characters">
+            <input type="text" class="form-control" id="username" name="username" required pattern=".{4,70}" title="Username must contain at least 4 and at most 70 characters" autofocus="autofocus">
         </div>
 
         {% if form.password.errors %}
