@@ -63,9 +63,9 @@
 {% endblock %}
 
 {% block js_bottom %}
-  <script type="text/javascript">
+<script type="text/javascript">
     number_results = {{ results['titles']|length }};
     page_number = {{ display_page_number or 0 }};
-  </script>
-  <script src="../static/javascripts/ga_search_results.js"></script>
+</script>
+<script src="/static/javascripts/ga_search_results.js"></script>
 {% endblock %}
