@@ -18,6 +18,7 @@ from service import (
     login_api_client,
     health_checker,
     title_formatter,
+    auditing,
 )
 
 from service.forms import TitleSearchForm, SigninForm
@@ -108,7 +109,7 @@ def sign_out():
 
     if user_id:
         logout_user()
-        LOGGER.info('User {} logged out'.format(user_id))
+        auditing.audit('User {} logged out'.format(user_id))
 
     return redirect(url_for('sign_in'))
 
@@ -126,7 +127,7 @@ def get_title(title_number):
             api_client.get_official_copy_data(title_number) if _show_full_title_data() else None
         )
 
-        LOGGER.info("VIEW REGISTER: Title number {0} was viewed by '{1}'".format(
+        auditing.audit("VIEW REGISTER: Title number {0} was viewed by '{1}'".format(
             title_number,
             current_user.get_id())
         )
@@ -161,7 +162,7 @@ def find_titles_page(search_term=''):
         return _initial_search_page()
     else:
         message_format = "SEARCH REGISTER: '{0}' was searched by '{1}'"
-        LOGGER.info(message_format.format(search_term, current_user.get_id()))
+        auditing.audit(message_format.format(search_term, current_user.get_id()))
         return _get_address_search_response(search_term, page_number)
 
 
@@ -177,7 +178,7 @@ def _process_valid_login_attempt(form):
     if authorised:
         login_user(User(username))
         next_url = request.args.get('next', 'title-search')
-        LOGGER.info('User {} logged in'.format(username))
+        auditing.audit('User {} logged in'.format(username))
         return redirect(next_url)
     else:
         # too many bad log-ins or invalid credentials

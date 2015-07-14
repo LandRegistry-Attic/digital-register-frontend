@@ -9,6 +9,8 @@ from service.server import app
 from .fake_response import FakeResponse
 
 
+TEST_USERNAME = 'username1'
+
 with open('tests/data/fake_title.json', 'r') as fake_title_json_file:
     fake_title_json_string = fake_title_json_file.read()
     fake_title_bytes = str.encode(fake_title_json_string)
@@ -61,7 +63,7 @@ class BaseServerTest:
         ):
             self.app.post(
                 '/login',
-                data={'username': 'username1', 'password': 'password1'},
+                data={'username': TEST_USERNAME, 'password': 'password1'},
                 follow_redirects=False
             )
 
@@ -99,6 +101,18 @@ class TestViewTitle(BaseServerTest):
     def test_get_title_page(self, mock_get_official_copy_data, mock_get):
         response = self.app.get('/titles/titleref')
         assert response.status_code == 200
+
+    @mock.patch('service.auditing.audit')
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    def test_get_title_page_audits_the_event(
+            self, mock_get_official_copy_data, mock_get, mock_audit):
+
+        self.app.get('/titles/titleref')
+
+        mock_audit.assert_called_once_with(
+            "VIEW REGISTER: Title number titleref was viewed by '{}'".format(TEST_USERNAME)
+        )
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
@@ -182,13 +196,17 @@ class TestViewTitle(BaseServerTest):
         assert 'coordinates' in page_content
         assert coordinate_data in page_content
 
+    @mock.patch('service.auditing.audit')
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_get_title_page_returns_500_when_error(self, mock_get_official_copy_data, mock_get):
+    def test_get_title_page_returns_500_when_error(
+            self, mock_get_official_copy_data, mock_get, mock_audit):
+
         mock_get.side_effect = Exception('test exception')
         response = self.app.get('/titles/titleref')
         assert response.status_code == 500
         assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
+        assert mock_audit.mock_calls == []
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
@@ -286,7 +304,7 @@ class TestTitleSearch(BaseServerTest):
     def test_title_search_success(self, mock_get_official_copy, mock_get):
         response = self.app.post(
             '/title-search',
-            data=dict(search_term='DN1000'),
+            data={'search_term': 'DN1000'},
             follow_redirects=True
         )
         assert response.status_code == 200
@@ -302,16 +320,25 @@ class TestTitleSearch(BaseServerTest):
     def test_title_search_plain_text_value_format(self, mock_get):
         response = self.app.post(
             '/title-search',
-            data=dict(search_term='some text'),
+            data={'search_term': 'some text'},
             follow_redirects=True
         )
         assert '0 results found' in response.data.decode()
+
+    @mock.patch('service.auditing.audit')
+    @mock.patch('requests.get', return_value=fake_no_titles)
+    def test_title_search_audits_the_events(self, mock_get, mock_audit):
+        search_term = 'search term'
+        self.app.post('/title-search', data={'search_term': search_term}, follow_redirects=True)
+        mock_audit.assert_called_once_with(
+            "SEARCH REGISTER: '{}' was searched by '{}'".format(search_term, TEST_USERNAME)
+        )
 
     @mock.patch('requests.get', return_value=unavailable_title)
     def test_title_search_title_not_found(self, mock_get):
         response = self.app.post(
             '/title-search',
-            data=dict(search_term='DT1000'),
+            data={'search_term': 'DT1000'},
             follow_redirects=True
         )
         assert '0 results found' in response.data.decode()
@@ -320,7 +347,7 @@ class TestTitleSearch(BaseServerTest):
     def test_postcode_search_success(self, mock_get):
         response = self.app.post(
             '/title-search',
-            data=dict(search_term='PL9 7FN'),
+            data={'search_term': 'PL9 7FN'},
             follow_redirects=True
         )
         assert response.status_code == 200
