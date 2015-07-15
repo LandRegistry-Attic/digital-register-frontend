@@ -5,7 +5,22 @@
   <h1 class="heading-xlarge collapse-bottom">Summary of title {{ title.number }}</h1>
   <p class="expand-bottom">This title was last changed on <b>{{ title.last_changed | date }}</b> at <b>{{ title.last_changed | time }}</b></p>
 
-  <div class="grid-row">
+<div class="download-documents text">
+  <div class="document-item">
+    <a href="{{ url_for('display_title_pdf', title_number=title.number) }}" class="image">
+      <img src="/static/images/icon-register-document.png">
+    </a>
+    <span class="title">Title register and title plan</span><br>
+    <span class="footnote">PDF document</span>
+    <p>
+      <a class="button" style="vertical-align: baseline;" href="{{ url_for('display_title_pdf', title_number=title.number) }}"><b>Download</b></a>
+    </p>
+  </div>
+</div>
+
+<h2 class="heading-large">Document summary</h2>
+
+<div class="grid-row">
 
     <div class="column-two-thirds">
 
