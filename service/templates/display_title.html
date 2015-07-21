@@ -10,10 +10,10 @@
     <a href="{{ url_for('display_title_pdf', title_number=title.number) }}" class="image">
       <img src="/static/images/icon-register-document.png">
     </a>
-    <span class="title">Title register and title plan</span><br>
+    <span class="title">Title register</span><br>
     <span class="footnote">PDF document</span>
     <p>
-      <a class="button" style="vertical-align: baseline;" href="{{ url_for('display_title_pdf', title_number=title.number) }}"><b>Download</b></a>
+      <a class="button" id="download-link" style="vertical-align: baseline;" href="{{ url_for('display_title_pdf', title_number=title.number) }}"><b>Download</b></a>
     </p>
   </div>
 </div>
