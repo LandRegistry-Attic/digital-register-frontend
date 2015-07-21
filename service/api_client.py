@@ -20,20 +20,20 @@ def get_title(title_number):
 
 
 # TODO: check response status
-def get_titles_by_postcode(postcode, page_num):
+def get_titles_by_postcode(postcode, page_number):
     response = requests.get(
         '{}title_search_postcode/{}'.format(REGISTER_TITLE_API_URL, postcode),
-        params={'page': page_num}
+        params={'page': page_number}
     )
 
     return _to_json(response)
 
 
 # TODO: check response status
-def get_titles_by_address(address, page_num):
+def get_titles_by_address(address, page_number):
     response = requests.get(
         '{}title_search_address/{}'.format(REGISTER_TITLE_API_URL, address),
-        params={'page': page_num}
+        params={'page': page_number}
     )
 
     return _to_json(response)
