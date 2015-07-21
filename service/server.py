@@ -120,9 +120,9 @@ def get_title(title_number):
     title = _get_register_title(title_number)
 
     if title:
-        page_number = int(request.args.get('page_number', 1))
+        display_page_number = int(request.args.get('page', 1))
         search_term = request.args.get('search_term', title_number)
-        breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, page_number)
+        breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
         full_title_data = (
             api_client.get_official_copy_data(title_number) if _show_full_title_data() else None
         )
@@ -132,7 +132,7 @@ def get_title(title_number):
             current_user.get_id())
         )
 
-        return _title_details_page(title, search_term, page_number, breadcrumbs, full_title_data)
+        return _title_details_page(title, search_term, breadcrumbs, full_title_data)
     else:
         abort(404)
 
@@ -141,10 +141,11 @@ def get_title(title_number):
 @app.route('/title-search/<search_term>', methods=['POST'])
 @login_required
 def find_titles():
-    page_number = int(request.args.get('page', 1))
+    display_page_number = int(request.args.get('page', 1))
+
     search_term = request.form['search_term'].strip()
     if search_term:
-        return redirect(url_for('find_titles', search_term=search_term, page=page_number))
+        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number))
     else:
         # TODO: we should redirect to that page
         return _initial_search_page()
@@ -155,7 +156,8 @@ def find_titles():
 @app.route('/title-search/<search_term>', methods=['GET'])
 @login_required
 def find_titles_page(search_term=''):
-    page_number = int(request.args.get('page', 1))
+    display_page_number = int(request.args.get('page', 1))
+    page_number = display_page_number - 1  # page_number is 0 indexed
 
     search_term = search_term.strip()
     if not search_term:
@@ -197,27 +199,28 @@ def _get_address_search_response(search_term, page_number):
 
 
 def _get_search_by_title_number_response(search_term, page_number):
+    display_page_number = page_number + 1
     title_number = search_term
     title = _get_register_title(title_number)
     if title:
         # Redirect to the display_title method to display the digital register
-        return redirect(url_for('get_title', title_number=title_number, page_number=page_number,
-                                search_term=search_term))
+        return redirect(url_for('get_title', title_number=title_number,
+                                page_number=display_page_number, search_term=search_term))
     else:
         # If title not found display 'no title found' screen
         results = {'number_results': 0}
-        return _search_results_page(results, search_term, page_number)
+        return _search_results_page(results, search_term)
 
 
 def _get_search_by_postcode_response(search_term, page_number):
     postcode = _normalise_postcode(search_term)
     postcode_search_results = api_client.get_titles_by_postcode(postcode, page_number)
-    return _search_results_page(postcode_search_results, postcode, page_number)
+    return _search_results_page(postcode_search_results, postcode)
 
 
-def _get_search_by_address_response(search_term, page_num):
-    address_search_results = api_client.get_titles_by_address(search_term, page_num)
-    return _search_results_page(address_search_results, search_term, page_num)
+def _get_search_by_address_response(search_term, page_number):
+    address_search_results = api_client.get_titles_by_address(search_term, page_number)
+    return _search_results_page(address_search_results, search_term)
 
 
 def _is_title_number(search_term):
@@ -241,16 +244,16 @@ def _introduce_wait_between_login_attempts():
         time.sleep(NOF_SECS_BETWEEN_LOGINS)
 
 
-def _breadcumbs_for_title_details(title_number, search_term, page_number):
+def _breadcumbs_for_title_details(title_number, search_term, display_page_number):
     common_breadcrumbs = [
-        {"text": "Find a title", "url": url_for('find_titles')},
-        {"current": "Viewing {}".format(title_number)},
+        {'text': 'Find a title', 'url': url_for('find_titles')},
+        {'current': 'Viewing {}'.format(title_number)},
     ]
 
     search_breadcrumbs = [
         {
-            "text": "Search results",
-            "url": url_for('find_titles_page', search_term=search_term, page=page_number),
+            'text': 'Search results',
+            'url': url_for('find_titles_page', search_term=search_term, page=display_page_number),
         }
     ]
 
@@ -284,13 +287,12 @@ def _login_page(form=None, show_unauthorised_message=False, next_url=None):
     )
 
 
-def _title_details_page(title, search_term, page_number, breadcrumbs, full_title_data):
+def _title_details_page(title, search_term, breadcrumbs, full_title_data):
     return render_template(
         'display_title.html',
         title=title,
         username=current_user.get_id(),
         search_term=search_term,
-        page_number=page_number,
         breadcrumbs=breadcrumbs,
         full_title_data=full_title_data,
     )
@@ -304,17 +306,16 @@ def _initial_search_page():
     )
 
 
-def _search_results_page(results, search_term, page_number):
+def _search_results_page(results, search_term):
     return render_template(
         'search_results.html',
         search_term=search_term,
-        page_num=page_number,
         results=results,
         form=TitleSearchForm(),
         username=current_user.get_id(),
         breadcrumbs=[
-            {"text": "Find a Title", "url": url_for('find_titles')},
-            {"current": "Search results"}
+            {'text': 'Find a Title', 'url': url_for('find_titles')},
+            {'current': 'Search results'}
         ]
     )
 

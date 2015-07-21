@@ -359,13 +359,13 @@ class TestTitleSearch(BaseServerTest):
     def test_postcode_search_with_page_calls_api_correctly(self, mock_get):
         self.app.get('/title-search/PL9%207FN?page=23')
         mock_get.assert_called_with('http://landregistry.local:8004/title_search_postcode/PL9 7FN',
-                                    params={'page': 23})
+                                    params={'page': 22})
 
     @mock.patch('requests.get', return_value=fake_address_search)
     def test_address_search_with_page_calls_api_correctly(self, mock_get):
         self.app.get('/title-search/PLYMOUTH?page=23')
         mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/PLYMOUTH',
-                                    params={'page': 23})
+                                    params={'page': 22})
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_search_title_passes_postcode_to_api_with_space_added_when_missing(self, mock_get):
