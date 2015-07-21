@@ -10,7 +10,7 @@
             Search results for <span class="visuallyhidden">{% if search_term %}{{ search_term }}{% endif %}</span>
             </label>
         </h1>
-        <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}">
+        <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}"  autofocus="autofocus">
         <input type="submit" value="Search" class="button search-button">
     </div>
 </form>
