@@ -139,7 +139,7 @@ def display_title_pdf(title_number):
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
-                publication_date = datetime.datetime(3001, 2, 3, 4, 5, 6)  #TODO: get real date
+                publication_date = datetime.datetime(3001, 2, 3, 4, 5, 6)  # TODO: get real date
                 html = render_template('full_title.html', title_number=title_number,
                                        publication_date=publication_date,
                                        sub_registers=sub_registers)
