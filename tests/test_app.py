@@ -240,7 +240,7 @@ class TestViewTitle(BaseServerTest):
     def test_get_title_calls_api_client_for_full_info_when_configured(
             self, mock_get_copy, mock_get):
 
-        with mock.patch.dict(CONFIG_DICT, {'SHOW_FULL_TITLE_DATA': True}):
+        with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_DATA': True}):
             title_number = 'AGL1234'
             self.app.get('/titles/{}'.format(title_number))
             mock_get_copy.assert_called_once_with(title_number)
@@ -249,7 +249,7 @@ class TestViewTitle(BaseServerTest):
     def test_get_title_does_not_call_api_client_for_full_info_when_not_configured(
             self, mock_get_copy):
 
-        with mock.patch.dict(CONFIG_DICT, {'SHOW_FULL_TITLE_DATA': False}):
+        with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_DATA': False}):
             title_number = 'AGL1234'
             self.app.get('/titles/{}'.format(title_number))
             assert mock_get_copy.mock_calls == []
@@ -286,6 +286,64 @@ class TestViewTitle(BaseServerTest):
             if i > 0:
                 previous_string = strings_to_find_on_page[i - 1]
                 assert response_body.index(string_to_find) > response_body.index(previous_string)
+
+
+class TestDisplayTitlePdf(BaseServerTest):
+
+    def setup_method(self, method):
+        self.app = app.test_client()
+        self._log_in_user()
+
+        with mock.patch('service.login_api_client.authenticate_user', return_value=True):
+            self._log_in_user()
+
+    @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
+    def test_display_title_pdf_no_title(self, mock_get):
+        response = self.app.get('/titles/titleref.pdf')
+        assert response.status_code == 404
+        assert 'Page not found' in response.data.decode()
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    def test_display_title_pdf(self, mock_get_official_copy_data, mock_get):
+        response = self.app.get('/titles/titleref.pdf')
+        assert response.status_code == 200
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    @mock.patch('service.server.render_template')
+    def test_display_title_pdf_renders_template(self, mock_render, mock_get_official_copy_data,
+                                                mock_get):
+        self.app.get('/titles/titleref.pdf')
+        actual_call = mock_render.mock_calls[0]
+        actual_args = actual_call[1]
+        actual_kwargs = actual_call[2]
+
+        assert actual_args[0] == 'full_title.html'
+        assert actual_kwargs['title_number'] == 'titleref'
+
+        import datetime  # TODO: use assert_called_once_with once we get publication_date from API
+        assert type(actual_kwargs['publication_date']) == datetime.datetime
+
+        sub_registers_response = official_copy_response['official_copy_data']['sub_registers']
+        assert actual_kwargs['sub_registers'] == sub_registers_response
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch.object(service.api_client, 'get_official_copy_data')
+    def test_display_title_pdf_calls_api_client_for_full_info_when_enabled(self, mock_get_copy,
+                                                                           mock_get):
+        with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_PDF': True}):
+            title_number = 'AGL1234'
+            self.app.get('/titles/{}.pdf'.format(title_number))
+            mock_get_copy.assert_called_once_with(title_number)
+
+    @mock.patch.object(service.api_client, 'get_official_copy_data')
+    def test_display_title_pdf_doesnt_call_api_client_for_full_info_when_disabled(self,
+                                                                                  mock_get_copy):
+        with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_PDF': False}):
+            title_number = 'AGL1234'
+            self.app.get('/titles/{}.pdf'.format(title_number))
+            assert mock_get_copy.mock_calls == []
 
 
 class TestTitleSearch(BaseServerTest):
