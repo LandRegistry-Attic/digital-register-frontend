@@ -118,7 +118,7 @@ def get_title(title_number):
         search_term = request.args.get('search_term', title_number)
         breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
         full_title_data = (
-            api_client.get_official_copy_data(title_number) if _show_full_title_data() else None
+            api_client.get_official_copy_data(title_number) if _should_show_full_title_data() else None
         )
 
         auditing.audit("VIEW REGISTER: Title number {0} was viewed by '{1}'".format(
@@ -134,7 +134,7 @@ def get_title(title_number):
 @app.route('/titles/<title_number>.pdf', methods=['GET'])
 @login_required
 def display_title_pdf(title_number):
-    if _show_full_title_pdf():
+    if _should_show_full_title_pdf():
         full_title_data = api_client.get_official_copy_data(title_number)
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
@@ -246,11 +246,11 @@ def _is_csrf_enabled():
     return app.config.get('DISABLE_CSRF_PREVENTION') is not True
 
 
-def _show_full_title_data():
+def _should_show_full_title_data():
     return app.config.get('SHOW_FULL_TITLE_DATA')
 
 
-def _show_full_title_pdf():
+def _should_show_full_title_pdf():
     return app.config.get('SHOW_FULL_TITLE_PDF')
 
 
