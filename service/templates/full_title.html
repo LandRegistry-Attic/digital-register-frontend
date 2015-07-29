@@ -153,7 +153,7 @@
       <span class="copy-18 block">Register of title</span>
       Title Number: {{ title_number }}
     </h1>
-    <h2 class="copy-14">Issued on: {{ publication_date.strftime('%d %B %Y') }}</h2>
+    <h2 class="copy-14">Issued on: {{ title.last_changed | date }}</h2>
 
     <div id="cover" class="group">
       <div class="text-90 copy-10 fleft">
@@ -179,11 +179,13 @@
         <div class="sub-register-description">
           <h3 class="register-a">Property register</h3>
           <p class="text-80 copy-10">
-            Describes the land and estate comprised in the title. Except as
-            mentioned below, the title includes any legal easements granted by
-            the registered lease but is subject to any rights that it reserves,
-            so far as those easements and rights exist and benefit or affect the
-            registered land.
+            Describes the land and estate comprised in the title.
+            {% if sub_register['tenure'] == 'Leasehold' %}
+              Except as mentioned below, the title includes any legal easements
+              granted by the registered lease but is subject to any rights that
+              it reserves, so far as those easements and rights exist and
+              benefit or affect theregistered land.
+            {% endif %}
           </p>
         </div>
       {% elif sub_register['sub_register_name'] == 'B' %}

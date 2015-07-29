@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import datetime
+from datetime import datetime
 from flask import (abort, make_response, Markup, redirect, render_template, request, Response,
                    url_for)
 from flask_login import login_user, login_required, current_user, logout_user
@@ -134,13 +134,17 @@ def get_title(title_number):
 @app.route('/titles/<title_number>.pdf', methods=['GET'])
 @login_required
 def display_title_pdf(title_number):
-    if _should_show_full_title_pdf():
+    if not _should_show_full_title_pdf():
+        abort(404)
+
+    title = _get_register_title(title_number)
+    if title:
         full_title_data = api_client.get_official_copy_data(title_number)
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
-                publication_date = datetime.datetime(3001, 2, 3, 4, 5, 6)  # TODO: get real date
-                html = render_template('full_title.html', title_number=title_number,
+                publication_date = datetime(3001, 2, 3, 4, 5, 6)  # TODO: get real date
+                html = render_template('full_title.html', title_number=title_number, title=title,
                                        publication_date=publication_date,
                                        sub_registers=sub_registers)
 
