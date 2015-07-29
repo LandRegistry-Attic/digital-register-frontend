@@ -72,6 +72,6 @@ window.onload = function() {
 
     map.fitBounds(bounds, {maxZoom: 18, animate: false});
   } else {
-    document.getElementById('map').innerHTML = '<div class="summary">No map information available</div>';
+    document.getElementById('map').innerHTML = '<div class="panel-simple">No map information available</div>';
   }
 };

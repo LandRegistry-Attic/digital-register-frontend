@@ -1,0 +1,51 @@
+{
+    "title_number": "AGL1234",
+    "official_copy_data": {
+        "sub_registers": [
+            {
+                "entries": [
+                    {
+                        "full_text": "A yearly ... payable yearly on ...",
+                        "sequence_number": 1
+                    },
+                    {
+                        "entry_date": "1995-11-06",
+                        "full_text": "The land has the ...",
+                        "sequence_number": 2
+                    }
+                ],
+                "sub_register_name": "A"
+            },
+            {
+                "entries": [
+                    {
+                        "entry_date": "1996-07-01",
+                        "full_text": "PROPRIETOR: JOHN SMITH",
+                        "sequence_number": 1
+                    },
+                    {
+                        "entry_date": "1996-07-01",
+                        "full_text": "RESTRICTION: Except under an order of...",
+                        "sequence_number": 2
+                    }
+                ],
+                "sub_register_name": "B"
+            },
+            {
+                "entries": [
+                    {
+                        "entry_date": "1996-07-01",
+                        "full_text": "REGISTERED CHARGE dated 3 July 1995...",
+                        "sequence_number": 7
+                    },
+                    {
+                        "entry_date": "1996-07-01",
+                        "full_text": "Proprietor: WESTMINSTER H...",
+                        "sequence_number": 8
+                    }
+                ],
+                "sub_register_name": "C"
+            }
+        ]
+    }
+}
