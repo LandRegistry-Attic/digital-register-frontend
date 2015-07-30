@@ -1,10 +1,13 @@
+from datetime import datetime
+from io import BytesIO
 import json
 import mock
+from PyPDF2 import PdfFileReader
 import pytest
 from unittest.mock import call
+
 from config import CONFIG_DICT
 import service
-
 from service.server import app
 from .fake_response import FakeResponse
 
@@ -321,12 +324,19 @@ class TestDisplayTitlePdf(BaseServerTest):
 
         assert actual_args[0] == 'full_title.html'
         assert actual_kwargs['title_number'] == 'titleref'
+        assert actual_kwargs['publication_date'] == datetime(3001, 2, 3, 4, 5, 6)
+        assert actual_kwargs['sub_registers'] == official_copy_response['official_copy_data']['sub_registers']
 
-        import datetime  # TODO: use assert_called_once_with once we get publication_date from API
-        assert type(actual_kwargs['publication_date']) == datetime.datetime
-
-        sub_registers_response = official_copy_response['official_copy_data']['sub_registers']
-        assert actual_kwargs['sub_registers'] == sub_registers_response
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    def test_display_title_pdf_includes_official_copy_data(self, mock_get_official_copy_data, mock_get):
+        response = self.app.get('/titles/titleref.pdf')
+        pdf = PdfFileReader(BytesIO(response.data))
+        pdf_text = '\n'.join([page.extractText() for page in pdf.pages])
+        sub_registers = official_copy_response['official_copy_data']['sub_registers']
+        for sub_register in sub_registers:
+            for entry in sub_register['entries']:
+                assert entry['full_text'] in pdf_text
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch.object(service.api_client, 'get_official_copy_data')
