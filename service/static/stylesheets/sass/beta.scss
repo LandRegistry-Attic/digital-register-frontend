@@ -3,3 +3,29 @@
 .phase-banner {
   @include phase-banner(beta);
 }
+
+// Document downloads area
+
+.download-documents {
+  margin: $gutter*1.5 0;
+  padding: $gutter;
+  border: 10px solid $light-blue;
+}
+
+.document-item {
+  @extend %contain-floats;
+
+  .image {
+    width: 100px;
+    box-shadow: 0 1px 3px $grey-2;
+
+    @include media(tablet) {
+      float: left;
+      margin-right: 30px;
+    }
+
+    &:hover {
+      outline: 3px solid $yellow;
+    }
+  }
+}

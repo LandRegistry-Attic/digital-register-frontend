@@ -1,10 +1,13 @@
+from datetime import datetime
+from io import BytesIO
 import json
 import mock
+from PyPDF2 import PdfFileReader
 import pytest
 from unittest.mock import call
+
 from config import CONFIG_DICT
 import service
-
 from service.server import app
 from .fake_response import FakeResponse
 
@@ -57,15 +60,8 @@ unavailable_title = FakeResponse('', 404)
 class BaseServerTest:
 
     def _log_in_user(self):
-        with mock.patch(
-                'service.login_api_client.authenticate_user',
-                return_value=True
-        ):
-            self.app.post(
-                '/login',
-                data={'username': TEST_USERNAME, 'password': 'password1'},
-                follow_redirects=False
-            )
+        with mock.patch('service.login_api_client.authenticate_user', return_value=True):
+            self.app.post('/login', data={'username': TEST_USERNAME, 'password': 'password1'}, follow_redirects=False)
 
 
 class TestViewTitleUnauthorised(BaseServerTest):
@@ -105,9 +101,7 @@ class TestViewTitle(BaseServerTest):
     @mock.patch('service.auditing.audit')
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_get_title_page_audits_the_event(
-            self, mock_get_official_copy_data, mock_get, mock_audit):
-
+    def test_get_title_page_audits_the_event(self, mock_get_official_copy_data, mock_get, mock_audit):
         self.app.get('/titles/titleref')
 
         mock_audit.assert_called_once_with(
@@ -199,9 +193,7 @@ class TestViewTitle(BaseServerTest):
     @mock.patch('service.auditing.audit')
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_get_title_page_returns_500_when_error(
-            self, mock_get_official_copy_data, mock_get, mock_audit):
-
+    def test_get_title_page_returns_500_when_error(self, mock_get_official_copy_data, mock_get, mock_audit):
         mock_get.side_effect = Exception('test exception')
         response = self.app.get('/titles/titleref')
         assert response.status_code == 500
@@ -237,19 +229,17 @@ class TestViewTitle(BaseServerTest):
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch.object(service.api_client, 'get_official_copy_data')
-    def test_get_title_calls_api_client_for_full_info_when_configured(
-            self, mock_get_copy, mock_get):
+    def test_get_title_calls_api_client_for_full_info_when_configured(self, mock_get_copy, mock_get):
 
-        with mock.patch.dict(CONFIG_DICT, {'SHOW_FULL_TITLE_DATA': True}):
+        with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_DATA': True}):
             title_number = 'AGL1234'
             self.app.get('/titles/{}'.format(title_number))
             mock_get_copy.assert_called_once_with(title_number)
 
     @mock.patch.object(service.api_client, 'get_official_copy_data')
-    def test_get_title_does_not_call_api_client_for_full_info_when_not_configured(
-            self, mock_get_copy):
+    def test_get_title_does_not_call_api_client_for_full_info_when_not_configured(self, mock_get_copy):
 
-        with mock.patch.dict(CONFIG_DICT, {'SHOW_FULL_TITLE_DATA': False}):
+        with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_DATA': False}):
             title_number = 'AGL1234'
             self.app.get('/titles/{}'.format(title_number))
             assert mock_get_copy.mock_calls == []
@@ -257,9 +247,7 @@ class TestViewTitle(BaseServerTest):
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch.object(
         service.api_client, 'get_official_copy_data', return_value=official_copy_response)
-    def test_get_title_returns_page_containing_official_copy_info_page_when_present(
-            self, mock_get_copy, mock_get):
-
+    def test_get_title_returns_page_containing_official_copy_info_page_when_present(self, mock_get_copy, mock_get):
         title_number = 'AGL1234'
         response = self.app.get('/titles/{}'.format(title_number))
 
@@ -288,6 +276,68 @@ class TestViewTitle(BaseServerTest):
                 assert response_body.index(string_to_find) > response_body.index(previous_string)
 
 
+class TestDisplayTitlePdf(BaseServerTest):
+
+    def setup_method(self, method):
+        self.app = app.test_client()
+        self._log_in_user()
+
+        with mock.patch('service.login_api_client.authenticate_user', return_value=True):
+            self._log_in_user()
+
+    @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
+    def test_display_title_pdf_no_title(self, mock_get):
+        response = self.app.get('/titles/titleref.pdf')
+        assert response.status_code == 404
+        assert 'Page not found' in response.data.decode()
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    def test_display_title_pdf(self, mock_get_official_copy_data, mock_get):
+        response = self.app.get('/titles/titleref.pdf')
+        assert response.status_code == 200
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    @mock.patch('service.server.render_template')
+    def test_display_title_pdf_renders_template(self, mock_render, mock_get_official_copy_data, mock_get):
+        self.app.get('/titles/titleref.pdf')
+        actual_call = mock_render.mock_calls[0]
+        actual_args = actual_call[1]
+        actual_kwargs = actual_call[2]
+
+        assert actual_args[0] == 'full_title.html'
+        assert actual_kwargs['title_number'] == 'titleref'
+        assert actual_kwargs['publication_date'] == datetime(3001, 2, 3, 4, 5, 6)
+        assert actual_kwargs['sub_registers'] == official_copy_response['official_copy_data']['sub_registers']
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    def test_display_title_pdf_includes_official_copy_data(self, mock_get_official_copy_data, mock_get):
+        response = self.app.get('/titles/titleref.pdf')
+        pdf = PdfFileReader(BytesIO(response.data))
+        pdf_text = '\n'.join([page.extractText() for page in pdf.pages])
+        sub_registers = official_copy_response['official_copy_data']['sub_registers']
+        for sub_register in sub_registers:
+            for entry in sub_register['entries']:
+                assert entry['full_text'] in pdf_text
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch.object(service.api_client, 'get_official_copy_data')
+    def test_display_title_pdf_calls_api_client_for_full_info_when_enabled(self, mock_get_copy, mock_get):
+        with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_PDF': True}):
+            title_number = 'AGL1234'
+            self.app.get('/titles/{}.pdf'.format(title_number))
+            mock_get_copy.assert_called_once_with(title_number)
+
+    @mock.patch.object(service.api_client, 'get_official_copy_data')
+    def test_display_title_pdf_doesnt_call_api_client_for_full_info_when_disabled(self, mock_get_copy):
+        with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_PDF': False}):
+            title_number = 'AGL1234'
+            self.app.get('/titles/{}.pdf'.format(title_number))
+            assert mock_get_copy.mock_calls == []
+
+
 class TestTitleSearch(BaseServerTest):
 
     def setup_method(self, method):
@@ -302,11 +352,7 @@ class TestTitleSearch(BaseServerTest):
     @mock.patch('requests.get', return_value=fake_title)
     @mock.patch.object(service.api_client, 'get_official_copy_data')
     def test_title_search_success(self, mock_get_official_copy, mock_get):
-        response = self.app.post(
-            '/title-search',
-            data={'search_term': 'DN1000'},
-            follow_redirects=True
-        )
+        response = self.app.post('/title-search', data={'search_term': 'DN1000'}, follow_redirects=True)
         assert response.status_code == 200
         page_content = response.data.decode()
         assert 'DN1000' in page_content
@@ -318,11 +364,7 @@ class TestTitleSearch(BaseServerTest):
 
     @mock.patch('requests.get', return_value=fake_no_titles)
     def test_title_search_plain_text_value_format(self, mock_get):
-        response = self.app.post(
-            '/title-search',
-            data={'search_term': 'some text'},
-            follow_redirects=True
-        )
+        response = self.app.post('/title-search', data={'search_term': 'some text'}, follow_redirects=True)
         assert '0 results found' in response.data.decode()
 
     @mock.patch('service.auditing.audit')
@@ -330,26 +372,17 @@ class TestTitleSearch(BaseServerTest):
     def test_title_search_audits_the_events(self, mock_get, mock_audit):
         search_term = 'search term'
         self.app.post('/title-search', data={'search_term': search_term}, follow_redirects=True)
-        mock_audit.assert_called_once_with(
-            "SEARCH REGISTER: '{}' was searched by '{}'".format(search_term, TEST_USERNAME)
-        )
+        audit_text = "SEARCH REGISTER: '{}' was searched by '{}'".format(search_term, TEST_USERNAME)
+        mock_audit.assert_called_once_with(audit_text)
 
     @mock.patch('requests.get', return_value=unavailable_title)
     def test_title_search_title_not_found(self, mock_get):
-        response = self.app.post(
-            '/title-search',
-            data={'search_term': 'DT1000'},
-            follow_redirects=True
-        )
+        response = self.app.post('/title-search', data={'search_term': 'DT1000'}, follow_redirects=True)
         assert '0 results found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_success(self, mock_get):
-        response = self.app.post(
-            '/title-search',
-            data={'search_term': 'PL9 7FN'},
-            follow_redirects=True
-        )
+        response = self.app.post('/title-search', data={'search_term': 'PL9 7FN'}, follow_redirects=True)
         assert response.status_code == 200
         page_content = response.data.decode()
         assert 'AGL1000' in page_content
@@ -358,14 +391,12 @@ class TestTitleSearch(BaseServerTest):
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_with_page_calls_api_correctly(self, mock_get):
         self.app.get('/title-search/PL9%207FN?page=23')
-        mock_get.assert_called_with('http://landregistry.local:8004/title_search_postcode/PL9 7FN',
-                                    params={'page': 22})
+        mock_get.assert_called_with('http://landregistry.local:8004/title_search_postcode/PL9 7FN', params={'page': 22})
 
     @mock.patch('requests.get', return_value=fake_address_search)
     def test_address_search_with_page_calls_api_correctly(self, mock_get):
         self.app.get('/title-search/PLYMOUTH?page=23')
-        mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/PLYMOUTH',
-                                    params={'page': 22})
+        mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/PLYMOUTH', params={'page': 22})
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_search_title_passes_postcode_to_api_with_space_added_when_missing(self, mock_get):
@@ -399,8 +430,8 @@ class TestHealthcheck(BaseServerTest):
     def test_health_calls_health_endpoints_of_apis(self, mock_login_api_get, mock_api_get):
         self.app.get('/health')
 
-        mock_login_api_get.assert_called_once_wth('{}health'.format(CONFIG_DICT['LOGIN_API']))
-        mock_api_get.assert_called_once_wth('{}health'.format(CONFIG_DICT['REGISTER_TITLE_API']))
+        mock_login_api_get.assert_called_once_wth('{}health'.format(app.config['LOGIN_API']))
+        mock_api_get.assert_called_once_wth('{}health'.format(app.config['REGISTER_TITLE_API']))
 
     @mock.patch('service.health_checker.perform_healthchecks', return_value=[])
     def test_health_returns_ok_when_health_checker_returns_no_errors(
@@ -444,8 +475,7 @@ class TestHealthcheck(BaseServerTest):
         errors = response_json['errors']
 
         assert len(errors) == 2
-        assert ("digital-register-api health endpoint returned "
-                "an invalid response: {'status': 'error'}") in errors
+        assert "digital-register-api health endpoint returned an invalid response: {'status': 'error'}" in errors
         assert "login-api health endpoint returned an invalid response: not a json" in errors
         assert response.status_code == 500
 
