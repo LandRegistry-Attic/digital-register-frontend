@@ -1,14 +1,12 @@
-#!/usr/bin/env python
-from datetime import datetime
-from flask import (abort, make_response, Markup, redirect, render_template, request, Response,
-                   url_for)
-from flask_login import login_user, login_required, current_user, logout_user
-from flask_weasyprint import HTML, render_pdf
-from flask_wtf import Form
-from flask_wtf.csrf import CsrfProtect
+from datetime import datetime                                                                          # type: ignore
+from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for  # type: ignore
+from flask_login import login_user, login_required, current_user, logout_user                          # type: ignore
+from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
+from flask_wtf import Form                                                                             # type: ignore
+from flask_wtf.csrf import CsrfProtect                                                                 # type: ignore
 import json
 import logging
-import logging.config
+import logging.config                                                                                  # type: ignore
 import os
 import re
 import time

@@ -1,5 +1,6 @@
+from datetime import timedelta
 import os
-import datetime
+from typing import Dict, Union
 
 fault_log_file_path = os.environ['FAULT_LOG_FILE_PATH']
 google_analytics_api_key = os.environ['GOOGLE_ANALYTICS_API_KEY']
@@ -21,7 +22,7 @@ CONFIG_DICT = {
     'LOGGING': True,
     'LOGGING_CONFIG_FILE_PATH': logging_config_file_path,
     'LOGIN_API': login_api,
-    'PERMANENT_SESSION_LIFETIME': datetime.timedelta(minutes=15),
+    'PERMANENT_SESSION_LIFETIME': timedelta(minutes=15),
     'REGISTER_TITLE_API': register_title_api,
     'SECRET_KEY': secret_key,
     'SERVICE_NOTICE_HTML': service_notice_html,
@@ -29,7 +30,7 @@ CONFIG_DICT = {
     'MORE_PROPRIETOR_DETAILS': more_proprietor_details,
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
-}
+}  # type: Dict[str, Union[bool, str, timedelta]]
 
 settings = os.environ.get('SETTINGS')
 
