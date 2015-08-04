@@ -1,4 +1,5 @@
-from flask.ext.assets import Environment
+from flask.ext.assets import Environment  # type: ignore
+
 from . import pipeline
 
 assets = Environment()

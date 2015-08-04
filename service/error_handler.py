@@ -1,5 +1,5 @@
-from flask import Markup, request, render_template
-from werkzeug.exceptions import default_exceptions, HTTPException
+from flask import Markup, request, render_template                 # type: ignore
+from werkzeug.exceptions import default_exceptions, HTTPException  # type: ignore
 import logging
 
 GENERIC_ERROR_WORDING = 'Sorry, we are experiencing technical difficulties.'
