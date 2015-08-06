@@ -115,6 +115,7 @@ def get_title(title_number):
         display_page_number = int(request.args.get('page', 1))
         search_term = request.args.get('search_term', title_number)
         breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
+        show_pdf = _should_show_full_title_pdf()
         full_title_data = (
             api_client.get_official_copy_data(title_number) if _should_show_full_title_data() else None
         )
@@ -124,7 +125,7 @@ def get_title(title_number):
             current_user.get_id())
         )
 
-        return _title_details_page(title, search_term, breadcrumbs, full_title_data)
+        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data)
     else:
         abort(404)
 
@@ -304,13 +305,14 @@ def _login_page(form=None, show_unauthorised_message=False, next_url=None):
     )
 
 
-def _title_details_page(title, search_term, breadcrumbs, full_title_data):
+def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data):
     return render_template(
         'display_title.html',
         title=title,
         username=current_user.get_id(),
         search_term=search_term,
         breadcrumbs=breadcrumbs,
+        show_pdf=show_pdf,
         full_title_data=full_title_data,
     )
 
