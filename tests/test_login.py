@@ -188,7 +188,7 @@ class TestLogin:
 
     @mock.patch('requests.post', return_value=invalid_credentials_response)
     def test_overlong_username(self, mock_post):
-        username = '1234567890'*7+'a'
+        username = '1234567890' * 7 + 'a'
         response = self.app.post(
             '/login',
             data={

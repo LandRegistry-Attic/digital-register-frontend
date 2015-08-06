@@ -1,26 +1,18 @@
-#!/usr/bin/env python
+from datetime import datetime                                                                          # type: ignore
+from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for  # type: ignore
+from flask_login import login_user, login_required, current_user, logout_user                          # type: ignore
+from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
+from flask_wtf import Form                                                                             # type: ignore
+from flask_wtf.csrf import CsrfProtect                                                                 # type: ignore
 import json
-from flask import abort, render_template, request, redirect, url_for, Response
-from flask import Markup
-from flask_login import login_user, login_required, current_user, logout_user
-from flask_wtf.csrf import CsrfProtect
 import logging
-import logging.config
+import logging.config                                                                                  # type: ignore
 import os
 import re
 import time
 
-from service import (
-    app,
-    login_manager,
-    address_utils,
-    api_client,
-    login_api_client,
-    health_checker,
-    title_formatter,
-    auditing,
-)
-
+from service import (address_utils, api_client, app, auditing, health_checker, login_api_client,
+                     login_manager, title_formatter)
 from service.forms import TitleSearchForm, SigninForm
 
 
@@ -124,7 +116,7 @@ def get_title(title_number):
         search_term = request.args.get('search_term', title_number)
         breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
         full_title_data = (
-            api_client.get_official_copy_data(title_number) if _show_full_title_data() else None
+            api_client.get_official_copy_data(title_number) if _should_show_full_title_data() else None
         )
 
         auditing.audit("VIEW REGISTER: Title number {0} was viewed by '{1}'".format(
@@ -135,6 +127,27 @@ def get_title(title_number):
         return _title_details_page(title, search_term, breadcrumbs, full_title_data)
     else:
         abort(404)
+
+
+@app.route('/titles/<title_number>.pdf', methods=['GET'])
+@login_required
+def display_title_pdf(title_number):
+    if not _should_show_full_title_pdf():
+        abort(404)
+
+    title = _get_register_title(title_number)
+    if title:
+        full_title_data = api_client.get_official_copy_data(title_number)
+        if full_title_data:
+            sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
+            if sub_registers:
+                publication_date = datetime(3001, 2, 3, 4, 5, 6)  # TODO: get real date
+                html = render_template('full_title.html', title_number=title_number, title=title,
+                                       publication_date=publication_date,
+                                       sub_registers=sub_registers)
+
+                return render_pdf(HTML(string=html))
+    abort(404)
 
 
 @app.route('/title-search', methods=['POST'])
@@ -235,8 +248,12 @@ def _is_csrf_enabled():
     return app.config.get('DISABLE_CSRF_PREVENTION') is not True
 
 
-def _show_full_title_data():
+def _should_show_full_title_data():
     return app.config.get('SHOW_FULL_TITLE_DATA')
+
+
+def _should_show_full_title_pdf():
+    return app.config.get('SHOW_FULL_TITLE_PDF')
 
 
 def _introduce_wait_between_login_attempts():

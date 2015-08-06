@@ -1,4 +1,5 @@
-import requests
+import requests  # type: ignore
+
 from service import app
 
 REGISTER_TITLE_API_URL = app.config['REGISTER_TITLE_API']

@@ -1,6 +1,6 @@
-from flask.ext.assets import Bundle
-from os import path
-import sass as libsass
+from flask.ext.assets import Bundle  # type: ignore
+from os import path                  # type: ignore
+import sass as libsass               # type: ignore
 
 
 __dot = path.dirname(path.realpath(__file__))
