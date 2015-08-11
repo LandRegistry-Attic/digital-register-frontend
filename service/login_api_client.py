@@ -1,5 +1,6 @@
 import json
-import requests
+import requests  # type: ignore
+
 from service import app
 
 

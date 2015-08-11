@@ -1,8 +1,8 @@
-from flask import Flask
-import dateutil
-import dateutil.parser
-import faulthandler
-from flask_login import LoginManager
+import dateutil                       # type: ignore
+import dateutil.parser                # type: ignore
+import faulthandler                   # type: ignore
+from flask import Flask               # type: ignore
+from flask_login import LoginManager  # type: ignore
 import re
 
 from config import CONFIG_DICT
@@ -11,7 +11,7 @@ from service import logging_config, error_handler, static
 pattern = re.compile(r'[^a-zA-Z0-9_ ;:\-,\.()&£]+', re.UNICODE)
 
 # This causes the traceback to be written to the fault log file in case of serious faults
-fault_log_file = open(CONFIG_DICT['FAULT_LOG_FILE_PATH'], 'a')
+fault_log_file = open(str(CONFIG_DICT['FAULT_LOG_FILE_PATH']), 'a')
 faulthandler.enable(file=fault_log_file)
 
 app = Flask(__name__)
@@ -62,7 +62,7 @@ GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
 
 @app.context_processor
 def inject_google_analytics():
-    return dict(google_api_key=GOOGLE_ANALYTICS_API_KEY)
+    return {'google_api_key': GOOGLE_ANALYTICS_API_KEY}
 
 
 logging_config.setup_logging()
