@@ -2,7 +2,7 @@
 
 {% block body %}
 
-  <h1 class="heading-xlarge collapse-bottom">Summary of title {{ title.number }}</h1>
+  <h1 class="heading-xlarge collapse-bottom">Summary of {% if is_caution_title %}caution {% endif %}title {{ title.number }}</h1>
   <p class="expand-bottom">This title was last changed on <b>{{ title.last_changed | date }}</b> at <b>{{ title.last_changed | time }}</b></p>
 
   {% if show_pdf %}
@@ -11,8 +11,8 @@
         <a href="{{ url_for('display_title_pdf', title_number=title.number) }}" class="image">
           <img src="/static/images/icon-register-document.png">
         </a>
-        <span class="title">Title register</span><br>
-        <span class="footnote">PDF document</span>
+        <span class="title">{% if is_caution_title %}Caution title register{% else %}Title register{% endif %}</span><br>
+        <span class="footnote">{% if is_caution_title %}Caution title {% endif %}PDF document</span>
         <p>
           <a class="button" id="download-link" style="vertical-align: baseline;" href="{{ url_for('display_title_pdf', title_number=title.number) }}"><b>Download</b></a>
         </p>
@@ -41,7 +41,7 @@
       </div>
 
       <dl class="definition-tabular expand-top-half">
-        <dt>Owner{{ title.proprietors|length|pluralize }}</dt>
+        <dt>{% if is_caution_title %}Cautioner{% else %}Owner{% endif %}{{ title.proprietors|length|pluralize }}</dt>
         <dd>
           {% for proprietor in title.proprietors %}
             <h5 class="expand-bottom-half {% if loop.index != 1 %} expand-top-half {% endif %}">
@@ -78,8 +78,10 @@
           </dd>
         {% endif %}
 
-        <dt>Tenure type</dt>
-        <dd><b>{{ title.tenure }}</b></dd>
+        {% if not is_caution_title %}
+          <dt>Tenure type</dt>
+          <dd><b>{{ title.tenure }}</b></dd>
+        {% endif %}
 
         {% if title.ppi_data %}
           <dt>Price paid/stated</dt>

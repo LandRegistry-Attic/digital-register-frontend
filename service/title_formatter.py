@@ -1,4 +1,4 @@
-from service import address_utils, app
+from service import address_utils, app, title_utils
 
 MORE_PROPRIETOR_DETAILS = (app.config['MORE_PROPRIETOR_DETAILS'] == 'true')
 
@@ -17,6 +17,7 @@ def format_display_json(title_json):
         'proprietors': proprietors,
         'tenure': title_data.get('tenure', 'No data'),
         'indexPolygon': indexPolygon,
+        'is_caution_title': title_utils.is_caution_title(title_data),
     }
 
     if 'lenders' in title_data:

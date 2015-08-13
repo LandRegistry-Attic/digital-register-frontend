@@ -12,7 +12,7 @@ import re
 import time
 
 from service import (address_utils, api_client, app, auditing, health_checker, login_api_client,
-                     login_manager, title_formatter)
+                     login_manager, title_formatter, title_utils)
 from service.forms import TitleSearchForm, SigninForm
 
 
@@ -314,6 +314,7 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
         breadcrumbs=breadcrumbs,
         show_pdf=show_pdf,
         full_title_data=full_title_data,
+        is_caution_title=title_utils.is_caution_title(title),
     )
 
 
