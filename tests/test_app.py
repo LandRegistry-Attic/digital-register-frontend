@@ -379,7 +379,7 @@ class TestTitleSearch(BaseServerTest):
     def test_get_title_search_page(self):
         response = self.app.get('/title-search')
         assert response.status_code == 200
-        assert 'Find a title' in str(response.data)
+        assert 'Search the land and property register' in str(response.data)
 
     @mock.patch('requests.get', return_value=fake_title)
     @mock.patch.object(service.api_client, 'get_official_copy_data')
