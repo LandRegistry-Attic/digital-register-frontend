@@ -36,22 +36,22 @@
     </div>
     <div class="grid-row">
       {% if breadcrumbs %}
-      <div class="column-two-thirds">
-        <div class="global-breadcrumb">
-          <nav role="navigation">
-            <ol>
-              {% for breadcrumb in breadcrumbs %}
-                {% if breadcrumb['url'] %}
-                  <li><a href="{{ breadcrumb['url'] }}">{{ breadcrumb['text'] }}</a></li>
-                {% endif %}
-                {% if breadcrumb['current'] %}
-                  <li><strong>{{ breadcrumb['current'] }}</strong></li>
-                {% endif %}
-              {% endfor %}
-            </ol>
-          </nav>
+        <div class="column-two-thirds">
+          <div class="global-breadcrumb">
+            <nav role="navigation">
+              <ol>
+                {% for breadcrumb in breadcrumbs %}
+                  {% if breadcrumb['url'] %}
+                    <li><a href="{{ breadcrumb['url'] }}">{{ breadcrumb['text'] }}</a></li>
+                  {% endif %}
+                  {% if breadcrumb['current'] %}
+                    <li><strong>{{ breadcrumb['current'] }}</strong></li>
+                  {% endif %}
+                {% endfor %}
+              </ol>
+            </nav>
+          </div>
         </div>
-      </div>
       {% endif %}
       <div class="column-quarter column-flip">
         <div class="account">
