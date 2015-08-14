@@ -149,10 +149,28 @@ class TestViewTitle(BaseServerTest):
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_proprietor_on_title_page(self, mock_get_official_copy_data, mock_get):
+    def test_proprietor_on_non_caution_title_page(self, mock_get_official_copy_data, mock_get):
         response = self.app.get('/titles/titleref')
         assert response.status_code == 200
-        assert 'Scott Oakes' in response.data.decode()
+
+        response_data = response.data.decode()
+        assert 'Scott Oakes' in response_data
+        assert 'Owners' in response_data
+        assert 'Cautioners' not in response_data
+
+    @mock.patch('service.title_utils.is_caution_title', return_value=True)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    def test_cautioner_on_caution_title_page(
+            self, mock_get_official_copy_data, mock_get, mock_is_caution_title):
+
+        response = self.app.get('/titles/titleref')
+        assert response.status_code == 200
+
+        response_data = response.data.decode()
+        assert 'Scott Oakes' in response_data
+        assert 'Owners' not in response_data
+        assert 'Cautioners' in response_data
 
     @mock.patch('service.api_client.requests.get', return_value=fake_charge_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
@@ -170,9 +188,23 @@ class TestViewTitle(BaseServerTest):
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_tenure_on_title_page(self, mock_get_official_copy_data, mock_get):
+    def test_tenure_on_non_caution_title_page(self, mock_get_official_copy_data, mock_get):
         response = self.app.get('/titles/titleref')
-        assert 'Freehold' in response.data.decode()
+        assert response.status_code == 200
+        response_data = response.data.decode()
+
+        assert 'Tenure type' in response_data
+        assert 'Freehold' in response_data
+
+    @mock.patch('service.title_utils.is_caution_title', return_value=True)
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    def test_no_tenure_on_caution_title_page(
+            self, mock_get_official_copy_data, mock_get, mock_is_caution_title):
+
+        response = self.app.get('/titles/titleref')
+        assert response.status_code == 200
+        assert 'Tenure' not in response.data.decode()
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
@@ -206,7 +238,7 @@ class TestViewTitle(BaseServerTest):
         # This tests that when going directly to a title the search results breadcrumb doesn't show
         response = self.app.get('/titles/DN1000')
         page_content = response.data.decode()
-        assert 'Find a title' in page_content
+        assert 'Search the land and property register' in page_content
         assert 'Search results' not in page_content
         assert 'Viewing DN1000' in page_content
 
@@ -215,7 +247,7 @@ class TestViewTitle(BaseServerTest):
     def test_breadcrumbs_search_results_appear(self, mock_get_official_copy_data, mock_get):
         response = self.app.get('/titles/DN1000?search_term="testing"')
         page_content = response.data.decode()
-        assert 'Find a title' in page_content
+        assert 'Search the land and property register' in page_content
         assert 'Search results' in page_content
         assert 'Viewing DN1000' in page_content
 
@@ -347,7 +379,7 @@ class TestTitleSearch(BaseServerTest):
     def test_get_title_search_page(self):
         response = self.app.get('/title-search')
         assert response.status_code == 200
-        assert 'Find a title' in str(response.data)
+        assert 'Search the land and property register' in str(response.data)
 
     @mock.patch('requests.get', return_value=fake_title)
     @mock.patch.object(service.api_client, 'get_official_copy_data')

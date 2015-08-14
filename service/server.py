@@ -12,7 +12,7 @@ import re
 import time
 
 from service import (address_utils, api_client, app, auditing, health_checker, login_api_client,
-                     login_manager, title_formatter)
+                     login_manager, title_formatter, title_utils)
 from service.forms import TitleSearchForm, SigninForm
 
 
@@ -263,24 +263,17 @@ def _introduce_wait_between_login_attempts():
 
 
 def _breadcumbs_for_title_details(title_number, search_term, display_page_number):
-    common_breadcrumbs = [
-        {'text': 'Find a title', 'url': url_for('find_titles')},
-        {'current': 'Viewing {}'.format(title_number)},
-    ]
-
-    search_breadcrumbs = [
-        {
-            'text': 'Search results',
-            'url': url_for('find_titles_page', search_term=search_term, page=display_page_number),
-        }
-    ]
+    search_breadcrumb = {'text': 'Search the land and property register', 'url': url_for('find_titles')}
+    results_breadcrumb = {'text': 'Search results', 'url': url_for('find_titles_page', search_term=search_term,
+                                                                   page=display_page_number)}
+    current_breadcrumb = {'current': 'Viewing {}'.format(title_number)}
 
     found_title_by_number = title_number.lower() == search_term.lower()
 
     if found_title_by_number:
-        return common_breadcrumbs
+        return [search_breadcrumb, current_breadcrumb]
     else:
-        return common_breadcrumbs + search_breadcrumbs
+        return [search_breadcrumb, results_breadcrumb, current_breadcrumb]
 
 
 def _normalise_postcode(postcode_in):
@@ -314,6 +307,7 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
         breadcrumbs=breadcrumbs,
         show_pdf=show_pdf,
         full_title_data=full_title_data,
+        is_caution_title=title_utils.is_caution_title(title),
     )
 
 
@@ -333,7 +327,7 @@ def _search_results_page(results, search_term):
         form=TitleSearchForm(),
         username=current_user.get_id(),
         breadcrumbs=[
-            {'text': 'Find a Title', 'url': url_for('find_titles')},
+            {'text': 'Search the land and property register', 'url': url_for('find_titles')},
             {'current': 'Search results'}
         ]
     )
