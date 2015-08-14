@@ -7,7 +7,6 @@
 // Document downloads area
 
 .download-documents {
-  margin: $gutter*1.5 0;
   padding: $gutter;
   border: 10px solid $light-blue;
 }
@@ -15,14 +14,10 @@
 .document-item {
   @extend %contain-floats;
 
-  .image {
+  .image img {
     width: 100px;
     box-shadow: 0 1px 3px $grey-2;
-
-    @include media(tablet) {
-      float: left;
-      margin-right: 30px;
-    }
+    height: 140px;
 
     &:hover {
       outline: 3px solid $yellow;

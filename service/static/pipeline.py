@@ -39,10 +39,12 @@ beta = Bundle('stylesheets/sass/beta.scss',
               filters=(compile_sass,), output='stylesheets/css/beta.css')
 
 
-js = Bundle('govuk_frontend_toolkit/javascripts/vendor/polyfills/bind.js',
+js = Bundle('lr-styleguide/js/vendor/jquery/jquery-1.11.3.js',
+            'govuk_frontend_toolkit/javascripts/vendor/polyfills/bind.js',
             'govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
+            'govuk_frontend_toolkit/javascripts/govuk/stick-at-top-when-scrolling.js',
+            'govuk_frontend_toolkit/javascripts/govuk/stop-scrolling-at-footer.js',
             'lr-styleguide/js/vendor/polyfills/details.polyfill.js',
-            'lr-styleguide/js/vendor/jquery/jquery-1.11.3.js',
             'lr-styleguide/js/components/buttons-actions.js',
             'lr-styleguide/js/components/case-list.js',
             'lr-styleguide/js/components/inits.js',

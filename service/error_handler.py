@@ -21,13 +21,9 @@ def setup_errors(app, error_template="error.html"):
             code = 500
             error_title = GENERIC_ERROR_WORDING
             description = GENERIC_ERROR_DESCRIPTION
-        return render_template(error_template,
-                               error=error_title,
-                               code=code,
-                               description=Markup(description),
-                               breadcrumbs=[
-                                   {"text": "Find a Title", "url": "/title-search"}
-                               ]), code
+        breadcrumbs = [{'text': 'Search the land and property register', 'url': '/title-search'}]
+        return render_template(error_template, error=error_title, code=code, description=Markup(description),
+                               breadcrumbs=breadcrumbs), code
 
     for exception in default_exceptions:
         app.register_error_handler(exception, error_handler)

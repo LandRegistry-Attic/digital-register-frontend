@@ -238,7 +238,7 @@ class TestViewTitle(BaseServerTest):
         # This tests that when going directly to a title the search results breadcrumb doesn't show
         response = self.app.get('/titles/DN1000')
         page_content = response.data.decode()
-        assert 'Find a title' in page_content
+        assert 'Search the land and property register' in page_content
         assert 'Search results' not in page_content
         assert 'Viewing DN1000' in page_content
 
@@ -247,7 +247,7 @@ class TestViewTitle(BaseServerTest):
     def test_breadcrumbs_search_results_appear(self, mock_get_official_copy_data, mock_get):
         response = self.app.get('/titles/DN1000?search_term="testing"')
         page_content = response.data.decode()
-        assert 'Find a title' in page_content
+        assert 'Search the land and property register' in page_content
         assert 'Search results' in page_content
         assert 'Viewing DN1000' in page_content
 
@@ -379,7 +379,7 @@ class TestTitleSearch(BaseServerTest):
     def test_get_title_search_page(self):
         response = self.app.get('/title-search')
         assert response.status_code == 200
-        assert 'Find a title' in str(response.data)
+        assert 'Search the land and property register' in str(response.data)
 
     @mock.patch('requests.get', return_value=fake_title)
     @mock.patch.object(service.api_client, 'get_official_copy_data')
