@@ -28,7 +28,7 @@
             </h2>
             <div class="font-xsmall">
               Title number {{ title['title_number'] }}<br>
-              <b>{{ title['data']['tenure'] }}</b>
+              <b>{{ title | tenure_info }}</b>
             </div>
           </li>
         {% endfor %}

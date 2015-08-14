@@ -1,5 +1,4 @@
 import json
-import logging
 from logging.config import dictConfig  # type: ignore
 
 from config import CONFIG_DICT
