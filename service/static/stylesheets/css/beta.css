@@ -84,16 +84,26 @@
         vertical-align: baseline; } }
 
 .download-documents {
-  margin: 45px 0;
   padding: 30px;
   border: 10px solid #2b8cc4; }
 
-.document-item .image {
+.document-item .image img {
   width: 100px;
-  box-shadow: 0 1px 3px #bfc1c3; }
-  @media (min-width: 641px) {
-    .document-item .image {
-      float: left;
-      margin-right: 30px; } }
-  .document-item .image:hover {
+  box-shadow: 0 1px 3px #bfc1c3;
+  height: 140px; }
+  .document-item .image img:hover {
     outline: 3px solid #ffbf47; }
+
+.alert-flag-hi-viz {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 8px 0 0;
+  padding: 2px 5px 0;
+  letter-spacing: 1px;
+  text-decoration: none;
+  color: #fff2d3;
+  background-color: #0b0c0c;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.8em; }
