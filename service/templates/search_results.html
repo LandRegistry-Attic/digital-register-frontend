@@ -42,7 +42,6 @@
                 <li class="previous-page">
                   <a href="{{ url_for('find_titles', search_term=search_term, page=display_page_number - 1) }}">
                     <span class="pagination-label">Previous <span class="visuallyhidden">page</span></span>
-                    <span>{{ display_page_number - 1 }} of {{ results['number_pages'] }}</span>
                   </a>
                 </li>
               {% endif %}
@@ -50,13 +49,13 @@
                 <li class="next-page">
                   <a href="{{ url_for('find_titles', search_term=search_term, page=display_page_number + 1) }}">
                     <span class="pagination-label">Next <span class="visuallyhidden">page</span></span>
-                    <span>{{ display_page_number + 1 }} of {{ results['number_pages'] }}</span>
                   </a>
                 </li>
               {% endif %}
             </ul>
           {% endif %}
         </div>
+        <div style="text-align: center">Page {{ display_page_number }} of {{ results['number_pages'] }}</div>
       {% endif %}
     </div>
   </div>
