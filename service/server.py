@@ -25,6 +25,8 @@ TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
 POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 NOF_SECS_BETWEEN_LOGINS = 1
 LOGGER = logging.getLogger(__name__)
+INCLUDE_TIME = True
+IGNORE_TIME = False
 
 
 class User():
@@ -139,9 +141,13 @@ def display_title_pdf(title_number):
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
-                publication_date = datetime(3001, 2, 3, 4, 5, 6)  # TODO: get real date
+                last_entry_date = _create_string_date(datetime(3001, 2, 3, 4, 5, 6), INCLUDE_TIME) #TODO use real date
+                issued_date = _create_string_date(datetime.now(), IGNORE_TIME)
+                edition_date = _create_string_date(datetime.strptime(title.get('edition_date'), "%Y-%m-%d"), IGNORE_TIME)
                 html = render_template('full_title.html', title_number=title_number, title=title,
-                                       publication_date=publication_date,
+                                       last_entry_date=last_entry_date,
+                                       issued_date=issued_date,
+                                       edition_date=edition_date,
                                        sub_registers=sub_registers)
 
                 return render_pdf(HTML(string=html))
@@ -332,3 +338,12 @@ def _search_results_page(results, search_term):
 
 def _cookies_page():
     return render_template('cookies.html', username=current_user.get_id())
+
+
+def _create_string_date(datetoconvert, needs_time):
+    # converts to example : 12 August 2014
+    date = datetoconvert.strftime('%d %B %Y')
+    if needs_time:
+        # will add time in format 12:34:24
+        date += " at {}".format(datetoconvert.strftime('%H:%M:%S'))
+    return date

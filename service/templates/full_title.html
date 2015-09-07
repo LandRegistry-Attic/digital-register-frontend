@@ -153,17 +153,20 @@
       <span class="copy-18 block">Register of title</span>
       Title Number: {{ title_number }}
     </h1>
-    <h2 class="copy-14">Issued on: {{ title.last_changed | date }}</h2>
+    <h2 class="copy-14">Issued on: {{ issued_date }}</h2>
 
     <div id="cover" class="group">
       <div class="text-90 copy-10 fleft">
         <p>
-          This copy shows the entries on the register of title on
-          {{ publication_date.strftime('%d %B %Y') }} at {{ publication_date.strftime('%H:%M:%S') }}
+          This copy shows the entries on the register of title on<br>
+          {{ last_entry_date }}
         </p>
         <p>
           This date must be quoted as the “search from date” in any official
           search application based on this copy.
+        </p>
+        <p>
+          Edition Date {{ edition_date }}
         </p>
         <p>
           The date at the beginning of an entry is the date on which the entry

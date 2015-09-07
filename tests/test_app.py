@@ -340,7 +340,9 @@ class TestDisplayTitlePdf(BaseServerTest):
 
         assert actual_args[0] == 'full_title.html'
         assert actual_kwargs['title_number'] == 'titleref'
-        assert actual_kwargs['publication_date'] == datetime(3001, 2, 3, 4, 5, 6)
+        assert actual_kwargs['last_entry_date'] == '03 February 3001 at 04:05:06'
+        assert actual_kwargs['issued_date'] == datetime.now().strftime('%d %B %Y')
+        assert actual_kwargs['edition_date'] == '12 August 2013'
         assert actual_kwargs['sub_registers'] == official_copy_response['official_copy_data']['sub_registers']
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
