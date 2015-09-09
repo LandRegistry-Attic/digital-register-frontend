@@ -25,8 +25,6 @@ TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
 POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 NOF_SECS_BETWEEN_LOGINS = 1
 LOGGER = logging.getLogger(__name__)
-INCLUDE_TIME = True
-IGNORE_TIME = False
 
 
 class User():
@@ -141,18 +139,7 @@ def display_title_pdf(title_number):
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
-                last_entry_date = _create_string_date(datetime(3001, 2, 3, 4, 5, 6), INCLUDE_TIME)  # TODO use real date
-                issued_date = _create_string_date(datetime.now(), IGNORE_TIME)
-                if title.get('edition_date'):
-                    edition_date = _create_string_date(datetime.strptime(title.get('edition_date'), "%Y-%m-%d"), IGNORE_TIME)
-                else:
-                    edition_date = "No date given"
-                html = render_template('full_title.html', title_number=title_number, title=title,
-                                       last_entry_date=last_entry_date,
-                                       issued_date=issued_date,
-                                       edition_date=edition_date,
-                                       sub_registers=sub_registers)
-
+                html = _create_pdf_template(sub_registers, title, title_number)
                 return render_pdf(HTML(string=html))
     abort(404)
 
@@ -343,10 +330,27 @@ def _cookies_page():
     return render_template('cookies.html', username=current_user.get_id())
 
 
-def _create_string_date(datetoconvert, needs_time):
+def _create_string_date_only(datetoconvert):
     # converts to example : 12 August 2014
-    date = datetoconvert.strftime('%d %B %Y')
-    if needs_time:
-        # will add time in format 12:34:24
-        date += " at {}".format(datetoconvert.strftime('%H:%M:%S'))
+    date = datetoconvert.strftime('%-d %B %Y')
     return date
+
+
+def _create_string_date_and_time(datetoconvert):
+    # converts to example : 12 August 2014 12:34:06
+    date = datetoconvert.strftime('%-d %B %Y at %H:%M:%S')
+    return date
+
+
+def _create_pdf_template(sub_registers, title, title_number):
+    last_entry_date = _create_string_date_and_time(datetime(3001, 2, 3, 4, 5, 6))  # TODO use real date
+    issued_date = _create_string_date_only(datetime.now())
+    if title.get('edition_date'):
+        edition_date = _create_string_date_only(datetime.strptime(title.get('edition_date'), "%Y-%m-%d"))
+    else:
+        edition_date = "No date given"
+    return render_template('full_title.html', title_number=title_number, title=title,
+                           last_entry_date=last_entry_date,
+                           issued_date=issued_date,
+                           edition_date=edition_date,
+                           sub_registers=sub_registers)
