@@ -141,9 +141,12 @@ def display_title_pdf(title_number):
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
-                last_entry_date = _create_string_date(datetime(3001, 2, 3, 4, 5, 6), INCLUDE_TIME) #TODO use real date
+                last_entry_date = _create_string_date(datetime(3001, 2, 3, 4, 5, 6), INCLUDE_TIME)  # TODO use real date
                 issued_date = _create_string_date(datetime.now(), IGNORE_TIME)
-                edition_date = _create_string_date(datetime.strptime(title.get('edition_date'), "%Y-%m-%d"), IGNORE_TIME)
+                if title.get('edition_date'):
+                    edition_date = _create_string_date(datetime.strptime(title.get('edition_date'), "%Y-%m-%d"), IGNORE_TIME)
+                else:
+                    edition_date = "No date given"
                 html = render_template('full_title.html', title_number=title_number, title=title,
                                        last_entry_date=last_entry_date,
                                        issued_date=issued_date,

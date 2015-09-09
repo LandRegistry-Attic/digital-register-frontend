@@ -19,6 +19,11 @@ with open('tests/data/fake_title.json', 'r') as fake_title_json_file:
     fake_title_bytes = str.encode(fake_title_json_string)
     fake_title = FakeResponse(fake_title_bytes)
 
+with open('tests/data/fake_title_no_edition_date.json', 'r') as fake_title_no_edition_json_file:
+    fake_title_no_edition_json_string = fake_title_no_edition_json_file.read()
+    fake_title_no_edition_bytes = str.encode(fake_title_no_edition_json_string)
+    fake_title_no_edition = FakeResponse(fake_title_no_edition_bytes)
+
 with open('tests/data/fake_title_with_charge.json', 'r') as fake_charge_title_json_file:
     fake_charge_title_json_string = fake_charge_title_json_file.read()
     fake_charge_title_bytes = str.encode(fake_charge_title_json_string)
@@ -343,6 +348,22 @@ class TestDisplayTitlePdf(BaseServerTest):
         assert actual_kwargs['last_entry_date'] == '03 February 3001 at 04:05:06'
         assert actual_kwargs['issued_date'] == datetime.now().strftime('%d %B %Y')
         assert actual_kwargs['edition_date'] == '12 August 2013'
+        assert actual_kwargs['sub_registers'] == official_copy_response['official_copy_data']['sub_registers']
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title_no_edition)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    @mock.patch('service.server.render_template')
+    def test_display_title_pdf_renders_template_with_no_edition_date(self, mock_render, mock_get_official_copy_data, mock_get):
+        self.app.get('/titles/titleref.pdf')
+        actual_call = mock_render.mock_calls[0]
+        actual_args = actual_call[1]
+        actual_kwargs = actual_call[2]
+
+        assert actual_args[0] == 'full_title.html'
+        assert actual_kwargs['title_number'] == 'titleref'
+        assert actual_kwargs['last_entry_date'] == '03 February 3001 at 04:05:06'
+        assert actual_kwargs['issued_date'] == datetime.now().strftime('%d %B %Y')
+        assert actual_kwargs['edition_date'] == 'No date given'
         assert actual_kwargs['sub_registers'] == official_copy_response['official_copy_data']['sub_registers']
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
