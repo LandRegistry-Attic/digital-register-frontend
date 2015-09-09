@@ -3,11 +3,9 @@ from flask import abort, make_response, Markup, redirect, render_template, reque
 from flask_login import login_user, login_required, current_user, logout_user                          # type: ignore
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 from flask_wtf import Form                                                                             # type: ignore
-from flask_wtf.csrf import CsrfProtect                                                                 # type: ignore
 import json
 import logging
 import logging.config                                                                                  # type: ignore
-import os
 import re
 import time
 
@@ -335,9 +333,3 @@ def _search_results_page(results, search_term):
 
 def _cookies_page():
     return render_template('cookies.html', username=current_user.get_id())
-
-
-def run_app():
-    CsrfProtect(app)
-    port = int(os.environ.get('PORT', 8003))
-    app.run(host='0.0.0.0', port=port)
