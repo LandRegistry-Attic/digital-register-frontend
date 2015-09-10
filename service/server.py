@@ -139,11 +139,7 @@ def display_title_pdf(title_number):
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
-                publication_date = datetime(3001, 2, 3, 4, 5, 6)  # TODO: get real date
-                html = render_template('full_title.html', title_number=title_number, title=title,
-                                       publication_date=publication_date,
-                                       sub_registers=sub_registers)
-
+                html = _create_pdf_template(sub_registers, title, title_number)
                 return render_pdf(HTML(string=html))
     abort(404)
 
@@ -332,3 +328,29 @@ def _search_results_page(results, search_term):
 
 def _cookies_page():
     return render_template('cookies.html', username=current_user.get_id())
+
+
+def _create_string_date_only(datetoconvert):
+    # converts to example : 12 August 2014
+    date = datetoconvert.strftime('%-d %B %Y')
+    return date
+
+
+def _create_string_date_and_time(datetoconvert):
+    # converts to example : 12 August 2014 12:34:06
+    date = datetoconvert.strftime('%-d %B %Y at %H:%M:%S')
+    return date
+
+
+def _create_pdf_template(sub_registers, title, title_number):
+    last_entry_date = _create_string_date_and_time(datetime(3001, 2, 3, 4, 5, 6))  # TODO use real date
+    issued_date = _create_string_date_only(datetime.now())
+    if title.get('edition_date'):
+        edition_date = _create_string_date_only(datetime.strptime(title.get('edition_date'), "%Y-%m-%d"))
+    else:
+        edition_date = "No date given"
+    return render_template('full_title.html', title_number=title_number, title=title,
+                           last_entry_date=last_entry_date,
+                           issued_date=issued_date,
+                           edition_date=edition_date,
+                           sub_registers=sub_registers)
