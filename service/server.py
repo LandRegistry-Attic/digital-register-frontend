@@ -349,8 +349,11 @@ def _create_pdf_template(sub_registers, title, title_number):
         edition_date = _create_string_date_only(datetime.strptime(title.get('edition_date'), "%Y-%m-%d"))
     else:
         edition_date = "No date given"
+    class_of_title = title.get('class_of_title')
+
     return render_template('full_title.html', title_number=title_number, title=title,
                            last_entry_date=last_entry_date,
                            issued_date=issued_date,
                            edition_date=edition_date,
+                           class_of_title=class_of_title,
                            sub_registers=sub_registers)
