@@ -5,11 +5,12 @@
         size: A4 portrait;
         margin: 10mm 10mm 15mm 10mm;
         @bottom-right {
-          content: "{{ title_number }} Page " counter(page) " of " counter(pages);
+          content: "Title number: {{ title_number }} \A Page " counter(page) " of " counter(pages);
           font-family: 'GDSTransportWebsite';
           font-size: 8pt;
           color: silver;
           border-top: 1pt solid silver;
+          white-space: pre;
         }
       }
       body {
