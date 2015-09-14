@@ -198,7 +198,9 @@
             Specifies the class of title and identifies the owner. It contains
             any entries that affect the right of disposal.
           </p>
-          <p>{{ class_of_title }}</p>
+          {% if not is_caution %}
+            <p>Title {{ class_of_title }} </p>
+          {% endif %}
         </div>
       {% elif sub_register['sub_register_name'] == 'C' %}
         <div class="sub-register-description">
@@ -220,7 +222,7 @@
             <h4{% if 'entry_date' in entry %} class="shunt"{% endif %}>{{ entry['sequence_number'] }}:</h4>
             <p>{{ entry['full_text'] }}</p>
           </div>
-        <div>
+        </div>
       {% endfor %}
 
     {% endfor %}
