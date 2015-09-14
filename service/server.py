@@ -2,12 +2,9 @@ from datetime import datetime                                                   
 from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for  # type: ignore
 from flask_login import login_user, login_required, current_user, logout_user                          # type: ignore
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
-from flask_wtf import Form                                                                             # type: ignore
-from flask_wtf.csrf import CsrfProtect                                                                 # type: ignore
 import json
 import logging
 import logging.config                                                                                  # type: ignore
-import os
 import re
 import time
 
@@ -142,11 +139,7 @@ def display_title_pdf(title_number):
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
-                publication_date = datetime(3001, 2, 3, 4, 5, 6)  # TODO: get real date
-                html = render_template('full_title.html', title_number=title_number, title=title,
-                                       publication_date=publication_date,
-                                       sub_registers=sub_registers)
-
+                html = _create_pdf_template(sub_registers, title, title_number)
                 return render_pdf(HTML(string=html))
     abort(404)
 
@@ -337,7 +330,27 @@ def _cookies_page():
     return render_template('cookies.html', username=current_user.get_id())
 
 
-def run_app():
-    CsrfProtect(app)
-    port = int(os.environ.get('PORT', 8003))
-    app.run(host='0.0.0.0', port=port)
+def _create_string_date_only(datetoconvert):
+    # converts to example : 12 August 2014
+    date = datetoconvert.strftime('%-d %B %Y')
+    return date
+
+
+def _create_string_date_and_time(datetoconvert):
+    # converts to example : 12 August 2014 12:34:06
+    date = datetoconvert.strftime('%-d %B %Y at %H:%M:%S')
+    return date
+
+
+def _create_pdf_template(sub_registers, title, title_number):
+    last_entry_date = _create_string_date_and_time(datetime(3001, 2, 3, 4, 5, 6))  # TODO use real date
+    issued_date = _create_string_date_only(datetime.now())
+    if title.get('edition_date'):
+        edition_date = _create_string_date_only(datetime.strptime(title.get('edition_date'), "%Y-%m-%d"))
+    else:
+        edition_date = "No date given"
+    return render_template('full_title.html', title_number=title_number, title=title,
+                           last_entry_date=last_entry_date,
+                           issued_date=issued_date,
+                           edition_date=edition_date,
+                           sub_registers=sub_registers)

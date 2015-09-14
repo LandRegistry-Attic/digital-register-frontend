@@ -9,7 +9,6 @@ def format_display_json(title_json):
     title_data = title_json['data']
     address_lines = address_utils.get_address_lines(title_data['address'])
     indexPolygon = _get_property_address_index_polygon(title_json['geometry_data'])
-
     title = {
         'number': title_json['title_number'],
         'last_changed': title_data.get('last_application_timestamp', 'No data'),
@@ -18,6 +17,7 @@ def format_display_json(title_json):
         'tenure': title_data.get('tenure', 'No data'),
         'indexPolygon': indexPolygon,
         'is_caution_title': title_utils.is_caution_title(title_data),
+        'edition_date': title_data.get('edition_date'),
     }
 
     if 'lenders' in title_data:
