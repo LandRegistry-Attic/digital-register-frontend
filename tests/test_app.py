@@ -348,6 +348,7 @@ class TestDisplayTitlePdf(BaseServerTest):
         assert actual_kwargs['last_entry_date'] == '3 February 3001 at 04:05:06'
         assert actual_kwargs['issued_date'] == datetime.now().strftime('%-d %B %Y')
         assert actual_kwargs['edition_date'] == '12 August 2013'
+        assert actual_kwargs['class_of_title'] == 'Absolute'
         assert actual_kwargs['sub_registers'] == official_copy_response['official_copy_data']['sub_registers']
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title_no_edition)
@@ -364,6 +365,7 @@ class TestDisplayTitlePdf(BaseServerTest):
         assert actual_kwargs['last_entry_date'] == '3 February 3001 at 04:05:06'
         assert actual_kwargs['issued_date'] == datetime.now().strftime('%-d %B %Y')
         assert actual_kwargs['edition_date'] == 'No date given'
+        assert actual_kwargs['class_of_title'] == 'Unknown'
         assert actual_kwargs['sub_registers'] == official_copy_response['official_copy_data']['sub_registers']
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
