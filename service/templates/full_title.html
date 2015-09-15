@@ -119,7 +119,6 @@
       .copy-18 {
         font-size: 18pt;
       }
-
       .text-80 {
         width: 80mm;
       }
@@ -149,12 +148,11 @@
   </head>
 
   <body>
-
+    <span class="copy-18 block">Official copy of register of title</span>
+    <span class="copy-14 block">Issued by Land Registry on {{ issued_date }}</span>
     <h1 class="register-title">
-      <span class="copy-18 block">Register of title</span>
       Title Number: {{ title_number }}
     </h1>
-    <h2 class="copy-14">Issued on: {{ issued_date }}</h2>
 
     <div id="cover" class="group">
       <div class="text-90 copy-10 fleft">
