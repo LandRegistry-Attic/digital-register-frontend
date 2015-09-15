@@ -220,7 +220,7 @@
 
       {% for entry in sub_register['entries'] %}
         <div class="register-entry group">
-          {% if 'entry_date' in entry %}<div class="entry-date">{{ entry['entry_date'] }}</div>{% endif %}
+          {% if 'entry_date' in entry %}<div class="entry-date">{{ entry['entry_date'] | date }}</div>{% endif %}
           <div class="entry">
             <h4{% if 'entry_date' in entry %} class="shunt"{% endif %}>{{ entry['sequence_number'] }}:</h4>
             <p>{{ entry['full_text'] }}</p>
