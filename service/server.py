@@ -343,14 +343,21 @@ def _create_string_date_and_time(datetoconvert):
 
 
 def _create_pdf_template(sub_registers, title, title_number):
-    last_entry_date = _create_string_date_and_time(datetime(3001, 2, 3, 4, 5, 6))  # TODO use real date
+    # TODO use real date - this is reliant on new functionality to check the daylist
+    last_entry_date = _create_string_date_and_time(datetime(3001, 2, 3, 4, 5, 6))
     issued_date = _create_string_date_only(datetime.now())
     if title.get('edition_date'):
         edition_date = _create_string_date_only(datetime.strptime(title.get('edition_date'), "%Y-%m-%d"))
     else:
         edition_date = "No date given"
+    class_of_title = title.get('class_of_title')
+    # need to check for caution title as we don't display Class of title for them
+    is_caution = title.get('is_caution_title') is True
+
     return render_template('full_title.html', title_number=title_number, title=title,
                            last_entry_date=last_entry_date,
                            issued_date=issued_date,
                            edition_date=edition_date,
-                           sub_registers=sub_registers)
+                           class_of_title=class_of_title,
+                           sub_registers=sub_registers,
+                           is_caution=is_caution)

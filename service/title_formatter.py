@@ -18,6 +18,7 @@ def format_display_json(title_json):
         'indexPolygon': indexPolygon,
         'is_caution_title': title_utils.is_caution_title(title_data),
         'edition_date': title_data.get('edition_date'),
+        'class_of_title': title_data.get('class_of_title'),
     }
 
     if 'lenders' in title_data:
