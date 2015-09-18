@@ -109,7 +109,7 @@ def get_title(title_number):
     title = _get_register_title(title_number)
 
     if title:
-        display_page_number = int(request.args.get('page', 1))
+        display_page_number = int(request.args.get('page') or 1)
         search_term = request.args.get('search_term', title_number)
         breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
         show_pdf = _should_show_full_title_pdf()
@@ -148,7 +148,7 @@ def display_title_pdf(title_number):
 @app.route('/title-search/<search_term>', methods=['POST'])
 @login_required
 def find_titles():
-    display_page_number = int(request.args.get('page', 1))
+    display_page_number = int(request.args.get('page') or 1)
 
     search_term = request.form['search_term'].strip()
     if search_term:
@@ -163,7 +163,7 @@ def find_titles():
 @app.route('/title-search/<search_term>', methods=['GET'])
 @login_required
 def find_titles_page(search_term=''):
-    display_page_number = int(request.args.get('page', 1))
+    display_page_number = int(request.args.get('page') or 1)
     page_number = display_page_number - 1  # page_number is 0 indexed
 
     search_term = search_term.strip()
