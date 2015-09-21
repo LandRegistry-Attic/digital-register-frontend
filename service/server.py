@@ -109,8 +109,8 @@ def get_title(title_number):
     title = _get_register_title(title_number)
 
     if title:
-        display_page_number = int(request.args.get('page') or 1)
         search_term = request.args.get('search_term', title_number)
+        display_page_number = int(request.args.get('page') or 1)
         breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
         show_pdf = _should_show_full_title_pdf()
         full_title_data = (
@@ -122,7 +122,7 @@ def get_title(title_number):
             current_user.get_id())
         )
 
-        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data)
+        return _title_details_page(title, search_term, display_page_number, breadcrumbs, show_pdf, full_title_data)
     else:
         abort(404)
 
@@ -277,6 +277,10 @@ def _normalise_postcode(postcode_in):
 
 
 def _login_page(form=None, show_unauthorised_message=False, next_url=None):
+    title_number = request.args.get('title_number')
+    search_term = request.args.get('search_term', title_number)
+    display_page_number = int(request.args.get('page') or 1)
+
     if not form:
         form = SigninForm(csrf_enabled=_is_csrf_enabled())
 
@@ -288,15 +292,19 @@ def _login_page(form=None, show_unauthorised_message=False, next_url=None):
         unauthorised_title=UNAUTHORISED_TITLE if show_unauthorised_message else None,
         unauthorised_description=UNAUTHORISED_WORDING if show_unauthorised_message else None,
         next=next_url,
+        title_number=title_number,
+        search_term=search_term,
+        display_page_number=display_page_number,
     )
 
 
-def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data):
+def _title_details_page(title, search_term, display_page_number, breadcrumbs, show_pdf, full_title_data):
     return render_template(
         'display_title.html',
         title=title,
         username=current_user.get_id(),
         search_term=search_term,
+        display_page_number=display_page_number,
         breadcrumbs=breadcrumbs,
         show_pdf=show_pdf,
         full_title_data=full_title_data,
