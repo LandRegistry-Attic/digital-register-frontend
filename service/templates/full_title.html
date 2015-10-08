@@ -190,8 +190,15 @@
               Except as mentioned below, the title includes any legal easements
               granted by the registered lease but is subject to any rights that
               it reserves, so far as those easements and rights exist and
-              benefit or affect theregistered land.
+              benefit or affect the registered land.
             {% endif %}
+          </p>
+          <p>
+          {% if districts %}
+            {% for district in districts %}
+              {{district}}&nbsp;
+            {% endfor %}
+          {% endif %}
           </p>
         </div>
       {% elif sub_register['sub_register_name'] == 'B' %}
