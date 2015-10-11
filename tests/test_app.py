@@ -1,15 +1,15 @@
 from datetime import datetime
 from io import BytesIO
 import json
-import mock
-from PyPDF2 import PdfFileReader
-import pytest
-from unittest.mock import call
+import mock  # type: ignore
+from PyPDF2 import PdfFileReader  # type: ignore
+import pytest  # type: ignore
+from unittest.mock import call  # type: ignore
 
-from config import CONFIG_DICT
-import service
-from service.server import app
-from .fake_response import FakeResponse
+from config import CONFIG_DICT  # type: ignore
+import service  # type: ignore
+from service.server import app  # type: ignore
+from .fake_response import FakeResponse  # type: ignore
 
 
 TEST_USERNAME = 'username1'
@@ -443,7 +443,6 @@ class TestTitleSearch(BaseServerTest):
         assert response.status_code == 200
         page_content = response.data.decode()
         assert 'AGL1000' in page_content
-        assert '21 Murhill Lane, Saltram Meadow, Plymouth, (PL9 7FN)' in page_content
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_with_page_calls_api_correctly(self, mock_get):
