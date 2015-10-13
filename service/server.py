@@ -117,6 +117,8 @@ def get_title(title_number):
             api_client.get_official_copy_data(title_number) if _should_show_full_title_data() else None
         )
 
+        full_title_data = _strip_not_notes(full_title_data)
+
         auditing.audit("VIEW REGISTER: Title number {0} was viewed by '{1}'".format(
             title_number,
             current_user.get_id())
@@ -136,6 +138,7 @@ def display_title_pdf(title_number):
     title = _get_register_title(title_number)
     if title:
         full_title_data = api_client.get_official_copy_data(title_number)
+        full_title_data = _strip_not_notes(full_title_data)
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
@@ -366,3 +369,16 @@ def _create_pdf_template(sub_registers, title, title_number):
                            sub_registers=sub_registers,
                            is_caution=is_caution,
                            districts=districts)
+
+def _strip_not_notes(json_in):
+    """
+    Remove all not notes (unicode 172) from json
+    """
+    json_out = json_in
+    for i, sub_register in enumerate(json_in['official_copy_data']['sub_registers']):
+        for j, entry in enumerate(sub_register['entries']):
+            txt = json_in['official_copy_data']['sub_registers'][i]['entries'][j]['full_text']
+            txt = txt.replace(chr(172), "")
+            json_out['official_copy_data']['sub_registers'][i]['entries'][j]['full_text'] = txt
+
+    return json_out
