@@ -117,7 +117,7 @@ def get_title(title_number):
             api_client.get_official_copy_data(title_number) if _should_show_full_title_data() else None
         )
 
-        full_title_data = _strip_not_notes(full_title_data)
+        full_title_data = _strip_delimiters(full_title_data)
 
         auditing.audit("VIEW REGISTER: Title number {0} was viewed by '{1}'".format(
             title_number,
@@ -138,7 +138,7 @@ def display_title_pdf(title_number):
     title = _get_register_title(title_number)
     if title:
         full_title_data = api_client.get_official_copy_data(title_number)
-        full_title_data = _strip_not_notes(full_title_data)
+        full_title_data = _strip_delimiters(full_title_data)
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
@@ -370,14 +370,27 @@ def _create_pdf_template(sub_registers, title, title_number):
                            is_caution=is_caution,
                            districts=districts)
 
-def _strip_not_notes(json_in):
+def _strip_delimiters(json_in):
     """
-    Remove all not notes (unicode 172) from json
+    Remove all delimiters and not notes from json
     """
     json_out = json_in
     for i, sub_register in enumerate(json_in['official_copy_data']['sub_registers']):
         for j, entry in enumerate(sub_register['entries']):
             txt = json_in['official_copy_data']['sub_registers'][i]['entries'][j]['full_text']
+            #Remove hash mark (unicode 35)
+            txt = txt.replace(chr(35), "")
+            #Remove percentage sign (unicode 37)
+            txt = txt.replace(chr(37), "")
+            #Remove asterix (unicode 42)
+            txt = txt.replace(chr(42), "")
+            #Remove less than symbol (unicode 60)
+            txt = txt.replace(chr(60), "")
+            #Remove equals sign (unicode 61)
+            txt = txt.replace(chr(61), "")
+            #Remove greater than symbol (unicode 62)
+            txt = txt.replace(chr(62), "")
+            #Remove not note (unicode 172)
             txt = txt.replace(chr(172), "")
             json_out['official_copy_data']['sub_registers'][i]['entries'][j]['full_text'] = txt
 
