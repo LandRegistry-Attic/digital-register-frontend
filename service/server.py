@@ -378,21 +378,20 @@ def _strip_delimiters(json_in):
     json_out = json_in
     for i, sub_register in enumerate(json_in['official_copy_data']['sub_registers']):
         for j, entry in enumerate(sub_register['entries']):
+            '''
+            Unicode characters:
+            35 - Hash #
+            37 - Percentage %
+            42 - Asterix *
+            60 - Less than <
+            61 - Equals =
+            62 - Greater than >
+            172 - Not note ¬
+            '''
+            delimiter_array = [35, 37, 42, 60, 61, 62, 172]
             txt = json_in['official_copy_data']['sub_registers'][i]['entries'][j]['full_text']
-            # Remove hash mark (unicode 35)
-            txt = txt.replace(chr(35), "")
-            # Remove percentage sign (unicode 37)
-            txt = txt.replace(chr(37), "")
-            # Remove asterix (unicode 42)
-            txt = txt.replace(chr(42), "")
-            # Remove less than symbol (unicode 60)
-            txt = txt.replace(chr(60), "")
-            # Remove equals sign (unicode 61)
-            txt = txt.replace(chr(61), "")
-            # Remove greater than symbol (unicode 62)
-            txt = txt.replace(chr(62), "")
-            # Remove not note (unicode 172)
-            txt = txt.replace(chr(172), "")
+            for delimiter in delimiter_array:
+                txt = txt.replace(chr(delimiter), "")
             json_out['official_copy_data']['sub_registers'][i]['entries'][j]['full_text'] = txt
 
     return json_out
