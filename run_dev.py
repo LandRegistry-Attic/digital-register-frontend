@@ -14,4 +14,4 @@ def handle_shutdown(*args, **kwargs):
 LOGGER.info('Starting the server')
 CsrfProtect(app)
 port = int(app.config.get('PORT', 8003))
-app.run(host='0.0.0.0', port=port, use_debugger=True)
+app.run(host='0.0.0.0', port=port)
