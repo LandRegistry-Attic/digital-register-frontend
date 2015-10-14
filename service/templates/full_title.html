@@ -230,13 +230,7 @@
           {% if 'entry_date' in entry %}<div class="entry-date">{{ entry['entry_date'] | date }}</div>{% endif %}
           <div class="entry">
             <h4{% if 'entry_date' in entry %} class="shunt"{% endif %}>{{ entry['sequence_number'] }}:</h4>
-            {% set entry_text = entry['full_text']|replace("%", "") %}
-            {% set entry_text = entry_text|replace("*", "") %}
-            {% set entry_text = entry_text|replace("<", "") %}
-            {% set entry_text = entry_text|replace("#", "") %}
-            {% set entry_text = entry_text|replace("=", "") %}
-            {% set entry_text = entry_text|replace(">", "") %}
-            <p>{{ entry_text }}</p>
+            <p>{{ entry['full_text'] }}</p>
           </div>
         </div>
       {% endfor %}
