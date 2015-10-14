@@ -370,6 +370,7 @@ def _create_pdf_template(sub_registers, title, title_number):
                            is_caution=is_caution,
                            districts=districts)
 
+
 def _strip_delimiters(json_in):
     """
     Remove all delimiters and not notes from json
@@ -378,19 +379,19 @@ def _strip_delimiters(json_in):
     for i, sub_register in enumerate(json_in['official_copy_data']['sub_registers']):
         for j, entry in enumerate(sub_register['entries']):
             txt = json_in['official_copy_data']['sub_registers'][i]['entries'][j]['full_text']
-            #Remove hash mark (unicode 35)
+            # Remove hash mark (unicode 35)
             txt = txt.replace(chr(35), "")
-            #Remove percentage sign (unicode 37)
+            # Remove percentage sign (unicode 37)
             txt = txt.replace(chr(37), "")
-            #Remove asterix (unicode 42)
+            # Remove asterix (unicode 42)
             txt = txt.replace(chr(42), "")
-            #Remove less than symbol (unicode 60)
+            # Remove less than symbol (unicode 60)
             txt = txt.replace(chr(60), "")
-            #Remove equals sign (unicode 61)
+            # Remove equals sign (unicode 61)
             txt = txt.replace(chr(61), "")
-            #Remove greater than symbol (unicode 62)
+            # Remove greater than symbol (unicode 62)
             txt = txt.replace(chr(62), "")
-            #Remove not note (unicode 172)
+            # Remove not note (unicode 172)
             txt = txt.replace(chr(172), "")
             json_out['official_copy_data']['sub_registers'][i]['entries'][j]['full_text'] = txt
 

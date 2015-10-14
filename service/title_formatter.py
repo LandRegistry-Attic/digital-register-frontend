@@ -101,12 +101,13 @@ def _format_private_individual_name(name):
     decoration = name.get('decoration')
     return '{0}, {1}'.format(formatted_name, decoration) if decoration else formatted_name
 
+
 # If the district field contains both the county and district, only display the district
 def _format_districts(districts):
     formatted_districts = []
     for district in districts:
         if ':' in district:
-            formatted_districts.append(re.sub('.*: ', '', district));
+            formatted_districts.append(re.sub('.*: ', '', district))
         else:
             formatted_districts.append(district)
-    return formatted_districts;
+    return formatted_districts
