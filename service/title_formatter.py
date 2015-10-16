@@ -20,7 +20,7 @@ def format_display_json(title_json):
         'is_caution_title': title_utils.is_caution_title(title_data),
         'edition_date': title_data.get('edition_date'),
         'class_of_title': title_data.get('class_of_title'),
-        'districts': _format_districts(title_data.get('districts'))
+        'districts': title_data.get('districts')
     }
 
     if 'lenders' in title_data:
@@ -100,14 +100,3 @@ def _format_private_individual_name(name):
     formatted_name = ' '.join(name_list)
     decoration = name.get('decoration')
     return '{0}, {1}'.format(formatted_name, decoration) if decoration else formatted_name
-
-
-# If the district field contains both the county and district, only display the district
-def _format_districts(districts):
-    formatted_districts = []
-    for district in districts:
-        if ':' in district:
-            formatted_districts.append(re.sub('.*: ', '', district))
-        else:
-            formatted_districts.append(district)
-    return formatted_districts
