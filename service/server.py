@@ -49,6 +49,47 @@ class User():
 def load_user(user_id):
     return User(user_id)
 
+@app.route('/', methods=['GET'])
+@app.route('/search', methods=['GET'])
+def app_start():
+    """ DM US107
+    App entry point
+    - show search page
+    """
+    return render_template(
+        'search.html',
+        form=TitleSearchForm(),
+        )
+
+@app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
+def confirm_selection(title_number, search_term):
+    """ DM US107 """
+    title_number = request.args.get('title', title_number)
+    title = _get_register_title(title_number)
+    search_term = request.args.get('search_term', search_term)
+    return render_template(
+        'confirm_selection.html',
+        search_term=search_term,
+        title=title,
+        display_page_number=1,
+        products_string="Hello",
+    )
+
+
+@app.route("/pre-payment-confirmation/<title_number>/<search_term>/<page>/<products>", methods=['POST'])
+def pre_payment_confirmation(title_number, search_term, page, products):
+    """ DM US107 """
+    title_number = request.args.get('title_number', title)
+    search_term = request.args.get('search_term', search_term)
+    page = request.args.get('page', page)
+    products = request.args.get('products', products)
+    return render_template(
+        'confirm_selection.html',
+        search_term=search_term,
+        page=page,
+        title_number=title_number,
+        product_string=products,
+    )
 
 @app.route('/health', methods=['GET'])
 def healthcheck():
@@ -149,7 +190,6 @@ def display_title_pdf(title_number):
 
 @app.route('/title-search', methods=['POST'])
 @app.route('/title-search/<search_term>', methods=['POST'])
-@login_required
 def find_titles():
     display_page_number = int(request.args.get('page') or 1)
 
@@ -161,10 +201,9 @@ def find_titles():
         return _initial_search_page()
 
 
-@app.route('/', methods=['GET'])
+# @app.route('/', methods=['GET'])
 @app.route('/title-search', methods=['GET'])
 @app.route('/title-search/<search_term>', methods=['GET'])
-@login_required
 def find_titles_page(search_term=''):
     display_page_number = int(request.args.get('page') or 1)
     page_number = display_page_number - 1  # page_number is 0 indexed
