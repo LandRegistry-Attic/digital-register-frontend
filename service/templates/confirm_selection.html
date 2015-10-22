@@ -1,86 +1,79 @@
 {% extends "layout.html" %}
 
+<style type="text/css">
+
+.service-notice {
+    padding: 10px 10px;
+    border-left: 4px solid #ffbf47;
+    background-color: #fff2d3;
+}
+
+.service-notice h2 {
+    margin-top: 0
+}
+
+.service-notice p {
+    margin-bottom: 0
+}
+
+</style>
+
 {% block body %}
-
-  {{ title }}
-  {{ search_term }}
-  
-
-
 
 {% if is_caution_title %}
     <span class="alert-flag-hi-viz">Caution against first registration</span>
     <br>
   {% endif %}
 
-    <div class="grid-row">
+<h1 class="heading-xlarge collapse-bottom">Summary of title {{params.title.number}}</h1>
 
-        <div class="column-two-thirds">
-            <a href="{{ url_for('find_titles', title_number=title_number, search_term=search_term, page=display_page_number, products=products_string) }}">Search for another property</a>
-        </div>
+<p class="expand-bottom">This title was last changed on <b>{{params.last_changed_datestring}} at {{params.last_changed_timestring}}</p>
 
-        <div class="column-third">
-            {% if title.address_lines %}
-            <h1 class="heading-xlarge collapse-bottom">{{ title.address_lines[0] }}</h1>
-            <p class="lede collapse-top">
-            {{ '<br>'.join(title.address_lines[1:])|safe }}
-            </p>
-            {% else %}
-            <h1>No recorded address for this title</h1>
-            {% endif %}
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <div class="text">
+      <div itemscope itemtype="http://schema.org/PostalAddress" class="lede">
+        {% for line in params.title.address_lines %}
+          <span>{{line}}</span><br/>
+        {% endfor %}
+      </div>
+      <br/>
 
-            <dl class="definition-tabular expand-top-half">
-                {% if not is_caution_title %}
-                <dt>Tenure type</dt>
-                <dd><b>{{ title.tenure }}</b></dd>
-                {% endif %}
-
-                <dt>Title number</dt>
-                <dd><b>{{ title.number }}</b></dd>
-            </dl>
-
-            <p class="heading-medium">How would you like to view this information?</p>
-            <form action="{{ url_for('pre_payment_confirmation', title_number=title, search_term=search_term, page=display_page_number, products=products_string) }}" method="post">
-                <label for="box-1" class="bold-medium">
-                    <input type="checkbox" id="box-1" name="summary_or_documents" value="summary"> Summary view - £1.00
-                </label>
-                <details>
-                    <summary>What is in the summary view?</summary>
-                    <p>The summary view contains reduced information of the full register. It consists of the following information only:</p>
-                    <ul class="list-bullet">
-                        <li>address and title number</li>
-                        <li>owner name and address details</li>
-                        <li>any lender name and address details</li>
-                        <li>tenure, title quality and price paid details</li>
-                    </ul>
-                </details>
-
-                <label for="box-2" class="bold-medium">
-                    <input type="checkbox" id="box-2" name="summary_or_documents" value="documents"> Title documents - £3.00 per document
-               </label>
-
-               <details>
-                   <summary>What are title documents?</summary>
-                   <p>Title documents are available in PDF format to download and keep.</p>
-                   <p>The <b>title register</b> has details about the property or land, including:</p>
-                   <ul class="list-bullet">
-                       <li>title number</li>
-                       <li>who owns it</li>
-                       <li>what they paid for it (properties only, if available)</li>
-                       <li>any rights of way</li>
-                       <li>whether a mortgage on it has been ‘discharged’, eg paid off</li>
-                   </ul>
-                   <p>The <b>title plan</b> includes details of:</p>
-                   <ul class="list-bullet">
-                       <li>the property’s location</li>
-                       <li>the general boundaries</li>
-                   </ul>
-               </details>
-               <input type="submit" value="Next" class="button">
-          </form>
-
+      <dl class="definition-tabular">
+        <dt>Tenure type</dt>
+        <dd><b>{{params.title.tenure}}</b></dd>
+      </dl>
     </div>
 
+    <div class="service-notice font-xsmall">
+      <p>The <b>title register</b> contains details about the property or land, including:</p>
+      <ul class="list-bullet">
+        <li>title number</li>
+        <li>who owns it</li>
+        <li>what they paid for it (properties only, if available)</li>
+        <li>any rights of way</li>
+      </ul>
+    </div>
+    <br/>
+    <dl class="definition-tabular font-xsmall">
+      <!---dt>Payment of</dt>
+      <dd><b>Summary of Title Register</b></dd-->
+      <dt>Amount to pay</dt>
+      {% autoescape false %}
+      <dd><b>{{params.price}}</b></dd>
+      {% endautoescape %}
+    </dl>
+
+    <br/>
+
+    <form class="form" action="{{ url_for('pre_sign_in') }}" method="post">
+      <input type='hidden' name='title' id='title' value="{{params.title}}"/>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <button type="submit" class="button" >Buy Now</button>
+    </form>
+
   </div>
+
+</div>
 
 {% endblock %}

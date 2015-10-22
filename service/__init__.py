@@ -30,4 +30,4 @@ def inject_google_analytics():
     return {'google_api_key': GOOGLE_ANALYTICS_API_KEY}
 
 logging_config.setup_logging()
-error_handler.setup_errors(app)
+#error_handler.setup_errors(app)
