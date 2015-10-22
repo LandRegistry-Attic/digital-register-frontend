@@ -102,32 +102,46 @@ def app_start():
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
     """ DM US107 """
-    title_number = request.args.get('title', title_number)
-    title = _get_register_title(title_number)
-    search_term = request.args.get('search_term', search_term)
+    params = dict()
+    params['title'] = _get_register_title(request.args.get('title', title_number))
+    params['search_term'] = request.args.get('search_term', search_term)
+    params['display_page_number'] = 1
+    params['products_string'] = "unused"
+    params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+
+    #Last changed date - NB current string format needs an update >>>
+    datestring = params['title']['last_changed']
+    if len(datestring) == 25:
+        if datestring[22] == ':':
+            l = list(datestring)
+            del(l[22])
+            datestring = "".join(l)
+
+    dt_obj = datetime.strptime(datestring,"%Y-%m-%dT%H:%M:%S%z")
+    params['last_changed_datestring'] = \
+        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
+    params['last_changed_timestring'] = \
+        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
+                      '{:02d}'.format(dt_obj.minute),
+                      '{:02d}'.format(dt_obj.second))
+
     return render_template(
         'confirm_selection.html',
-        search_term=search_term,
-        title=title,
-        display_page_number=1,
-        products_string="Hello",
-    )
+        params=params,
+        )
 
 
-@app.route("/pre-payment-confirmation/<title_number>/<search_term>/<page>/<products>", methods=['POST'])
-def pre_payment_confirmation(title_number, search_term, page, products):
+@app.route('/pre-sign-in/', methods=['POST'])
+def pre_sign_in():
     """ DM US107 """
-    title_number = request.args.get('title_number', title)
-    search_term = request.args.get('search_term', search_term)
-    page = request.args.get('page', page)
-    products = request.args.get('products', products)
+    title = request.form['title']
     return render_template(
-        'confirm_selection.html',
-        search_term=search_term,
-        page=page,
-        title_number=title_number,
-        product_string=products,
-    )
+        'pre-sign-in.html',
+        title=title,
+        )
+
+
+
 
 @app.route('/health', methods=['GET'])
 def healthcheck():
