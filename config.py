@@ -13,6 +13,7 @@ session_cookie_secure = os.environ['SESSION_COOKIE_SECURE'].lower() != 'false'
 more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
+title_register_summary_price = "&pound;1.20 (incl. VAT)"
 
 
 CONFIG_DICT = {
@@ -30,6 +31,7 @@ CONFIG_DICT = {
     'MORE_PROPRIETOR_DETAILS': more_proprietor_details,
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
+    'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
 settings = os.environ.get('SETTINGS')
