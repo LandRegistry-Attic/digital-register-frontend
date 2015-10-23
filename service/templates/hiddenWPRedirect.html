@@ -1,0 +1,52 @@
+<!-- 'Jinja' template -->
+<script type="text/Javascript">
+	 window.onload = function() { document.getElementById('redirect').submit();}
+</script>
+
+<div class="portletContent">
+	<div  class="twoCol">
+		<div class="twoColDiv bgWhite">
+			<h1>Page redirection</h1>
+				<p>You are about to be redirected to the WorldPay transaction page to proceed with your purchase. If you are not redirected within 30 seconds, please click Continue.</p>
+				<br/>
+				<br/>			
+				<form  id="redirect" action="{{WORLDPAY_DICT.WORLDPAY_REDIRECT_URL}}" method="POST">
+					<!-- Mandatory parameters, from configuration file -->
+					<input type="hidden" id="instId" name="instId"	value="{{WORLDPAY_DICT.WP_INST_ID}}">
+					<input type="hidden" id="authMode" name="authMode" value="{{WORLDPAY_DICT.WP_AUTH_MODE}}}">
+					<input type="hidden" id="accId1" name="accId1" value="{{WORLDPAY_DICT.WP_ACCOUNT_ID}}}">
+					<input type="hidden" id="currency" name="currency" value="{{WORLDPAY_DICT.WP_AUTH_CURR}}">
+					<input type="hidden" id="testMode" name="testMode" value="{{WORLDPAY_DICT.WP_TEST_MODE}}">
+					<input type="hidden" id="country" name="country" value="{{WORLDPAY_DICT.WP_DEFAULT_COUNTRY}}">
+
+					<!-- Mandatory parameters, from "Payment Request" form -->
+					<input type="hidden" id="cartId" name="cartId" value="{{WORLDPAY_DICT.cartId}}">
+					<input type="hidden" id="amount" name="amount"	value="{{WORLDPAY_DICT.amount}}">
+					<input type="hidden" id="desc" name="desc" value="{{WORLDPAY_DICT.desc}}">
+					<input type="hidden" id="name" name="name" value="{{WORLDPAY_DICT.forenames}} {{WORLDPAY_DICT.surname}}">
+
+					<!-- Custom parameters -->
+					<input type="hidden" id="MC_timestamp" name="MC_timestamp" value="{{WORLDPAY_DICT.requestIdString}}">
+					<input type="hidden" id="MC_purchaseType" name="MC_purchaseType" value="{{WORLDPAY_DICT.mcPurchaseType}">
+					<input type="hidden" id="MC_titleNumber" name="MC_titleNumber"	value="{{WORLDPAY_DICT.mcTitleNumber}}">
+					<input type="hidden" id="MC_searchType" name="MC_searchType" value="{{WORLDPAY_DICT.mcSearchType}}">
+					<input type="hidden" id="MC_portalInd" name="MC_portalInd" value="{{WORLDPAY_DICT.mcPortalInd}}">
+					<input type="hidden" id="MC_callbackUrl" name="MC_callbackUrl"	value="{{WORLDPAY_DICT.WP_AUTHORISATION_CALLBACK_URL}}">
+					<input type="hidden" id="C_returnURLCancel" name="C_returnURLCancel" value="{{WORLDPAY_DICT.ACTION_URL2}}">
+					<input type="hidden" id="C_returnURL" name="C_returnURL" value="{{WORLDPAY_DICT.ACTION_URL1}}">
+					<input type="hidden" id="C_returnURLCallback" name="C_returnURLCallback" value="{{WORLDPAY_DICT.ACTION_URL3}}">
+					<div class="nav">
+						<div class="twoCol"></div>
+						<div class="placeHolder"></div>
+						<input type="submit" class="last"  value="Continue &raquo"/>
+					</div>
+				</form>
+		</div><!-- end twoColDiv -->
+	</div><!-- end twoCol -->
+	<div class="rhSideCol">
+		<img class="home_image"
+			src="<%= renderResponse.encodeURL(renderRequest.getContextPath()+"/images/photo/lscape4.jpg")%>"
+			alt="Aerial image" />
+	</div>
+</div>
+
