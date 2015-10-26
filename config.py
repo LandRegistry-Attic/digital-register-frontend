@@ -60,7 +60,7 @@ WORLDPAY_DICT = {
     'WORLDPAY_START_ADDRESS': '195.35.90.0',
     'WORLDPAY_FINISH_ADDRESS': '195.35.91.255',
     'WP_AUTHORISATION_CALLBACK_URL': 'testpayment.landregisteronline.gov.uk/lro/servlet/AuthorisationCallbackServlet',
-    'WP_CALLBACK_SERVER_URL': 'http://localhost:10038',
+    'WP_CALLBACK_SERVER_URL': os.getenv('WP_CALLBACK_SERVER_URL', 'http://localhost:5000'),
     'RT_CONTEXT ': ' "https://localhost:10035"',
     'AVS_CHECK_ON': 'N',
     'AVS_FAILED_MATCH': '4',
@@ -88,3 +88,4 @@ elif settings == 'test':
     CONFIG_DICT['DISABLE_CSRF_PREVENTION'] = True
     CONFIG_DICT['FAULT_LOG_FILE_PATH'] = '/dev/null'
     CONFIG_DICT['LOGGING'] = False
+    CONFIG_DICT['SLEEP_BETWEEN_LOGINS'] = False
