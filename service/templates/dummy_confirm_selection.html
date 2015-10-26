@@ -1,0 +1,26 @@
+
+{% block body %}
+
+<h1 class="heading-xlarge collapse-bottom">WorldPay check</h1>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+    <br/>
+        <!-- 'worldpay_params' passed in via "render_template()" -->
+        <form class="form" action="{{worldpay_params.worldpay_redirect_url}}" method="post">
+            <!-- Note: these values may be obtained via 'params' of 'confirm_selection.html' -->
+            {% set _dummy =  worldpay_params.update({'cartid': 'TID090983'}) %}
+            {% set _dummy =  worldpay_params.update({'amount': '3'}) %}
+            {% set _dummy =  worldpay_params.update({'desc': 'Title'}) %}
+            {% set _dummy =  worldpay_params.update({'forenames': 'Forenames'}) %}
+            {% set _dummy =  worldpay_params.update({'surname': 'Surname'}) %}
+
+            <!-- WP parameters -->
+            {% include 'hiddenWP.html' %}
+            <button type="submit" class="button" >Buy Now</button>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -2,6 +2,7 @@ from datetime import timedelta
 import os
 from typing import Dict, Union
 
+"""
 fault_log_file_path = os.environ['FAULT_LOG_FILE_PATH']
 google_analytics_api_key = os.environ['GOOGLE_ANALYTICS_API_KEY']
 logging_config_file_path = os.environ['LOGGING_CONFIG_FILE_PATH']
@@ -31,15 +32,18 @@ CONFIG_DICT = {
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
 }  # type: Dict[str, Union[bool, str, timedelta]]
+"""
 
 # <worldpay> (From https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
+CONFIG_DICT = {'DEBUG': True}
 WP_TEST_MODE_ON = 100
 WP_TEST_MODE_OFF = 0
 
 WORLDPAY_DICT = {
     'BYPASS_WORLDPAY': 'N',
     'PURCHASE_TIME_EXPIRY_LIMIT': '5',
-    'WORLDPAY_REDIRECT_URL': 'https://secure.worldpay.com/wcc/dispatcher',
+    ##'WORLDPAY_REDIRECT_URL': 'https://secure.worldpay.com/wcc/dispatcher',
+    'WORLDPAY_REDIRECT_URL': os.getenv('WORLDPAY_REDIRECT_URL', 'https://secure-test.worldpay.com/wcc/purchase'),
     'WP_AUTH_CURR': 'GBP',
     'WP_CALLBACK_PW': 'unknown',
     'KEYSTORE_FILE_PATH': '/web/sycell/config/lronline.pfx',
@@ -59,7 +63,7 @@ WORLDPAY_DICT = {
     'WORLDPAY_START_ADDRESS': '195.35.90.0',
     'WORLDPAY_FINISH_ADDRESS': '195.35.91.255',
     'WP_AUTHORISATION_CALLBACK_URL': 'testpayment.landregisteronline.gov.uk/lro/servlet/AuthorisationCallbackServlet',
-    'WP_CALLBACK_SERVER_URL': 'http://localhost:10038',
+    'WP_CALLBACK_SERVER_URL': os.getenv('WP_CALLBACK_SERVER_URL', 'http://localhost:5000'),
     'RT_CONTEXT ': ' "https://localhost:10035"',
     'AVS_CHECK_ON': 'N',
     'AVS_FAILED_MATCH': '4',
