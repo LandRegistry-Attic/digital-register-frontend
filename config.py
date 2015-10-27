@@ -2,18 +2,19 @@ from datetime import timedelta
 import os
 from typing import Dict, Union
 
-"""
-fault_log_file_path = os.environ['FAULT_LOG_FILE_PATH']
-google_analytics_api_key = os.environ['GOOGLE_ANALYTICS_API_KEY']
-logging_config_file_path = os.environ['LOGGING_CONFIG_FILE_PATH']
-login_api = os.environ['LOGIN_API']
-register_title_api = os.environ['REGISTER_TITLE_API']
-secret_key = os.environ['APPLICATION_SECRET_KEY']
-service_notice_html = os.environ['SERVICE_NOTICE_HTML']
-session_cookie_secure = os.environ['SESSION_COOKIE_SECURE'].lower() != 'false'
-more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
-show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
-show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+fault_log_file_path = os.getenv('FAULT_LOG_FILE_PATH', 'fault.log')
+google_analytics_api_key = os.getenv('GOOGLE_ANALYTICS_API_KEY', '')
+logging_config_file_path = os.getenv('LOGGING_CONFIG_FILE_PATH', '..\logging_config.json')
+login_api = os.getenv('LOGIN_API', '')
+register_title_api = os.getenv('REGISTER_TITLE_API', '')
+secret_key = os.getenv('APPLICATION_SECRET_KEY' ,'secretkeyshouldberandom')
+service_notice_html = os.getenv('SERVICE_NOTICE_HTML', '<h2>Downtime notice</h2><p>This service will be offline between 2.00&ndash;5.00 on 31st July</p>')
+session_cookie_secure = os.getenv('SESSION_COOKIE_SECURE', 'False').lower() != 'false'
+more_proprietor_details = os.getenv('MORE_PROPRIETOR_DETAILS', 'False')
+show_full_title_data = os.getenv('SHOW_FULL_TITLE_DATA', 'True').lower() == 'true'
+show_full_title_pdf = os.getenv('SHOW_FULL_TITLE_PDF', 'True').lower() == 'true'
 
 
 CONFIG_DICT = {
@@ -32,10 +33,9 @@ CONFIG_DICT = {
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
 }  # type: Dict[str, Union[bool, str, timedelta]]
-"""
 
 # <worldpay> (From https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
-CONFIG_DICT = {'DEBUG': True}
+CONFIG_DICT.update({'DEBUG': True})
 WP_TEST_MODE_ON = 100
 WP_TEST_MODE_OFF = 0
 
@@ -63,7 +63,7 @@ WORLDPAY_DICT = {
     'WORLDPAY_START_ADDRESS': '195.35.90.0',
     'WORLDPAY_FINISH_ADDRESS': '195.35.91.255',
     'WP_AUTHORISATION_CALLBACK_URL': 'testpayment.landregisteronline.gov.uk/lro/servlet/AuthorisationCallbackServlet',
-    'WP_CALLBACK_SERVER_URL': os.getenv('WP_CALLBACK_SERVER_URL', 'http://localhost:5000'),
+    'WP_CALLBACK_SERVER_URL': os.getenv('WP_CALLBACK_SERVER_URL', 'http://localhost:5000/callback'),
     'RT_CONTEXT ': ' "https://localhost:10035"',
     'AVS_CHECK_ON': 'N',
     'AVS_FAILED_MATCH': '4',
