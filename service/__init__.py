@@ -30,4 +30,6 @@ def inject_google_analytics():
     return {'google_api_key': GOOGLE_ANALYTICS_API_KEY}
 
 logging_config.setup_logging()
-#error_handler.setup_errors(app)
+if app.config['DEBUG'] is False:
+    # Retain traceback when DEBUG = True
+    error_handler.setup_errors(app)
