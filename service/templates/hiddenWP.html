@@ -1,24 +1,28 @@
+
 			<!-- mandatory parameters, from configuration file -->
-			<input type="hidden" id="instid" name="instid"	value="{{worldpay_params.wp_inst_id}}">
-			<input type="hidden" id="authmode" name="authmode" value="{{worldpay_params.wp_auth_mode}}">
-			<input type="hidden" id="accid1" name="accid1" value="{{worldpay_params.wp_account_id}}">
+			<input type="hidden" id="instId" name="instId"	value="{{worldpay_params.wp_inst_id}}">
+			<input type="hidden" id="authMode" name="authMode" value="{{worldpay_params.wp_auth_mode}}">
+			<input type="hidden" id="accId1" name="accId1" value="{{worldpay_params.wp_account_id}}">
 			<input type="hidden" id="currency" name="currency" value="{{worldpay_params.wp_auth_curr}}">
-			<input type="hidden" id="testmode" name="testmode" value="{{worldpay_params.wp_test_mode}}">
+			<input type="hidden" id="testMode" name="testMode" value="{{worldpay_params.wp_test_mode}}">
 			<input type="hidden" id="country" name="country" value="{{worldpay_params.wp_default_country}}">
 
 			<!-- mandatory parameters, from "payment request" form -->
-			<input type="hidden" id="cartid" name="cartid" value="{{worldpay_params.cartid}}">
+			<input type="hidden" id="cartId" name="cartId" value="{{worldpay_params.cartid}}">
 			<input type="hidden" id="amount" name="amount"	value="{{worldpay_params.amount}}">
 			<input type="hidden" id="desc" name="desc" value="{{worldpay_params.desc}}">
 			<input type="hidden" id="name" name="name" value="{{worldpay_params.forenames}} {{worldpay_params.surname}}">
+			<input type="hidden" id="email" name="email" value="{{worldpay_params.email}}">
+			<input type="hidden" id="address" name="address" value="{{worldpay_params.address}}">
+			<input type="hidden" id="postcode" name="postcode" value="{{worldpay_params.postcode}}">
 
 			<!-- custom parameters -->
-			<input type="hidden" id="mc_timestamp" name="mc_timestamp" value="{{worldpay_params.requestidstring}}">
-			<input type="hidden" id="mc_purchasetype" name="mc_purchasetype" value="{{worldpay_params.mcpurchasetype}}">
-			<input type="hidden" id="mc_titlenumber" name="mc_titlenumber"	value="{{worldpay_params.mctitlenumber}}">
-			<input type="hidden" id="mc_searchtype" name="mc_searchtype" value="{{worldpay_params.mcsearchtype}}">
-			<input type="hidden" id="mc_portalind" name="mc_portalind" value="{{worldpay_params.mcportalind}}">
-			<input type="hidden" id="mc_callbackurl" name="mc_callbackurl"	value="{{worldpay_params.wp_authorisation_callback_url}}">
-			<input type="hidden" id="c_returnurlcancel" name="c_returnurlcancel" value="{{worldpay_params.action_url2}}">
-			<input type="hidden" id="c_returnurl" name="c_returnurl" value="{{worldpay_params.action_url1}}">
-			<input type="hidden" id="c_returnurlcallback" name="c_returnurlcallback" value="{{worldpay_params.action_url3}}">
+			<input type="hidden" id="MC_timestamp" name="MC_timestamp" value="{{worldpay_params.mc_timestamp}}">
+			<input type="hidden" id="MC_purchasetype" name="MC_purchasetype" value="{{worldpay_params.mc_purchasetype}}">
+			<input type="hidden" id="MC_titlenumber" name="MC_titlenumber"	value="{{worldpay_params.mc_titlenumber}}">
+			<input type="hidden" id="MC_searchtype" name="MC_searchtype" value="{{worldpay_params.mc_searchtype}}">
+			<input type="hidden" id="MC_portalind" name="MC_portalind" value="{{worldpay_params.mc_portalind}}">
+			<input type="hidden" id="MC_callbackurl" name="MC_callbackurl"	value="{{worldpay_params.wp_authorisation_callback_url}}">
+			<input type="hidden" id="C_returnurlcancel" name="C_returnurlcancel" value="{{worldpay_params.action_url2}}">
+			<input type="hidden" id="C_returnurl" name="C_returnurl" value="{{worldpay_params.action_url1}}">
+			<input type="hidden" id="C_returnurlcallback" name="C_returnurlcallback" value="{{worldpay_params.action_url3}}">

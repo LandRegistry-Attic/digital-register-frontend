@@ -9,11 +9,14 @@
         <!-- 'worldpay_params' passed in via "render_template()" -->
         <form class="form" action="{{worldpay_params.worldpay_redirect_url}}" method="post">
             <!-- Note: these values may be obtained via 'params' of 'confirm_selection.html' -->
-            {% set _dummy =  worldpay_params.update({'cartid': 'TID090983'}) %}
-            {% set _dummy =  worldpay_params.update({'amount': '3'}) %}
-            {% set _dummy =  worldpay_params.update({'desc': 'Title'}) %}
+            {% set _dummy =  worldpay_params.update({'cartid': '0001444208589806RhrHOvIFk6liOWwHE7bKfy-'}) %}
+            {% set _dummy =  worldpay_params.update({'amount': '3.0'}) %}
+            {% set _dummy =  worldpay_params.update({'desc': 'REGISTER VIEW                   '}) %}
             {% set _dummy =  worldpay_params.update({'forenames': 'Forenames'}) %}
             {% set _dummy =  worldpay_params.update({'surname': 'Surname'}) %}
+            {% set _dummy =  worldpay_params.update({'email': 'Richard.Prosser@landregistry.gsi.gov.uk'}) %}
+            {% set _dummy =  worldpay_params.update({'address': '1, Plymouth, '}) %}
+            {% set _dummy =  worldpay_params.update({'postcode': 'PL1 1AA'}) %}
 
             <!-- WP parameters -->
             {% include 'hiddenWP.html' %}
