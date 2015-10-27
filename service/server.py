@@ -56,14 +56,17 @@ def app_start():
     App entry point
     - show search page
     """
+    username = _username_from_header(request)
     return render_template(
         'search.html',
         form=TitleSearchForm(),
+        username=username,
         )
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
     """ DM US107 """
+
     params = dict()
     params['title'] = _get_register_title(request.args.get('title', title_number))
     params['search_term'] = request.args.get('search_term', search_term)
@@ -71,7 +74,9 @@ def confirm_selection(title_number, search_term):
     params['products_string'] = "unused"
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
 
-    #Last changed date - NB current string format needs an update >>>
+    # Last changed date - modified to remove colon in UTC offset, which python
+    # datetime.strptime() doesn't like >>>
+
     datestring = params['title']['last_changed']
     if len(datestring) == 25:
         if datestring[22] == ':':
@@ -87,22 +92,21 @@ def confirm_selection(title_number, search_term):
                       '{:02d}'.format(dt_obj.minute),
                       '{:02d}'.format(dt_obj.second))
 
+    username = _username_from_header(request)
+
     return render_template(
         'confirm_selection.html',
         params=params,
+        username=username,
         )
 
 
-@app.route('/pre-sign-in/', methods=['POST'])
-def pre_sign_in():
+@app.route('/spinner-page/', methods=['POST'])
+def spinner_page():
     """ DM US107 """
-    title = request.form['title']
     return render_template(
-        'pre-sign-in.html',
-        title=title,
+        'spinner-page.html',
         )
-
-
 
 
 @app.route('/health', methods=['GET'])
@@ -125,37 +129,6 @@ def healthcheck():
 @app.route('/cookies', methods=['GET'])
 def cookies():
     return _cookies_page()
-
-
-@app.route('/login', methods=['GET'])
-def signin_page():
-    user_id = current_user.get_id()
-    if user_id:
-        return redirect(url_for('find_titles_page'))
-    else:
-        return _login_page()
-
-
-@app.route('/login', methods=['POST'])
-def sign_in():
-    form = SigninForm(csrf_enabled=_is_csrf_enabled())
-
-    if not form.validate():
-        # entered invalid login form details so send back to same page with form error messages
-        return _login_page(form)
-    else:
-        return _process_valid_login_attempt(form)
-
-
-@app.route('/logout', methods=['GET'])
-def sign_out():
-    user_id = current_user.get_id()
-
-    if user_id:
-        logout_user()
-        auditing.audit('User {} logged out'.format(user_id))
-
-    return redirect(url_for('sign_in'))
 
 
 @app.route('/titles/<title_number>', methods=['GET'])
@@ -212,7 +185,7 @@ def find_titles():
         return redirect(url_for('find_titles', search_term=search_term, page=display_page_number))
     else:
         # TODO: we should redirect to that page
-        return _initial_search_page()
+        return _initial_search_page(request)
 
 
 # @app.route('/', methods=['GET'])
@@ -224,7 +197,7 @@ def find_titles_page(search_term=''):
 
     search_term = search_term.strip()
     if not search_term:
-        return _initial_search_page()
+        return _initial_search_page(request)
     else:
         message_format = "SEARCH REGISTER: '{0}' was searched by {1}"
         auditing.audit(message_format.format(search_term, current_user.get_id()))
@@ -360,22 +333,25 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
     )
 
 
-def _initial_search_page():
+def _initial_search_page(request):
+    username = _username_from_header(request)
     return render_template(
         'search.html',
         form=TitleSearchForm(),
-        username=current_user.get_id(),
+        username=username,
+        #username=current_user.get_id(),
     )
 
 
 def _search_results_page(results, search_term, addressbase=False):
+    username = _username_from_header(request)
     return render_template(
         'search_results.html',
         search_term=search_term,
         results=results,
         form=TitleSearchForm(),
-        username=current_user.get_id(),
         addressbase=addressbase,
+        username=username,
         breadcrumbs=[
             {'text': 'Search the land and property register', 'url': url_for('find_titles')},
             {'current': 'Search results'}
@@ -449,3 +425,14 @@ def _strip_delimiters(json_in):
             json_out['official_copy_data']['sub_registers'][i]['entries'][j]['full_text'] = txt
 
     return json_out
+
+
+def _username_from_header(request):
+    """ US107 """
+    """ Get username (if any) from WebSeal headers """
+    user_id = request.headers.get("iv-user", None)
+    if user_id is None:
+        return None
+    p = re.compile("[%][{0-9}][{0-9}]")
+    user_id = p.sub("", user_id)
+    return user_id

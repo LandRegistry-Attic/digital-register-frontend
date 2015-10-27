@@ -1,23 +1,5 @@
 {% extends "layout.html" %}
 
-<style type="text/css">
-
-.service-notice {
-    padding: 10px 10px;
-    border-left: 4px solid #ffbf47;
-    background-color: #fff2d3;
-}
-
-.service-notice h2 {
-    margin-top: 0
-}
-
-.service-notice p {
-    margin-bottom: 0
-}
-
-</style>
-
 {% block body %}
 
 {% if is_caution_title %}
@@ -66,7 +48,7 @@
 
     <br/>
 
-    <form class="form" action="{{ url_for('pre_sign_in') }}" method="post">
+    <form class="form" action="{{ url_for('spinner_page') }}" method="post">
       <input type='hidden' name='title' id='title' value="{{params.title}}"/>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <button type="submit" class="button" >Buy Now</button>

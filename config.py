@@ -2,6 +2,8 @@ from datetime import timedelta
 import os
 from typing import Dict, Union
 
+DEBUG = True
+
 fault_log_file_path = os.environ['FAULT_LOG_FILE_PATH']
 google_analytics_api_key = os.environ['GOOGLE_ANALYTICS_API_KEY']
 logging_config_file_path = os.environ['LOGGING_CONFIG_FILE_PATH']
@@ -15,9 +17,8 @@ show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
 title_register_summary_price = "&pound;1.20 (incl. VAT)"
 
-
 CONFIG_DICT = {
-    'DEBUG': False,
+    'DEBUG': DEBUG,
     'FAULT_LOG_FILE_PATH': fault_log_file_path,
     'GOOGLE_ANALYTICS_API_KEY': google_analytics_api_key,
     'LOGGING': True,
