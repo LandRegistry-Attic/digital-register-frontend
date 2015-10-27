@@ -94,14 +94,17 @@ def app_start():
     App entry point
     - show search page
     """
+    username = _username_from_header(request)
     return render_template(
         'search.html',
         form=TitleSearchForm(),
+        username=username,
         )
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
     """ DM US107 """
+
     params = dict()
     params['title'] = _get_register_title(request.args.get('title', title_number))
     params['search_term'] = request.args.get('search_term', search_term)
@@ -109,7 +112,9 @@ def confirm_selection(title_number, search_term):
     params['products_string'] = "unused"
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
 
-    #Last changed date - NB current string format needs an update >>>
+    # Last changed date - modified to remove colon in UTC offset, which python
+    # datetime.strptime() doesn't like >>>
+
     datestring = params['title']['last_changed']
     if len(datestring) == 25:
         if datestring[22] == ':':
@@ -125,22 +130,21 @@ def confirm_selection(title_number, search_term):
                       '{:02d}'.format(dt_obj.minute),
                       '{:02d}'.format(dt_obj.second))
 
+    username = _username_from_header(request)
+
     return render_template(
         'confirm_selection.html',
         params=params,
+        username=username,
         )
 
 
-@app.route('/pre-sign-in/', methods=['POST'])
-def pre_sign_in():
+@app.route('/spinner-page/', methods=['POST'])
+def spinner_page():
     """ DM US107 """
-    title = request.form['title']
     return render_template(
-        'pre-sign-in.html',
-        title=title,
+        'spinner-page.html',
         )
-
-
 
 
 @app.route('/health', methods=['GET'])
