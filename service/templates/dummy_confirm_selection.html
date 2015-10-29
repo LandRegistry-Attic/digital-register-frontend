@@ -18,6 +18,11 @@
             {% set _dummy =  worldpay_params.update({'address': '1, Plymouth, '}) %}
             {% set _dummy =  worldpay_params.update({'postcode': 'PL1 1AA'}) %}
 
+            {% set _dummy =  worldpay_params.update({'mc_purchasetype': 'registerOnly'}) %}
+            {% set _dummy =  worldpay_params.update({'mc_titlenumber': 'LA265'}) %}
+            {% set _dummy =  worldpay_params.update({'mc_searchtype': 'T'}) %}
+            {% set _dummy =  worldpay_params.update({'mc_portalind': 'Y'}) %}
+
             <!-- WP parameters -->
             {% include 'hiddenWP.html' %}
             <button type="submit" class="button" >Buy Now</button>

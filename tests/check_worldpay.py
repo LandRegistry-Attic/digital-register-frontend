@@ -3,6 +3,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from config import WORLDPAY_DICT, ROOT_DIR
+from datetime import datetime
 
 tmpl_dir = os.path.join(ROOT_DIR, os.path.normpath('service/templates'))
 
@@ -18,11 +19,7 @@ def _():
     Check that import/include works and that WorldPay 'sandbox' service is OK.
     """
 
-    _worldpay_dict.update({'mc_timestamp': '2015-10-07-09.58.39.347287'})
-    _worldpay_dict.update({'mc_purchasetype': 'registerOnly'})
-    _worldpay_dict.update({'mc_titlenumber': 'LA265'})
-    _worldpay_dict.update({'mc_searchtype': 'T'})
-    _worldpay_dict.update({'mc_portalind': 'Y'})
+    _worldpay_dict.update({'mc_timestamp': datetime.now()})
 
     return render_template('dummy_confirm_selection.html', worldpay_params=_worldpay_dict)
 
