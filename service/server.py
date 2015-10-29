@@ -69,6 +69,7 @@ def confirm_selection(title_number, search_term):
 
     params = dict()
     params['title'] = _get_register_title(request.args.get('title', title_number))
+    params['title_number'] = title_number
     params['search_term'] = request.args.get('search_term', search_term)
     params['display_page_number'] = 1
     params['products_string'] = "unused"
@@ -103,9 +104,20 @@ def confirm_selection(title_number, search_term):
 
 @app.route('/spinner-page/', methods=['POST'])
 def spinner_page():
-    """ DM US107 """
+    """
+    DM US107
+    The first page secured on webseal
+    """
+
+    worldpay_params = dict()
+    worldpay_params['title_number'] = request.form['title_number'].strip()
+    worldpay_params['username'] = _username_from_header
+
+    # more params to be confirmed by Richard (29/10/15)
+
     return render_template(
         'spinner-page.html',
+        params=worldpay_params,
         )
 
 
