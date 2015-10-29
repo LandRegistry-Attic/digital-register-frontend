@@ -1,7 +1,6 @@
 import os
 from flask import Flask
 from flask import render_template
-from flask import request
 from config import WORLDPAY_DICT, ROOT_DIR
 from datetime import datetime
 
@@ -22,11 +21,6 @@ def _():
     _worldpay_dict.update({'mc_timestamp': datetime.now()})
 
     return render_template('dummy_confirm_selection.html', worldpay_params=_worldpay_dict)
-
-# This is the "Callback URL" that Worldpay invokes after completing the payment process.
-@app.route('/callback', methods=['GET', 'POST'])
-def callback():
-    print(request.data)
 
 if __name__ == '__main__':
     app.run(debug=True)

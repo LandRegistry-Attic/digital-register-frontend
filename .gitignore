@@ -68,3 +68,7 @@ service/static/.webassets-cache/
 # Generated files
 service/static/lr-styleguide/js/styleguide-components.js
 
+# Reference files
+LRPortalConfig.properties
+hiddenWPRedirect.jsp
+
