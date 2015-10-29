@@ -49,7 +49,7 @@
     <br/>
 
     <form class="form" action="{{ url_for('spinner_page') }}" method="post">
-      <input type='hidden' name='title' id='title' value="{{params.title}}"/>
+      <input type='hidden' name='title_number' id='title_number' value="{{params.title_number}}"/>
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <button type="submit" class="button" >Buy Now</button>
     </form>
