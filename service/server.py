@@ -119,7 +119,7 @@ def get_title(title_number):
 
         full_title_data = _strip_delimiters(full_title_data)
 
-        auditing.audit("VIEW REGISTER: Title number {0} was viewed by '{1}'".format(
+        auditing.audit("VIEW REGISTER: Title number {0} was viewed by {1}".format(
             title_number,
             current_user.get_id())
         )
@@ -173,7 +173,7 @@ def find_titles_page(search_term=''):
     if not search_term:
         return _initial_search_page()
     else:
-        message_format = "SEARCH REGISTER: '{0}' was searched by '{1}'"
+        message_format = "SEARCH REGISTER: '{0}' was searched by {1}"
         auditing.audit(message_format.format(search_term, current_user.get_id()))
         return _get_address_search_response(search_term, page_number)
 
