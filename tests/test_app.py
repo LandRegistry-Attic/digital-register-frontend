@@ -1,15 +1,15 @@
 from datetime import datetime
 from io import BytesIO
 import json
-import mock
-from PyPDF2 import PdfFileReader
-import pytest
-from unittest.mock import call
+import mock  # type: ignore
+from PyPDF2 import PdfFileReader  # type: ignore
+import pytest  # type: ignore
+from unittest.mock import call  # type: ignore
 
-from config import CONFIG_DICT
-import service
-from service.server import app
-from .fake_response import FakeResponse
+from config import CONFIG_DICT  # type: ignore
+import service  # type: ignore
+from service.server import app  # type: ignore
+from .fake_response import FakeResponse  # type: ignore
 
 
 TEST_USERNAME = 'username1'
@@ -110,7 +110,7 @@ class TestViewTitle(BaseServerTest):
         self.app.get('/titles/titleref')
 
         mock_audit.assert_called_once_with(
-            "VIEW REGISTER: Title number titleref was viewed by '{}'".format(TEST_USERNAME)
+            "VIEW REGISTER: Title number titleref was viewed by {}".format(TEST_USERNAME)
         )
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
@@ -429,7 +429,7 @@ class TestTitleSearch(BaseServerTest):
     def test_title_search_audits_the_events(self, mock_get, mock_audit):
         search_term = 'search term'
         self.app.post('/title-search', data={'search_term': search_term}, follow_redirects=True)
-        audit_text = "SEARCH REGISTER: '{}' was searched by '{}'".format(search_term, TEST_USERNAME)
+        audit_text = "SEARCH REGISTER: '{}' was searched by {}".format(search_term, TEST_USERNAME)
         mock_audit.assert_called_once_with(audit_text)
 
     @mock.patch('requests.get', return_value=unavailable_title)
@@ -443,7 +443,6 @@ class TestTitleSearch(BaseServerTest):
         assert response.status_code == 200
         page_content = response.data.decode()
         assert 'AGL1000' in page_content
-        assert '21 Murhill Lane, Saltram Meadow, Plymouth, (PL9 7FN)' in page_content
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_with_page_calls_api_correctly(self, mock_get):

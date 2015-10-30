@@ -1,4 +1,5 @@
 from service import address_utils, app, title_utils
+import re
 
 MORE_PROPRIETOR_DETAILS = (app.config['MORE_PROPRIETOR_DETAILS'] == 'true')
 
@@ -19,6 +20,7 @@ def format_display_json(title_json):
         'is_caution_title': title_utils.is_caution_title(title_data),
         'edition_date': title_data.get('edition_date'),
         'class_of_title': title_data.get('class_of_title'),
+        'districts': title_data.get('districts')
     }
 
     if 'lenders' in title_data:

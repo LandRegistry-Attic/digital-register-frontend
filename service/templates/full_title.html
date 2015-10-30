@@ -5,7 +5,7 @@
         size: A4 portrait;
         margin: 10mm 10mm 15mm 10mm;
         @bottom-right {
-          content: "Title number: {{ title_number }} \A Page " counter(page) " of " counter(pages);
+          content: "Title number: {{ title_number }}\APage " counter(page) " of " counter(pages);
           font-family: 'GDSTransportWebsite';
           font-size: 8pt;
           color: silver;
@@ -190,8 +190,15 @@
               Except as mentioned below, the title includes any legal easements
               granted by the registered lease but is subject to any rights that
               it reserves, so far as those easements and rights exist and
-              benefit or affect theregistered land.
+              benefit or affect the registered land.
             {% endif %}
+          </p>
+          <p>
+          {% if districts %}
+            {% for district in districts %}
+              {{district}}&nbsp;
+            {% endfor %}
+          {% endif %}
           </p>
         </div>
       {% elif sub_register['sub_register_name'] == 'B' %}
@@ -202,7 +209,7 @@
             any entries that affect the right of disposal.
           </p>
           {% if not is_caution %}
-            <p>Title {{ class_of_title }} </p>
+            <p>Title {{ class_of_title }}</p>
           {% endif %}
         </div>
       {% elif sub_register['sub_register_name'] == 'C' %}
@@ -229,6 +236,6 @@
       {% endfor %}
 
     {% endfor %}
-        <div> <span class="copy-18 block">End of Register</span></div>
+    <div class="copy-18 block">End of Register</div>
   </body>
 </html>

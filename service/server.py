@@ -109,7 +109,7 @@ def get_title(title_number):
     title = _get_register_title(title_number)
 
     if title:
-        display_page_number = int(request.args.get('page', 1))
+        display_page_number = int(request.args.get('page') or 1)
         search_term = request.args.get('search_term', title_number)
         breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
         show_pdf = _should_show_full_title_pdf()
@@ -117,7 +117,9 @@ def get_title(title_number):
             api_client.get_official_copy_data(title_number) if _should_show_full_title_data() else None
         )
 
-        auditing.audit("VIEW REGISTER: Title number {0} was viewed by '{1}'".format(
+        full_title_data = _strip_delimiters(full_title_data)
+
+        auditing.audit("VIEW REGISTER: Title number {0} was viewed by {1}".format(
             title_number,
             current_user.get_id())
         )
@@ -136,6 +138,7 @@ def display_title_pdf(title_number):
     title = _get_register_title(title_number)
     if title:
         full_title_data = api_client.get_official_copy_data(title_number)
+        full_title_data = _strip_delimiters(full_title_data)
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
@@ -148,7 +151,7 @@ def display_title_pdf(title_number):
 @app.route('/title-search/<search_term>', methods=['POST'])
 @login_required
 def find_titles():
-    display_page_number = int(request.args.get('page', 1))
+    display_page_number = int(request.args.get('page') or 1)
 
     search_term = request.form['search_term'].strip()
     if search_term:
@@ -163,14 +166,14 @@ def find_titles():
 @app.route('/title-search/<search_term>', methods=['GET'])
 @login_required
 def find_titles_page(search_term=''):
-    display_page_number = int(request.args.get('page', 1))
+    display_page_number = int(request.args.get('page') or 1)
     page_number = display_page_number - 1  # page_number is 0 indexed
 
     search_term = search_term.strip()
     if not search_term:
         return _initial_search_page()
     else:
-        message_format = "SEARCH REGISTER: '{0}' was searched by '{1}'"
+        message_format = "SEARCH REGISTER: '{0}' was searched by {1}"
         auditing.audit(message_format.format(search_term, current_user.get_id()))
         return _get_address_search_response(search_term, page_number)
 
@@ -343,6 +346,7 @@ def _create_string_date_and_time(datetoconvert):
 
 
 def _create_pdf_template(sub_registers, title, title_number):
+
     # TODO use real date - this is reliant on new functionality to check the daylist
     last_entry_date = _create_string_date_and_time(datetime(3001, 2, 3, 4, 5, 6))
     issued_date = _create_string_date_only(datetime.now())
@@ -350,6 +354,9 @@ def _create_pdf_template(sub_registers, title, title_number):
         edition_date = _create_string_date_only(datetime.strptime(title.get('edition_date'), "%Y-%m-%d"))
     else:
         edition_date = "No date given"
+
+    districts = title.get('districts')
+
     class_of_title = title.get('class_of_title')
     # need to check for caution title as we don't display Class of title for them
     is_caution = title.get('is_caution_title') is True
@@ -360,4 +367,31 @@ def _create_pdf_template(sub_registers, title, title_number):
                            edition_date=edition_date,
                            class_of_title=class_of_title,
                            sub_registers=sub_registers,
-                           is_caution=is_caution)
+                           is_caution=is_caution,
+                           districts=districts)
+
+
+def _strip_delimiters(json_in):
+    """
+    Remove all delimiters and not notes from json
+    """
+    json_out = json_in
+    for i, sub_register in enumerate(json_in['official_copy_data']['sub_registers']):
+        for j, entry in enumerate(sub_register['entries']):
+            '''
+            Unicode characters:
+            35 - Hash #
+            37 - Percentage %
+            42 - Asterix *
+            60 - Less than <
+            61 - Equals =
+            62 - Greater than >
+            172 - Not note ¬
+            '''
+            delimiter_array = [35, 37, 42, 60, 61, 62, 172]
+            txt = json_in['official_copy_data']['sub_registers'][i]['entries'][j]['full_text']
+            for delimiter in delimiter_array:
+                txt = txt.replace(chr(delimiter), "")
+            json_out['official_copy_data']['sub_registers'][i]['entries'][j]['full_text'] = txt
+
+    return json_out
