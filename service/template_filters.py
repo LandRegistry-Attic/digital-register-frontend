@@ -8,11 +8,11 @@ ALPHANUMERIC_CHARACTER_PATTERN = re.compile(r'[^a-zA-Z0-9_ ;:\-,\.()&£]+', re.U
 
 
 def format_date(value):
-    return dateutil.parser.parse(value).strftime("%d %B %Y")
+    return dateutil.parser.parse(value).strftime('%d %B %Y')
 
 
 def format_time(value):
-    return dateutil.parser.parse(value).strftime("%H:%M:%S")
+    return dateutil.parser.parse(value).strftime('%H:%M:%S')
 
 
 def pluralize(number, singular='', plural='s'):
