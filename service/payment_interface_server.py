@@ -19,10 +19,8 @@ def worldpay():
 
     # Convert to lower case, for use by template.
     _worldpay_dict = dict((k.lower(), v) for k,v in WORLDPAY_DICT.items())
-    for k,v in _worldpay_dict.items():
-        flash("%s: %s" % (k,v))
 
     return render_template('hiddenWP.html', worldpay_params=_worldpay_dict)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5555)
+    app.run(port=5555)
