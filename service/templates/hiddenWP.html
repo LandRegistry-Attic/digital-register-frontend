@@ -9,15 +9,6 @@
 </head>
 <body>
 	<form  id="redirect" action="{{worldpay_params.worldpay_redirect_url}}" method="POST">
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-          {% endif %}
-        {% endwith %}
 
         <!-- mandatory parameters passed in from "payment request" form -->
         <input type="hidden" id="cartId" name="cartId" value="{{worldpay_params.cartid}}">
