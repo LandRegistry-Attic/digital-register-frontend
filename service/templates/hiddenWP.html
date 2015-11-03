@@ -1,20 +1,23 @@
 <!DOCTYPE html>
+<!-- Worldpay Interface as a hidden "service" -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Redirection to "Worldpay"</title>
-
 	<script type="text/Javascript">
 		 window.onload = function() { document.getElementById('redirect').submit();}
 	</script>
 </head>
 <body>
-    <h1>Redirection to "Worldpay"</h1>
-    <p>You are about to be redirected to the WorldPay transaction page to proceed with your purchase.</p>
-    <p>If you are not redirected within 30 seconds, please click the "Continue" button below.</p>
-    <br/>
-    <br/>
 	<form  id="redirect" action="{{worldpay_params.worldpay_redirect_url}}" method="POST">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
 
         <!-- mandatory parameters passed in from "payment request" form -->
         <input type="hidden" id="cartId" name="cartId" value="{{worldpay_params.cartid}}">
@@ -46,7 +49,7 @@
         <input type="hidden" id="C_returnURLCancel" name="C_returnURLCancel" value="{{worldpay_params.action_url2}}">
         <input type="hidden" id="C_returnURLCallback" name="C_returnURLCallback" value="{{worldpay_params.action_url3}}">
         <div class="nav">
-            <input type="submit" class="last"  value="Continue &raquo"/>
+            <input type="submit" class="last"  value="Continue &raquo" style="visibility:hidden"  />
         </div>
     </form>
 </body>

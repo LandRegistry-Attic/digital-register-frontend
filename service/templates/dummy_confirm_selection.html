@@ -1,5 +1,10 @@
-
-{% block body %}
+<!DOCTYPE html>
+<!-- Worldpay Interface as a hidden "service" -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
 
 <h1 class="heading-xlarge collapse-bottom">WorldPay check</h1>
 
@@ -7,28 +12,29 @@
     <div class="column-two-thirds">
     <br/>
         <!-- 'worldpay_params' passed in via "render_template()" -->
-        <form class="form" action="{{worldpay_params.worldpay_redirect_url}}" method="post">
-            <!-- Note: these values may be obtained via 'params' of 'confirm_selection.html' -->
-            {% set _dummy =  worldpay_params.update({'cartid': '0001444208589806RhrHOvIFk6liOWwHE7bKfy-'}) %}
-            {% set _dummy =  worldpay_params.update({'amount': '3.0'}) %}
-            {% set _dummy =  worldpay_params.update({'desc': 'REGISTER VIEW                   '}) %}
-            {% set _dummy =  worldpay_params.update({'forenames': 'Forenames'}) %}
-            {% set _dummy =  worldpay_params.update({'surname': 'Surname'}) %}
-            {% set _dummy =  worldpay_params.update({'email': 'Richard.Prosser@landregistry.gsi.gov.uk'}) %}
-            {% set _dummy =  worldpay_params.update({'address': '1, Plymouth, '}) %}
-            {% set _dummy =  worldpay_params.update({'postcode': 'PL1 1AA'}) %}
+        <form class="form" action="{{worldpay_params.payment_interface_url}}" method="post">
 
-            {% set _dummy =  worldpay_params.update({'mc_purchasetype': 'registerOnly'}) %}
-            {% set _dummy =  worldpay_params.update({'mc_titlenumber': 'LA265'}) %}
-            {% set _dummy =  worldpay_params.update({'mc_searchtype': 'T'}) %}
-            {% set _dummy =  worldpay_params.update({'mc_portalind': 'Y'}) %}
+            <!-- user parameters to be passed on -->
+            <input type="hidden" id="cartId" name="cartId" value="0001444208589806RhrHOvIFk6liOWwHE7bKfy">
+            <input type="hidden" id="amount" name="amount"	value="3.0">
+            <input type="hidden" id="desc" name="desc" value="REGISTER VIEW">
+            <input type="hidden" id="forenames" name="forenames" value="Forenames">
+            <input type="hidden" id="surname" name="surname" value="Surname">
+            <input type="hidden" id="email" name="email" value="Richard.Prosser@landregistry.gsi.gov.uk">
+            <input type="hidden" id="address" name="address" value="1, Plymouth, ">
+            <input type="hidden" id="postcode" name="postcode" value="PL1 1AA">
 
-            <!-- WP parameters -->
-            {% include 'hiddenWP.html' %}
+            <!-- custom parameters to be passed on -->
+            <input type="hidden" id="MC_timestamp" name="MC_timestamp" value="{{worldpay_params.mc_timestamp}}">
+            <input type="hidden" id="MC_purchaseType" name="MC_purchaseType" value="registerOnly">
+            <input type="hidden" id="MC_titleNumber" name="MC_titleNumber"	value="LA265">
+            <input type="hidden" id="MC_searchType" name="MC_searchType" value="T">
+
             <button type="submit" class="button" >Buy Now</button>
         </form>
     </div>
 
 </div>
 
-{% endblock %}
+</body>
+</html>

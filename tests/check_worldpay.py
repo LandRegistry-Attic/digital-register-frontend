@@ -10,12 +10,11 @@ app = Flask(__name__, template_folder=tmpl_dir)
 
 # Fix formatting issue (keys).
 _worldpay_dict = dict((k.lower(), v) for k,v in WORLDPAY_DICT.items())
-app.config.update(_worldpay_dict)
 
 @app.route('/', methods=['GET'])
 def _():
     """
-    Check that import/include works and that WorldPay 'sandbox' service is OK.
+    Check that WorldPay 'sandbox' service is OK.
     """
 
     _worldpay_dict.update({'mc_timestamp': datetime.now()})
