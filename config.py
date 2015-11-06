@@ -9,13 +9,13 @@ google_analytics_api_key = os.getenv('GOOGLE_ANALYTICS_API_KEY', '')
 logging_config_file_path = os.getenv('LOGGING_CONFIG_FILE_PATH', '..\logging_config.json')
 login_api = os.getenv('LOGIN_API', '')
 register_title_api = os.getenv('REGISTER_TITLE_API', '')
-secret_key = os.getenv('APPLICATION_SECRET_KEY' ,'secretkeyshouldberandom')
+secret_key = os.getenv('APPLICATION_SECRET_KEY', 'secretkeyshouldberandom')
 service_notice_html = os.getenv('SERVICE_NOTICE_HTML', '<h2>Downtime notice</h2><p>This service will be offline between 2.00&ndash;5.00 on 31st July</p>')
 session_cookie_secure = os.getenv('SESSION_COOKIE_SECURE', 'False').lower() != 'false'
 more_proprietor_details = os.getenv('MORE_PROPRIETOR_DETAILS', 'False')
 show_full_title_data = os.getenv('SHOW_FULL_TITLE_DATA', 'True').lower() == 'true'
 show_full_title_pdf = os.getenv('SHOW_FULL_TITLE_PDF', 'True').lower() == 'true'
-
+property_search_interface_url = os.getenv('PROPERTY_SEARCH_INTERFACE_URL', 'http://0.0.0.0:5000')
 
 CONFIG_DICT = {
     'DEBUG': False,
@@ -32,6 +32,7 @@ CONFIG_DICT = {
     'MORE_PROPRIETOR_DETAILS': more_proprietor_details,
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
+    'PROPERTY_SEARCH_INTERFACE_URL': property_search_interface_url
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
 # <worldpay> (From https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
