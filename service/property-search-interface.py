@@ -41,6 +41,7 @@ def insert(title_number,
     r = requests.post(url, json=params)
     r.raise_for_status()    # Raises error, if there is one.
 
+    # Get the timestamp, after the DB Insert has completed.
     return json.loads(r.text)['data']
 
 
