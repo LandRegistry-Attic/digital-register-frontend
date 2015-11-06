@@ -31,6 +31,7 @@ CONFIG_DICT = {
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
     'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
+    'PROPERTY_SEARCH_INTERFACE_URL': property_search_interface_url
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
 # <worldpay> (From https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
@@ -38,9 +39,6 @@ WP_TEST_MODE_ON = 100
 WP_TEST_MODE_OFF = 0
 
 WORLDPAY_DICT = {
-    'BYPASS_WORLDPAY': 'N',
-    'PURCHASE_TIME_EXPIRY_LIMIT': '5',
-    'WORLDPAY_REDIRECT_URL': 'https://secure.worldpay.com/wcc/dispatcher',
     'PAYMENT_INTERFACE_URL': os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555/'),
     'WORLDPAY_REDIRECT_URL': 'https://secure-test.worldpay.com/wcc/purchase',
     'WP_AUTH_CURR': 'GBP',
