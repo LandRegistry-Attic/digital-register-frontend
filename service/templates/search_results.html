@@ -16,7 +16,6 @@
       <input type="submit" value="Search" class="button search-button">
     </div>
   </form>
-
   <div class="grid-row">
     <div class="column-two-thirds">
       <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
@@ -25,7 +24,7 @@
           <li>
             <h2 class="heading-small">
               {% if title['data'] %}
-                <a href="{{ url_for('get_title', title_number=title['title_number'], page=display_page_number, search_term=search_term) }}">{{ title['data']['address']['address_string'] }}</a>
+                <a href="{{ url_for('get_title', title_number=title['title_number'], page=display_page_number, search_term=search_term) }}">{{ title['address'] }}</a>
               {% else %}
                 {{ title['address'] }}
               {% endif %}
