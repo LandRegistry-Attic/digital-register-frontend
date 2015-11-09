@@ -2,7 +2,7 @@ from datetime import timedelta
 import os
 from typing import Dict, Union
 
-DEBUG = True
+DEBUG = False
 
 fault_log_file_path = os.environ['FAULT_LOG_FILE_PATH']
 google_analytics_api_key = os.environ['GOOGLE_ANALYTICS_API_KEY']
