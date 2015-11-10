@@ -4,7 +4,7 @@ from service import app
 
 # Part of US241: store purchase decision for payments.
 
-NULL = None       # Temporary! [May not be valid for remote DB usage].
+NULL = None       # N.B.: not valid for remote DB usage.
 
 
 def insert(title_number,
@@ -71,6 +71,10 @@ def update(user_id,
 
     # Get params as dict: note that locals() should be called before any other variables are set!
     params = locals()
+
+    # No protocol in place to send NULL values 'over the wire',
+    # so back-end DB service defaults any unset parameter to a pukka null.
+    params = {k:v for (k,v) in params.items() if v is not NULL}
 
     property_search_interface_url = app.config['PROPERTY_SEARCH_INTERFACE_URL'].rstrip('/')
     url = property_search_interface_url + "/update-search-request-table"
