@@ -225,7 +225,7 @@ def _get_search_by_title_number_response(search_term, page_number):
 def _get_search_by_postcode_response(search_term, page_number):
     postcode = _normalise_postcode(search_term)
     postcode_search_results = api_client.get_titles_by_postcode(postcode, page_number)
-    return _search_results_page(postcode_search_results, postcode)
+    return _search_results_page(postcode_search_results, postcode, True)
 
 
 def _get_search_by_address_response(search_term, page_number):
@@ -315,13 +315,14 @@ def _initial_search_page():
     )
 
 
-def _search_results_page(results, search_term):
+def _search_results_page(results, search_term, addressbase=False):
     return render_template(
         'search_results.html',
         search_term=search_term,
         results=results,
         form=TitleSearchForm(),
         username=current_user.get_id(),
+        addressbase=addressbase,
         breadcrumbs=[
             {'text': 'Search the land and property register', 'url': url_for('find_titles')},
             {'current': 'Search results'}
