@@ -1,8 +1,11 @@
 import requests
-import json
 from service import app
 
-NULL=None       # Temporary!
+
+# Part of US241: store purchase decision for payments.
+
+NULL = None       # Temporary! [May not be valid for remote DB usage].
+
 
 def insert(title_number,
            fee_amt_quoted,
@@ -34,7 +37,7 @@ def insert(title_number,
     # Get params as dict: note that locals() should be called before any other variables are set!
     params = locals()
 
-    property_search_interface_url = app.config['property_search_interface_url'].rstrip('/')
+    property_search_interface_url = app.config['PROPERTY_SEARCH_INTERFACE_URL'].rstrip('/')
     url = property_search_interface_url + "/insert-to-search-request-table"
 
     # HTTP POST, json format.
@@ -42,7 +45,7 @@ def insert(title_number,
     r.raise_for_status()    # Raises error, if there is one.
 
     # Get the timestamp, after the DB Insert has completed.
-    return json.loads(r.text)['data']
+    return r.text
 
 
 def update(user_id,
@@ -69,7 +72,7 @@ def update(user_id,
     # Get params as dict: note that locals() should be called before any other variables are set!
     params = locals()
 
-    property_search_interface_url = app.config['property_search_interface_url'].rstrip('/')
+    property_search_interface_url = app.config['PROPERTY_SEARCH_INTERFACE_URL'].rstrip('/')
     url = property_search_interface_url + "/update-search-request-table"
 
     # HTTP POST, json format. Should be a PUT perhaps.

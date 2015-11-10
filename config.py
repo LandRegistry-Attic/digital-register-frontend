@@ -6,7 +6,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 fault_log_file_path = os.getenv('FAULT_LOG_FILE_PATH', 'fault.log')
 google_analytics_api_key = os.getenv('GOOGLE_ANALYTICS_API_KEY', '')
-logging_config_file_path = os.getenv('LOGGING_CONFIG_FILE_PATH', '..\logging_config.json')
+logging_config_file_path = os.getenv('LOGGING_CONFIG_FILE_PATH', os.path.join(ROOT_DIR, 'logging_config.json'))
 login_api = os.getenv('LOGIN_API', '')
 register_title_api = os.getenv('REGISTER_TITLE_API', '')
 secret_key = os.getenv('APPLICATION_SECRET_KEY', 'secretkeyshouldberandom')
@@ -15,7 +15,7 @@ session_cookie_secure = os.getenv('SESSION_COOKIE_SECURE', 'False').lower() != '
 more_proprietor_details = os.getenv('MORE_PROPRIETOR_DETAILS', 'False')
 show_full_title_data = os.getenv('SHOW_FULL_TITLE_DATA', 'True').lower() == 'true'
 show_full_title_pdf = os.getenv('SHOW_FULL_TITLE_PDF', 'True').lower() == 'true'
-property_search_interface_url = os.getenv('PROPERTY_SEARCH_INTERFACE_URL', 'http://0.0.0.0:5000')
+property_search_interface_url = os.getenv('PROPERTY_SEARCH_INTERFACE_URL', 'http://0.0.0.0:5050')
 
 CONFIG_DICT = {
     'DEBUG': False,
