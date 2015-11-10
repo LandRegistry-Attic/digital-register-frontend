@@ -1438,3 +1438,15 @@ input[type=number] {
       bottom: 0;
       position: absolute;
       border-left: 1px solid #fff; }
+
+.service-notice {
+    padding: 10px 10px;
+    border-left: 4px solid #ffbf47;
+    background-color: #fff2d3;
+}
+.service-notice h2 {
+    margin-top: 0
+}
+.service-notice p {
+    margin-bottom: 0
+}

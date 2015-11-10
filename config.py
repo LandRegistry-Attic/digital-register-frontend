@@ -2,6 +2,7 @@ from datetime import timedelta
 import os
 from typing import Dict, Union
 
+DEBUG = False
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 fault_log_file_path = os.getenv('FAULT_LOG_FILE_PATH', 'fault.log')
@@ -16,9 +17,10 @@ more_proprietor_details = os.getenv('MORE_PROPRIETOR_DETAILS', 'False')
 show_full_title_data = os.getenv('SHOW_FULL_TITLE_DATA', 'True').lower() == 'true'
 show_full_title_pdf = os.getenv('SHOW_FULL_TITLE_PDF', 'True').lower() == 'true'
 property_search_interface_url = os.getenv('PROPERTY_SEARCH_INTERFACE_URL', 'http://0.0.0.0:5050')
+title_register_summary_price = "&pound;1.20 (incl. VAT)"
 
 CONFIG_DICT = {
-    'DEBUG': False,
+    'DEBUG': DEBUG,
     'FAULT_LOG_FILE_PATH': fault_log_file_path,
     'GOOGLE_ANALYTICS_API_KEY': google_analytics_api_key,
     'LOGGING': True,
@@ -32,7 +34,8 @@ CONFIG_DICT = {
     'MORE_PROPRIETOR_DETAILS': more_proprietor_details,
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
-    'PROPERTY_SEARCH_INTERFACE_URL': property_search_interface_url
+    'PROPERTY_SEARCH_INTERFACE_URL': property_search_interface_url,
+    'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
 # <worldpay> (From https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
