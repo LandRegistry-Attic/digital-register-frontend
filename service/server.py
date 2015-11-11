@@ -147,8 +147,15 @@ def spinner_page():
     The first page secured on webseal
     """
 
+    title_number = request.form['title_number'].strip()
+    fee_amt_quoted = request.form['price'].strip()
+    property_search_purch_addr = request.form['address_lines']
+
+    # Create DB record, to be updated later if/when payment is made.
+    property_search_interface.insert(title_number, fee_amt_quoted, property_search_purch_addr)
+
     worldpay_params = dict()
-    worldpay_params['title_number'] = request.form['title_number'].strip()
+    worldpay_params['title_number'] = title_number
     worldpay_params['username'] = _username_from_header
 
     # more params to be confirmed by Richard (29/10/15)
