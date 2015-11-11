@@ -15,6 +15,8 @@ _worldpay_dict = dict((k.lower(), v) for k,v in WORLDPAY_DICT.items())
 def _():
     """
     Check that WorldPay 'sandbox' service is OK.
+
+    Note: 'test card' numbers at http://support.worldpay.com/support/kb/bg/testandgolive/tgl5103.html.
     """
 
     _worldpay_dict.update({'mc_timestamp': datetime.now()})
