@@ -7,6 +7,13 @@ from service import app
 NULL = None       # N.B.: not valid for remote DB usage.
 
 
+def _get_params(params):
+
+    # No protocol in place to send NULL values 'over the wire',
+    # so back-end DB service defaults any unset parameter to a pukka null.
+    return {k: v for (k, v) in params.items() if v is not NULL}
+
+
 def insert(title_number,
            fee_amt_quoted,
            property_search_purch_addr,
@@ -35,7 +42,7 @@ def insert(title_number,
     """
 
     # Get params as dict: note that locals() should be called before any other variables are set!
-    params = locals()
+    params = _get_params(locals())
 
     property_search_interface_url = app.config['PROPERTY_SEARCH_INTERFACE_URL'].rstrip('/')
     url = property_search_interface_url + "/insert-to-search-request-table"
@@ -68,13 +75,8 @@ def update(user_id,
     An exception may be raised.
     """
 
-
     # Get params as dict: note that locals() should be called before any other variables are set!
-    params = locals()
-
-    # No protocol in place to send NULL values 'over the wire',
-    # so back-end DB service defaults any unset parameter to a pukka null.
-    params = {k:v for (k,v) in params.items() if v is not NULL}
+    params = _get_params(locals())
 
     property_search_interface_url = app.config['PROPERTY_SEARCH_INTERFACE_URL'].rstrip('/')
     url = property_search_interface_url + "/update-search-request-table"
