@@ -10,16 +10,18 @@
 <body>
     <form  id="redirect" action="{{worldpay_params.worldpay_redirect_url}}" method="POST">
 
-        <!-- mandatory parameters passed in from "payment request" form -->
+        <!-- Mandatory parameters passed in from "payment request" form -->
         <input type="hidden" id="cartId" name="cartId" value="{{worldpay_params.cartid}}">
         <input type="hidden" id="amount" name="amount"	value="{{worldpay_params.amount}}">
+
+        <!-- Optional parameters that may be passed in from "payment request" form -->
         <input type="hidden" id="desc" name="desc" value="{{worldpay_params.desc}}">
         <input type="hidden" id="name" name="name" value="{{worldpay_params.forenames}} {{worldpay_params.surname}}">
         <input type="hidden" id="email" name="email" value="{{worldpay_params.email}}">
         <input type="hidden" id="address" name="address" value="{{worldpay_params.address}}">
         <input type="hidden" id="postcode" name="postcode" value="{{worldpay_params.postcode}}">
 
-        <!-- custom parameters passed in from "payment request" form -->
+        <!-- Custom parameters passed in from "payment request" form -->
         <!-- See http://support.worldpay.com/support/kb/bg/pdf/rhtml.pdf for details -->
         <!-- Strictly speaking, "MC_timestamp" should be "M_timestamp", as it is for WPAC only -->
         <input type="hidden" id="MC_timestamp" name="MC_timestamp" value="{{worldpay_params.mc_timestamp}}">
@@ -27,7 +29,7 @@
         <input type="hidden" id="MC_titleNumber" name="MC_titleNumber"	value="{{worldpay_params.mc_titlenumber}}">
         <input type="hidden" id="MC_searchType" name="MC_searchType" value="{{worldpay_params.mc_searchtype}}">
 
-        <!-- mandatory parameters, from configuration file + environment -->
+        <!-- Mandatory parameters, from configuration file + environment -->
         <input type="hidden" id="instId" name="instId"	value="{{worldpay_params.wp_inst_id}}">
         <input type="hidden" id="authMode" name="authMode" value="{{worldpay_params.wp_auth_mode}}">
         <input type="hidden" id="accId1" name="accId1" value="{{worldpay_params.wp_account_id}}">
@@ -35,7 +37,7 @@
         <input type="hidden" id="testMode" name="testMode" value="{{worldpay_params.wp_test_mode}}">
         <input type="hidden" id="country" name="country" value="{{worldpay_params.wp_default_country}}">
 
-        <!-- custom parameters, from configuration file -->
+        <!-- Custom parameters, from configuration file -->
         <input type="hidden" id="MC_portalInd" name="MC_portalInd" value="{{worldpay_params.mc_portalind}}">
         <input type="hidden" id="MC_callbackUrl" name="MC_callbackUrl" value="{{worldpay_params.wp_authorisation_callback_url}}">
         <input type="hidden" id="C_returnURL" name="C_returnURL" value="{{worldpay_params.action_url1}}">

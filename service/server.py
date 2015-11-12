@@ -105,8 +105,6 @@ def confirm_selection(title_number, search_term):
 @app.route('/spinner-page/', methods=['POST'])
 def spinner_page():
     """
-    US241 - store purchase details for auditing reasons.
-
     "Inform the user we're about to re-direct them to Worldpay to pay for their purchase".
 
     * Use DB API to add a record in T_PS_SRCH_REQ table.
@@ -124,9 +122,15 @@ def spinner_page():
         # TODO: Should have a log call here.
         abort(500)
 
+    # TODO: change the fixed values of 'cartid', 'mc_purchasetype' & 'mc_searchtype' to DRV search-related ones.
+
     worldpay_params = dict()
-    worldpay_params['title_number'] = title_number
-    worldpay_params['username'] = _username_from_header
+    worldpay_params['cartid'] = '0001444208589806RhrHOvIFk6liOWwHE7bKfy'    # [Could be session id. + user id. perhaps]
+    worldpay_params['amount'] = fee_amt_quoted
+    worldpay_params['mc_titlenumber'] = title_number
+    worldpay_params['mc_timestamp'] = timestamp
+    worldpay_params['mc_purchasetype'] = 'registerOnly'
+    worldpay_params['mc_searchtype'] = 'D'
 
     # more params (to be confirmed) ...
     ## worldpay_params['desc'] = request.form['desc']
