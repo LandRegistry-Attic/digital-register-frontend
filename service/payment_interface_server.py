@@ -26,7 +26,7 @@ def worldpay():
 
     # Any generic errors should be handled elsewhere ...
     except Exception as e:
-        # [Should have a log call here].
+        # TODO: Should have a log call here.
         abort(500)
 
 

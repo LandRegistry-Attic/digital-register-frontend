@@ -11,7 +11,6 @@ from flask_weasyprint import HTML, render_pdf                                   
 from service import (address_utils, api_client, app, auditing, health_checker, login_api_client,
                      login_manager, title_formatter, title_utils)
 from service.forms import TitleSearchForm, SigninForm
-from service.address_utils import address_lines_as_json
 
 
 LOGIN_API_URL = app.config['LOGIN_API']
@@ -106,8 +105,12 @@ def confirm_selection(title_number, search_term):
 @app.route('/spinner-page/', methods=['POST'])
 def spinner_page():
     """
-    DM US107
-    The first page secured on webseal
+    US241 - store purchase details for auditing reasons.
+
+    "Inform the user we're about to re-direct them to Worldpay to pay for their purchase".
+
+    * Use DB API to add a record in T_PS_SRCH_REQ table.
+    * Pass user-related Worldpay parameters to "Payment Interface Service".
     """
 
     title_number = request.form['title_number'].strip()
@@ -115,7 +118,11 @@ def spinner_page():
     property_search_purch_addr = request.form['address_lines']
 
     # Create DB record, to be updated later if/when payment is made.
-    property_search_interface.insert(title_number, fee_amt_quoted, property_search_purch_addr)
+    try:
+        timestamp = property_search_interface.insert(title_number, fee_amt_quoted, property_search_purch_addr)
+    except Exception as e:
+        # TODO: Should have a log call here.
+        abort(500)
 
     worldpay_params = dict()
     worldpay_params['title_number'] = title_number
@@ -129,10 +136,7 @@ def spinner_page():
     ## worldpay_params['address'] = property_search_purch_addr
     ## worldpay_params['postcode'] = ['postcode']
 
-    return render_template(
-        'spinner-page.html',
-        params=worldpay_params,
-        )
+    return render_template('spinner-page.html', params=worldpay_params)
 
 
 @app.route('/health', methods=['GET'])

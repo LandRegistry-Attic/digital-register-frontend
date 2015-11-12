@@ -3,12 +3,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-	<script type="text/Javascript">
-		 window.onload = function() { document.getElementById('redirect').submit();}
-	</script>
+    <script type="text/Javascript">
+         window.onload = function() { document.getElementById('redirect').submit();}
+    </script>
 </head>
 <body>
-	<form  id="redirect" action="{{worldpay_params.worldpay_redirect_url}}" method="POST">
+    <form  id="redirect" action="{{worldpay_params.worldpay_redirect_url}}" method="POST">
 
         <!-- mandatory parameters passed in from "payment request" form -->
         <input type="hidden" id="cartId" name="cartId" value="{{worldpay_params.cartid}}">
@@ -20,6 +20,8 @@
         <input type="hidden" id="postcode" name="postcode" value="{{worldpay_params.postcode}}">
 
         <!-- custom parameters passed in from "payment request" form -->
+        <!-- See http://support.worldpay.com/support/kb/bg/pdf/rhtml.pdf for details -->
+        <!-- Strictly speaking, "MC_timestamp" should be "M_timestamp", as it is for WPAC only -->
         <input type="hidden" id="MC_timestamp" name="MC_timestamp" value="{{worldpay_params.mc_timestamp}}">
         <input type="hidden" id="MC_purchaseType" name="MC_purchaseType" value="{{worldpay_params.mc_purchasetype}}">
         <input type="hidden" id="MC_titleNumber" name="MC_titleNumber"	value="{{worldpay_params.mc_titlenumber}}">
@@ -40,7 +42,7 @@
         <input type="hidden" id="C_returnURLCancel" name="C_returnURLCancel" value="{{worldpay_params.action_url2}}">
         <input type="hidden" id="C_returnURLCallback" name="C_returnURLCallback" value="{{worldpay_params.action_url3}}">
         <div class="nav">
-            <input type="submit" class="last"  value="Continue &raquo" style="visibility:hidden"  />
+            <input type="submit" class="last"  value="" style="visibility:hidden"  />
         </div>
     </form>
 </body>
