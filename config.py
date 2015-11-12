@@ -38,13 +38,13 @@ CONFIG_DICT = {
     'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
-# <worldpay> (From https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
+# <worldpay> (Derived from https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
 CONFIG_DICT.update({'DEBUG': True})
 WP_TEST_MODE_ON = 100
 WP_TEST_MODE_OFF = 0
 
 WORLDPAY_DICT = {
-    'PAYMENT_INTERFACE_URL': os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555/'),
+    'PAYMENT_INTERFACE_URL': os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555/'),  # payment_interface_server.py
     'WORLDPAY_REDIRECT_URL': 'https://secure-test.worldpay.com/wcc/purchase',
     'WP_AUTH_CURR': 'GBP',
     'WP_INST_ID': os.getenv('WP_INST_ID', ''),
@@ -52,7 +52,7 @@ WORLDPAY_DICT = {
     'WP_AUTH_MODE': 'E',
     'WP_TEST_MODE': WP_TEST_MODE_ON,
     'WP_DEFAULT_COUNTRY': 'GB',
-    'WP_CALLBACK_SERVER_URL': os.getenv('WP_CALLBACK_SERVER_URL', ''),
+    'WP_AUTHORISATION_CALLBACK_URL': os.getenv('WP_AUTHORISATION_CALLBACK_URL', ''),        # 'WPAC'
     'ACTION_URL1': '/download.do',
     'ACTION_URL2': '/QuickEnquiryInit.do',
     'ACTION_URL3': ''
