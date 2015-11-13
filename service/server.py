@@ -3,13 +3,12 @@ import logging
 import logging.config                                                                                  # type: ignore
 import re
 import time
-import service.property_search_interface as property_search_interface
 from datetime import datetime                                                                          # type: ignore
-from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for  # type: ignore
+from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
 from flask_login import login_user, login_required, current_user, logout_user                          # type: ignore
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 from service import (address_utils, api_client, app, auditing, health_checker, login_api_client,
-                     login_manager, title_formatter, title_utils)
+                     login_manager, title_formatter, title_utils, search_request_interface)
 from service.forms import TitleSearchForm, SigninForm
 
 
@@ -68,8 +67,10 @@ def app_start():
 def confirm_selection(title_number, search_term):
     """ Let user confirm a selection - i.e., place an order. """
 
+    title = _get_register_title(request.args.get('title', title_number))
+
     params = dict()
-    params['title'] = _get_register_title(request.args.get('title', title_number))
+    params['title'] = title
     params['title_number'] = title_number
     params['search_term'] = request.args.get('search_term', search_term)
     params['display_page_number'] = 1
@@ -78,11 +79,11 @@ def confirm_selection(title_number, search_term):
     params['post_confirmation_url'] = app.config['POST_CONFIRMATION_URL']
 
     # Use DB API to add a record in T_PS_SRCH_REQ table, to be updated later if/when payment is made.
-    property_search_purch_addr = request.form['address_lines']
+    property_search_purch_addr = title['address_lines']
 
     # Create DB record
     try:
-        timestamp = property_search_interface.insert(title_number, params['price'], property_search_purch_addr)
+        timestamp = search_request_interface.insert(title_number, params['price'], property_search_purch_addr)
     except Exception as e:
         # TODO: Should have a log call here.
         abort(500)
@@ -115,32 +116,17 @@ def confirm_selection(title_number, search_term):
                       '{:02d}'.format(dt_obj.minute),
                       '{:02d}'.format(dt_obj.second))
 
-    return render_template('confirm_selection.html', params=params)
+    return render_template('confirm_selection.html', params=params, worldpay_params=worldpay_params)
 
 
 @app.route('/spinner-page/', methods=['POST'])
 def spinner_page():
     """
     "Inform the user we're about to re-direct them to Worldpay to pay for their purchase".
-
-    * Use DB API to add a record in T_PS_SRCH_REQ table.
-    * Pass user-related Worldpay parameters to "Payment Interface Service".
     """
 
-    # TODO: change the fixed values of 'cartid', 'mc_purchasetype' & 'mc_searchtype' to DRV search-related ones.
 
-    worldpay_params = dict()
-    worldpay_params['cartid'] = '0001444208589806RhrHOvIFk6liOWwHE7bKfy'    # [Could be session id. + user id. perhaps]
-
-    # more params (to be confirmed) ...
-    ## worldpay_params['desc'] = request.form['desc']
-    ## worldpay_params['forenames'] = request.form['forenames']
-    ## worldpay_params['surname'] = ['surname']
-    ## worldpay_params['email'] = ['email']
-    ## worldpay_params['address'] = property_search_purch_addr
-    ## worldpay_params['postcode'] = ['postcode']
-
-    return render_template('spinner-page.html', params=worldpay_params)
+    return render_template('spinner-page.html')
 
 
 @app.route('/health', methods=['GET'])
