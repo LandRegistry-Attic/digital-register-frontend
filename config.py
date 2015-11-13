@@ -15,7 +15,9 @@ more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
 title_register_summary_price = "&pound;1.20 (incl. VAT)"
-post_confirmation_url = os.getenv('POST_CONFIRMATION_URL', 'http://0.0.0.0:55555')
+payment_interface_url = os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555')  # payment_interface_server.py
+post_confirmation_url = os.getenv('POST_CONFIRMATION_URL', payment_interface_url)
+
 
 CONFIG_DICT = {
     'DEBUG': DEBUG,

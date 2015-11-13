@@ -21,7 +21,7 @@ def _():
     """
 
     _worldpay_dict.update({'mc_timestamp': datetime.now()})
-    _worldpay_dict.update({'payment_interface_url': app.config['PAYMENT_INTERFACE_URL'])
+    _worldpay_dict.update({'payment_interface_url': app.config['PAYMENT_INTERFACE_URL']})
 
     return render_template('dummy_confirm_selection.html', worldpay_params=_worldpay_dict)
 
