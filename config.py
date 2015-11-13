@@ -18,6 +18,7 @@ show_full_title_data = os.getenv('SHOW_FULL_TITLE_DATA', 'True').lower() == 'tru
 show_full_title_pdf = os.getenv('SHOW_FULL_TITLE_PDF', 'True').lower() == 'true'
 property_search_interface_url = os.getenv('PROPERTY_SEARCH_INTERFACE_URL', 'http://0.0.0.0:5050')
 title_register_summary_price = "&pound;1.20 (incl. VAT)"
+post_confirmation_url = os.getenv('POST_CONFIRMATION_URL', 'http://0.0.0.0:55555')
 
 CONFIG_DICT = {
     'DEBUG': DEBUG,
@@ -36,6 +37,7 @@ CONFIG_DICT = {
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
     'PROPERTY_SEARCH_INTERFACE_URL': property_search_interface_url,
     'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
+    'POST_CONFIRMATION_URL': post_confirmation_url,
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
 # <worldpay> (Derived from https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
