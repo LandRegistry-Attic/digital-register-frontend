@@ -15,6 +15,7 @@ more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
 title_register_summary_price = "&pound;1.20 (incl. VAT)"
+post_confirmation_url = os.getenv('POST_CONFIRMATION_URL', 'http://0.0.0.0:55555')
 
 CONFIG_DICT = {
     'DEBUG': DEBUG,
@@ -31,6 +32,7 @@ CONFIG_DICT = {
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
     'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
+    'POST_CONFIRMATION_URL': post_confirmation_url,
     'PROPERTY_SEARCH_INTERFACE_URL': property_search_interface_url
 }  # type: Dict[str, Union[bool, str, timedelta]]
 

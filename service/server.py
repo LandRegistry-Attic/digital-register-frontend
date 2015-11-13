@@ -109,6 +109,7 @@ def confirm_selection(title_number, search_term):
     params['display_page_number'] = 1
     params['products_string'] = "unused"
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    params['post_confirmation_url'] = app.config['POST_CONFIRMATION_URL']
 
     # Last changed date - modified to remove colon in UTC offset, which python
     # datetime.strptime() doesn't like >>>
