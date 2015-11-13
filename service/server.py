@@ -271,6 +271,20 @@ def find_titles_page(search_term=''):
         auditing.audit(message_format.format(search_term, username))
         return _get_address_search_response(search_term, page_number)
 
+@app.route('/property-result/<title_number>', methods=['GET'])
+@login_required
+def individual_property_result(title_number):
+    title = _get_register_title(title_number)
+
+    if title:
+        display_page_number = int(request.args.get('page') or 1)
+        search_term = request.args.get('search_term', title_number)
+        breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
+
+        return _individual_property_result(title, display_page_number, search_term, breadcrumbs)
+    else:
+        abort(404)
+
 
 def _get_register_title(title_number):
     title = api_client.get_title(title_number)
@@ -366,6 +380,14 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
         is_caution_title=title_utils.is_caution_title(title),
     )
 
+def _individual_property_result(title, display_page_number, search_term, breadcrumbs):
+    return render_template(
+        'property_result.html',
+        title=title,
+        display_page_number=display_page_number,
+        search_term=search_term,
+        breadcrumbs=breadcrumbs,
+    )
 
 def _initial_search_page(request):
     username = _username_from_header(request)

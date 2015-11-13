@@ -23,7 +23,11 @@
         {% for title in results['titles'] %}
           <li>
             <h2 class="heading-small">
-              <a href="{{ url_for('confirm_selection', title_number=title['title_number'], search_term=search_term) }}">{{ title['data']['address']['address_string'] }}</a>
+              {% if title['data'] %}
+                <a href="{{ url_for('individual_property_result', title_number=title['title_number'], page=display_page_number, search_term=search_term) }}">{% if addressbase %}{{ title['address'] }}{% else %}{{ title['data']['address']['address_string'] }}{% endif %}</a>
+              {% else %}
+                {{ title['address'] }}
+              {% endif %}
             </h2>
             <div class="font-xsmall">
                 {% if title['data'] and title['data'].get('is_caution_title') %}Caution title {% else %}Title {% endif %} number {{ title['title_number'] }}<br>
