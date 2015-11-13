@@ -1,12 +1,12 @@
-from datetime import datetime                                                                          # type: ignore
-from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for  # type: ignore
-from flask_login import login_user, login_required, current_user, logout_user                          # type: ignore
-from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 import json
 import logging
 import logging.config                                                                                  # type: ignore
 import re
 import time
+from datetime import datetime                                                                          # type: ignore
+from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for  # type: ignore
+from flask_login import login_user, login_required, current_user, logout_user                          # type: ignore
+from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 
 from service import (address_utils, api_client, app, auditing, health_checker, login_api_client,
                      login_manager, title_formatter, title_utils)
@@ -49,6 +49,7 @@ class User():
 def load_user(user_id):
     return User(user_id)
 
+
 @app.route('/', methods=['GET'])
 @app.route('/search', methods=['GET'])
 def app_start():
@@ -86,15 +87,13 @@ def confirm_selection(title_number, search_term):
             del(l[22])
             datestring = "".join(l)
 
-    dt_obj = datetime.strptime(datestring,"%Y-%m-%dT%H:%M:%S%z")
+    dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
     params['last_changed_datestring'] = \
         "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
     params['last_changed_timestring'] = \
         "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
                       '{:02d}'.format(dt_obj.minute),
                       '{:02d}'.format(dt_obj.second))
-
-    username = _username_from_header(request)
 
     return render_template('confirm_selection.html', params=params)
 
@@ -108,26 +107,10 @@ def spinner_page():
     * Pass user-related Worldpay parameters to "Payment Interface Service".
     """
 
-    title_number = request.form['title_number'].strip()
-    fee_amt_quoted = request.form['price'].strip()
-    property_search_purch_addr = request.form['address_lines']
-
-    # Create DB record, to be updated later if/when payment is made.
-    try:
-        timestamp = property_search_interface.insert(title_number, fee_amt_quoted, property_search_purch_addr)
-    except Exception as e:
-        # TODO: Should have a log call here.
-        abort(500)
-
     # TODO: change the fixed values of 'cartid', 'mc_purchasetype' & 'mc_searchtype' to DRV search-related ones.
 
     worldpay_params = dict()
     worldpay_params['cartid'] = '0001444208589806RhrHOvIFk6liOWwHE7bKfy'    # [Could be session id. + user id. perhaps]
-    worldpay_params['amount'] = fee_amt_quoted
-    worldpay_params['mc_titlenumber'] = title_number
-    worldpay_params['mc_timestamp'] = timestamp
-    worldpay_params['mc_purchasetype'] = 'registerOnly'
-    worldpay_params['mc_searchtype'] = 'D'
 
     # more params (to be confirmed) ...
     ## worldpay_params['desc'] = request.form['desc']
@@ -160,37 +143,6 @@ def healthcheck():
 @app.route('/cookies', methods=['GET'])
 def cookies():
     return _cookies_page()
-
-
-@app.route('/login', methods=['GET'])
-def signin_page():
-    user_id = current_user.get_id()
-    if user_id:
-        return redirect(url_for('find_titles_page'))
-    else:
-        return _login_page()
-
-
-@app.route('/login', methods=['POST'])
-def sign_in():
-    form = SigninForm(csrf_enabled=_is_csrf_enabled())
-
-    if not form.validate():
-        # entered invalid login form details so send back to same page with form error messages
-        return _login_page(form)
-    else:
-        return _process_valid_login_attempt(form)
-
-
-@app.route('/logout', methods=['GET'])
-def sign_out():
-    user_id = current_user.get_id()
-
-    if user_id:
-        logout_user()
-        auditing.audit('User {} logged out'.format(user_id))
-
-    return redirect(url_for('sign_in'))
 
 
 @app.route('/titles/<title_number>', methods=['GET'])
@@ -239,7 +191,6 @@ def display_title_pdf(title_number):
 
 @app.route('/title-search', methods=['POST'])
 @app.route('/title-search/<search_term>', methods=['POST'])
-@login_required
 def find_titles():
     display_page_number = int(request.args.get('page') or 1)
 
@@ -248,20 +199,19 @@ def find_titles():
         return redirect(url_for('find_titles', search_term=search_term, page=display_page_number))
     else:
         # TODO: we should redirect to that page
-        return _initial_search_page()
+        return _initial_search_page(request)
 
 
-@app.route('/', methods=['GET'])
+# @app.route('/', methods=['GET'])
 @app.route('/title-search', methods=['GET'])
 @app.route('/title-search/<search_term>', methods=['GET'])
-@login_required
 def find_titles_page(search_term=''):
     display_page_number = int(request.args.get('page') or 1)
     page_number = display_page_number - 1  # page_number is 0 indexed
 
     search_term = search_term.strip()
     if not search_term:
-        return _initial_search_page()
+        return _initial_search_page(request)
     else:
         message_format = "SEARCH REGISTER: '{0}' was searched by '{1}'"
         auditing.audit(message_format.format(search_term, current_user.get_id()))
@@ -397,21 +347,24 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
     )
 
 
-def _initial_search_page():
+def _initial_search_page(request):
+    username = _username_from_header(request)
     return render_template(
         'search.html',
         form=TitleSearchForm(),
-        username=current_user.get_id(),
+        username=username,
+        #username=current_user.get_id(),
     )
 
 
 def _search_results_page(results, search_term):
+    username = _username_from_header(request)
     return render_template(
         'search_results.html',
         search_term=search_term,
         results=results,
         form=TitleSearchForm(),
-        username=current_user.get_id(),
+        username=username,
         breadcrumbs=[
             {'text': 'Search the land and property register', 'url': url_for('find_titles')},
             {'current': 'Search results'}
@@ -485,3 +438,14 @@ def _strip_delimiters(json_in):
             json_out['official_copy_data']['sub_registers'][i]['entries'][j]['full_text'] = txt
 
     return json_out
+
+
+def _username_from_header(request):
+    """ US107 """
+    """ Get username (if any) from WebSeal headers """
+    user_id = request.headers.get("iv-user", None)
+    if user_id is None:
+        return None
+    p = re.compile("[%][{0-9}][{0-9}]")
+    user_id = p.sub("", user_id)
+    return user_id

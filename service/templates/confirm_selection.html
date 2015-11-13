@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+{% if is_caution_title %}
+    <span class="alert-flag-hi-viz">Caution against first registration</span>
+    <br>
+  {% endif %}
+
+<h1 class="heading-xlarge collapse-bottom">Summary of title {{params.title.number}}</h1>
+
+<p class="expand-bottom">This title was last changed on <b>{{params.last_changed_datestring}} at {{params.last_changed_timestring}}</p>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <div class="text">
+      <div itemscope itemtype="http://schema.org/PostalAddress" class="lede">
+        {% for line in params.title.address_lines %}
+          <span>{{line}}</span><br/>
+        {% endfor %}
+      </div>
+      <br/>
+
+      <dl class="definition-tabular">
+        <dt>Tenure type</dt>
+        <dd><b>{{params.title.tenure}}</b></dd>
+      </dl>
+    </div>
+
+    <div class="service-notice font-xsmall">
+      <p>The <b>title register</b> contains details about the property or land, including:</p>
+      <ul class="list-bullet">
+        <li>title number</li>
+        <li>who owns it</li>
+        <li>what they paid for it (properties only, if available)</li>
+        <li>any rights of way</li>
+      </ul>
+    </div>
+    <br/>
+    <dl class="definition-tabular font-xsmall">
+      <!---dt>Payment of</dt>
+      <dd><b>Summary of Title Register</b></dd-->
+      <dt>Amount to pay</dt>
+      {% autoescape false %}
+      <dd><b>{{params.price}}</b></dd>
+      {% endautoescape %}
+    </dl>
+
+    <br/>
+
+    <form class="form" action="{{ url_for('spinner_page') }}" method="post">
+      <input type='hidden' name='title_number' id='title_number' value="{{params.title_number}}"/>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <button type="submit" class="button" >Buy Now</button>
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}
