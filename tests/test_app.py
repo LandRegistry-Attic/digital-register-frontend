@@ -476,6 +476,7 @@ class TestAuthenticated:
         self.app = app.test_client()
         self.headers = Headers([('iv-user', TEST_USERNAME)])
 
+    def test_authenticated(self):
     @mock.patch('requests.get', return_value=fake_address_search)
     def test_authenticated(self, mock_get):
         """ Does header contain 'iv-user' username field? """
