@@ -2,8 +2,6 @@
 
 {% block body %}
 
-  <input type='hidden' value='hello' id='username' name='username'/>
-
   {% set display_page_number = results.get('page_number', 0) + 1 %}
 
   <form class="form" action="{{ url_for('find_titles') }}" method="post" role="form">
