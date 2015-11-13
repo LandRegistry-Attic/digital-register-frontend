@@ -178,6 +178,96 @@ def spinner_page():
 
     return render_template('spinner-page.html', params=worldpay_params)
 
+@app.route('/', methods=['GET'])
+@app.route('/search', methods=['GET'])
+def app_start():
+    """ DM US107
+    App entry point
+    - show search page
+    """
+    username = _username_from_header(request)
+    return render_template(
+        'search.html',
+        form=TitleSearchForm(),
+        username=username,
+        )
+
+@app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
+def confirm_selection(title_number, search_term):
+    """ Let user confirm a selection - i.e., place an order. """
+
+    params = dict()
+    params['title'] = _get_register_title(request.args.get('title', title_number))
+    params['title_number'] = title_number
+    params['search_term'] = request.args.get('search_term', search_term)
+    params['display_page_number'] = 1
+    params['products_string'] = "unused"
+    params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    params['post_confirmation_url'] = app.config['POST_CONFIRMATION_URL']
+
+    # Last changed date - modified to remove colon in UTC offset, which python
+    # datetime.strptime() doesn't like >>>
+
+    datestring = params['title']['last_changed']
+    if len(datestring) == 25:
+        if datestring[22] == ':':
+            l = list(datestring)
+            del(l[22])
+            datestring = "".join(l)
+
+    dt_obj = datetime.strptime(datestring,"%Y-%m-%dT%H:%M:%S%z")
+    params['last_changed_datestring'] = \
+        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
+    params['last_changed_timestring'] = \
+        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
+                      '{:02d}'.format(dt_obj.minute),
+                      '{:02d}'.format(dt_obj.second))
+
+    username = _username_from_header(request)
+
+    return render_template('confirm_selection.html', params=params)
+
+
+@app.route('/spinner-page/', methods=['POST'])
+def spinner_page():
+    """
+    "Inform the user we're about to re-direct them to Worldpay to pay for their purchase".
+
+    * Use DB API to add a record in T_PS_SRCH_REQ table.
+    * Pass user-related Worldpay parameters to "Payment Interface Service".
+    """
+
+    title_number = request.form['title_number'].strip()
+    fee_amt_quoted = request.form['price'].strip()
+    property_search_purch_addr = request.form['address_lines']
+
+    # Create DB record, to be updated later if/when payment is made.
+    try:
+        timestamp = property_search_interface.insert(title_number, fee_amt_quoted, property_search_purch_addr)
+    except Exception as e:
+        # TODO: Should have a log call here.
+        abort(500)
+
+    # TODO: change the fixed values of 'cartid', 'mc_purchasetype' & 'mc_searchtype' to DRV search-related ones.
+
+    worldpay_params = dict()
+    worldpay_params['cartid'] = '0001444208589806RhrHOvIFk6liOWwHE7bKfy'    # [Could be session id. + user id. perhaps]
+    worldpay_params['amount'] = fee_amt_quoted
+    worldpay_params['mc_titlenumber'] = title_number
+    worldpay_params['mc_timestamp'] = timestamp
+    worldpay_params['mc_purchasetype'] = 'registerOnly'
+    worldpay_params['mc_searchtype'] = 'D'
+
+    # more params (to be confirmed) ...
+    ## worldpay_params['desc'] = request.form['desc']
+    ## worldpay_params['forenames'] = request.form['forenames']
+    ## worldpay_params['surname'] = ['surname']
+    ## worldpay_params['email'] = ['email']
+    ## worldpay_params['address'] = property_search_purch_addr
+    ## worldpay_params['postcode'] = ['postcode']
+
+    return render_template('spinner-page.html', params=worldpay_params)
+
 
 @app.route('/health', methods=['GET'])
 def healthcheck():
