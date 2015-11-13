@@ -57,11 +57,14 @@ with open('tests/data/official_copy_response.json', 'r') as official_copy_respon
 
 unavailable_title = FakeResponse('', 404)
 
+# DM US107
+class TestSearchTerm:
 
 class TestViewTitle:
 
     def setup_method(self, method):
         self.app = app.test_client()
+
         self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
@@ -359,6 +362,11 @@ class TestTitleSearch:
         assert response.status_code == 200
         assert 'Search the land and property register' in str(response.data)
 
+    @mock.patch('requests.get', return_value=unavailable_title)
+    def test_title_search_title_not_found(self, mock_get):
+        response = self.app.post('/title-search', data={'search_term': 'DT1000'}, follow_redirects=True)
+        assert '0 results found' in response.data.decode()
+
     @mock.patch('requests.get', return_value=fake_title)
     @mock.patch.object(service.api_client, 'get_official_copy_data')
     def test_title_search_success(self, mock_get_official_copy, mock_get):
@@ -391,6 +399,7 @@ class TestTitleSearch:
         assert response.status_code == 200
         page_content = response.data.decode()
         assert 'AGL1000' in page_content
+        assert '21 Murhill Lane, Saltram Meadow, Plymouth, (PL9 7FN)' in page_content
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_with_page_calls_api_correctly(self, mock_get):
