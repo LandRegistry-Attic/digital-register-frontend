@@ -206,11 +206,11 @@ def confirm_selection(title_number, search_term):
     params['post_confirmation_url'] = app.config['POST_CONFIRMATION_URL']
 
     # Use DB API to add a record in T_PS_SRCH_REQ table, to be updated later if/when payment is made.
-    property_search_purch_addr = request.form['address_lines']
+    property_search_purch_addr = title['address_lines']
 
     # Create DB record
     try:
-        timestamp = property_search_interface.insert(title_number, params['price'], property_search_purch_addr)
+        timestamp = search_request_interface.insert(title_number, params['price'], property_search_purch_addr)
     except Exception as e:
         # TODO: Should have a log call here.
         abort(500)

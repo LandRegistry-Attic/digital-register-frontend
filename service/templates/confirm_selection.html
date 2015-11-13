@@ -51,6 +51,18 @@
       <input type='hidden' name='title_number' id='title_number' value="{{params.title_number}}"/>
       <input type='hidden' name='price' id='price' value="{{params.price}}"/>
       <input type='hidden' name='address_lines' id='address_lines' value="{{params.title.address_lines}}"/>
+
+      <!-- Mandatory parameters passed in from "payment request" form -->
+      <input type="hidden" id="cartId" name="cartId" value="{{worldpay_params.cartid}}">
+      <input type="hidden" id="amount" name="amount"	value="{{worldpay_params.amount}}">
+
+      <!-- Custom parameters passed in from "payment request" form -->
+      <input type="hidden" id="MC_titleNumber" name="MC_titleNumber"	value="{{worldpay_params.mc_titlenumber}}">
+      <input type="hidden" id="MC_timestamp" name="MC_timestamp" value="{{worldpay_params.mc_timestamp}}">
+      <input type="hidden" id="MC_purchaseType" name="MC_purchaseType" value="{{worldpay_params.mc_purchasetype}}">
+      <input type="hidden" id="MC_searchType" name="MC_searchType" value="{{worldpay_params.mc_searchtype}}">
+
+
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
       <button type="submit" class="button" >Buy Now</button>
     </form>
