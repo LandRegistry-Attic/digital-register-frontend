@@ -17,7 +17,7 @@ more_proprietor_details = os.getenv('MORE_PROPRIETOR_DETAILS', 'False')
 show_full_title_data = os.getenv('SHOW_FULL_TITLE_DATA', 'True').lower() == 'true'
 show_full_title_pdf = os.getenv('SHOW_FULL_TITLE_PDF', 'True').lower() == 'true'
 title_register_summary_price = "&pound;1.20 (incl. VAT)"
-payment_interface_url = os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555/'),  # payment_interface_server.py
+payment_interface_url = os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555')  # payment_interface_server.py
 post_confirmation_url = os.getenv('POST_CONFIRMATION_URL', payment_interface_url)
 
 
@@ -37,6 +37,7 @@ CONFIG_DICT = {
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
     'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
+    'PAYMENT_INTERFACE_URL': payment_interface_url,
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
 # <worldpay> (Derived from https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
