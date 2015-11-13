@@ -205,6 +205,26 @@ def confirm_selection(title_number, search_term):
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     params['post_confirmation_url'] = app.config['POST_CONFIRMATION_URL']
 
+    # Use DB API to add a record in T_PS_SRCH_REQ table, to be updated later if/when payment is made.
+    property_search_purch_addr = request.form['address_lines']
+
+    # Create DB record
+    try:
+        timestamp = property_search_interface.insert(title_number, params['price'], property_search_purch_addr)
+    except Exception as e:
+        # TODO: Should have a log call here.
+        abort(500)
+
+    # TODO: change the fixed values of 'cartid', 'mc_purchasetype' & 'mc_searchtype' to DRV search-related ones.
+    # User-related WorldPay parameters.
+    worldpay_params = dict()
+    worldpay_params['cartid'] = '0001444208589806RhrHOvIFk6liOWwHE7bKfy'    # [Could be session id. + user id. perhaps]
+    worldpay_params['amount'] = params['price']
+    worldpay_params['mc_titlenumber'] = title_number
+    worldpay_params['mc_timestamp'] = timestamp
+    worldpay_params['mc_purchasetype'] = 'registerOnly'
+    worldpay_params['mc_searchtype'] = 'D'
+
     # Last changed date - modified to remove colon in UTC offset, which python
     # datetime.strptime() doesn't like >>>
 
