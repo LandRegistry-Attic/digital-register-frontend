@@ -8,7 +8,6 @@ from datetime import datetime                                                   
 from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for  # type: ignore
 from flask_login import login_user, login_required, current_user, logout_user                          # type: ignore
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
-
 from service import (address_utils, api_client, app, auditing, health_checker, login_api_client,
                      login_manager, title_formatter, title_utils)
 from service.forms import TitleSearchForm, SigninForm
@@ -239,6 +238,21 @@ def find_titles_page(search_term=''):
         return _get_address_search_response(search_term, page_number)
 
 
+@app.route('/property-result/<title_number>', methods=['GET'])
+@login_required
+def individual_property_result(title_number):
+    title = _get_register_title(title_number)
+
+    if title:
+        display_page_number = int(request.args.get('page') or 1)
+        search_term = request.args.get('search_term', title_number)
+        breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
+
+        return _individual_property_result(title, display_page_number, search_term, breadcrumbs)
+    else:
+        abort(404)
+
+
 def _get_register_title(title_number):
     title = api_client.get_title(title_number)
     return title_formatter.format_display_json(title) if title else None
@@ -365,6 +379,16 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
         show_pdf=show_pdf,
         full_title_data=full_title_data,
         is_caution_title=title_utils.is_caution_title(title),
+    )
+
+
+def _individual_property_result(title, display_page_number, search_term, breadcrumbs):
+    return render_template(
+        'property_result.html',
+        title=title,
+        display_page_number=display_page_number,
+        search_term=search_term,
+        breadcrumbs=breadcrumbs,
     )
 
 
