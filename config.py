@@ -15,6 +15,8 @@ session_cookie_secure = os.getenv('SESSION_COOKIE_SECURE', 'False').lower() != '
 more_proprietor_details = os.getenv('MORE_PROPRIETOR_DETAILS', 'False')
 show_full_title_data = os.getenv('SHOW_FULL_TITLE_DATA', 'True').lower() == 'true'
 show_full_title_pdf = os.getenv('SHOW_FULL_TITLE_PDF', 'True').lower() == 'true'
+payment_interface_url = os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555/'),  # payment_interface_server.py
+post_confirmation_url = os.getenv('POST_CONFIRMATION_URL', payment_interface_url)
 
 
 CONFIG_DICT = {
@@ -40,7 +42,6 @@ WP_TEST_MODE_ON = 100
 WP_TEST_MODE_OFF = 0
 
 WORLDPAY_DICT = {
-    'PAYMENT_INTERFACE_URL': os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555/'),  # payment_interface_server.py
     'WORLDPAY_REDIRECT_URL': 'https://secure-test.worldpay.com/wcc/purchase',
     'WP_AUTH_CURR': 'GBP',
     'WP_INST_ID': os.getenv('WP_INST_ID', ''),
