@@ -98,13 +98,14 @@ class TestSearchTerm:
         assert url_param.endswith('title_search_postcode/{}'.format(search_term))
 
 class TestAuthenticated:
-
+    """
+    Put webseal header in HTTP headers, request page and ensure that username
+    page element is present in response (see layout.html)
+    """
     def setup_method(self, method):
         self.app = app.test_client()
         self.headers = Headers([('iv-user', TEST_USERNAME)])
-        # self.app.config['WTF_CSRF_ENABLED'] = False
 
-    # @mock.patch('requests.get', return_value=True)
     def test_authenticated(self):
         """ Does header contain 'iv-user' username field? """
         response = self.app.get('/title-search/plymouth', headers=self.headers)
