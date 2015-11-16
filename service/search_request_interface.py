@@ -44,8 +44,8 @@ def insert(title_number,
     # Get params as dict: note that locals() should be called before any other variables are set!
     params = _get_params(locals())
 
-    property_search_interface_url = app.config['SEARCH_REQUEST_INTERFACE_URL'].rstrip('/')
-    url = property_search_interface_url + "/insert-to-search-request-table"
+    search_request_interface_url = app.config['SEARCH_REQUEST_INTERFACE_URL'].rstrip('/')
+    url = search_request_interface_url + "/insert-to-search-request-table"
 
     # HTTP POST, json format.
     r = requests.post(url, json=params)
@@ -78,8 +78,8 @@ def update(user_id,
     # Get params as dict: note that locals() should be called before any other variables are set!
     params = _get_params(locals())
 
-    property_search_interface_url = app.config['PROPERTY_SEARCH_INTERFACE_URL'].rstrip('/')
-    url = property_search_interface_url + "/update-search-request-table"
+    search_request_interface_url = app.config['SEARCH_REQUEST_INTERFACE_URL'].rstrip('/')
+    url = search_request_interface_url + "/update-search-request-table"
 
     # HTTP POST, json format. Should be a PUT perhaps.
     r = requests.post(url, json=params)
