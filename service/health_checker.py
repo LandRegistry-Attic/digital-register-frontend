@@ -1,9 +1,8 @@
 from collections import OrderedDict
-from service import api_client, login_api_client
+from service import api_client
 
 healthchecks = OrderedDict([
     ('digital-register-api', api_client.check_health),
-    ('login-api', login_api_client.check_health),
 ])
 
 

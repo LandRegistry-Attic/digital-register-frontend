@@ -7,7 +7,6 @@ DEBUG = False
 fault_log_file_path = os.environ['FAULT_LOG_FILE_PATH']
 google_analytics_api_key = os.environ['GOOGLE_ANALYTICS_API_KEY']
 logging_config_file_path = os.environ['LOGGING_CONFIG_FILE_PATH']
-login_api = os.environ['LOGIN_API']
 register_title_api = os.environ['REGISTER_TITLE_API']
 secret_key = os.environ['APPLICATION_SECRET_KEY']
 service_notice_html = os.environ['SERVICE_NOTICE_HTML']
@@ -23,7 +22,6 @@ CONFIG_DICT = {
     'GOOGLE_ANALYTICS_API_KEY': google_analytics_api_key,
     'LOGGING': True,
     'LOGGING_CONFIG_FILE_PATH': logging_config_file_path,
-    'LOGIN_API': login_api,
     'PERMANENT_SESSION_LIFETIME': timedelta(minutes=15),
     'REGISTER_TITLE_API': register_title_api,
     'SECRET_KEY': secret_key,
@@ -47,4 +45,3 @@ elif settings == 'test':
     CONFIG_DICT['DISABLE_CSRF_PREVENTION'] = True
     CONFIG_DICT['FAULT_LOG_FILE_PATH'] = '/dev/null'
     CONFIG_DICT['LOGGING'] = False
-    CONFIG_DICT['SLEEP_BETWEEN_LOGINS'] = False
