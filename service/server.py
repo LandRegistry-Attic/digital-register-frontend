@@ -1,6 +1,5 @@
 from datetime import datetime                                                                          # type: ignore
 from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for  # type: ignore
-from flask_login import login_user, login_required, current_user, logout_user                          # type: ignore
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 import json
 import logging
@@ -8,12 +7,11 @@ import logging.config                                                           
 import re
 import time
 
-from service import (address_utils, api_client, app, auditing, health_checker, login_api_client,
-                     login_manager, title_formatter, title_utils)
+from service import (address_utils, api_client, app, auditing, health_checker,
+                        title_formatter, title_utils)
 from service.forms import TitleSearchForm, SigninForm
 
 
-LOGIN_API_URL = app.config['LOGIN_API']
 # TODO: move this to the template
 UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
                               '<a rel="external" href="mailto:digital-register-'
@@ -23,31 +21,8 @@ UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
 UNAUTHORISED_TITLE = Markup('There was an error with your Username/Password combination.')
 TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
 POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
-NOF_SECS_BETWEEN_LOGINS = 1
 LOGGER = logging.getLogger(__name__)
 
-
-class User():
-
-    def __init__(self, username):
-        self.user_id = username
-
-    def get_id(self):
-        return self.user_id
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User(user_id)
 
 @app.route('/', methods=['GET'])
 @app.route('/search', methods=['GET'])
@@ -144,9 +119,9 @@ def cookies():
 
 
 @app.route('/titles/<title_number>', methods=['GET'])
-@login_required
 def get_title(title_number):
     title = _get_register_title(title_number)
+    username = _username_from_header(request)
 
     if title:
         display_page_number = int(request.args.get('page') or 1)
@@ -161,16 +136,15 @@ def get_title(title_number):
 
         auditing.audit("VIEW REGISTER: Title number {0} was viewed by {1}".format(
             title_number,
-            current_user.get_id())
+            username)
         )
 
-        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data)
+        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request)
     else:
         abort(404)
 
 
 @app.route('/titles/<title_number>.pdf', methods=['GET'])
-@login_required
 def display_title_pdf(title_number):
     if not _should_show_full_title_pdf():
         abort(404)
@@ -212,29 +186,13 @@ def find_titles_page(search_term=''):
         return _initial_search_page(request)
     else:
         message_format = "SEARCH REGISTER: '{0}' was searched by {1}"
-        auditing.audit(message_format.format(search_term, current_user.get_id()))
+        auditing.audit(message_format.format(search_term, _username_from_header(request)))
         return _get_address_search_response(search_term, page_number)
 
 
 def _get_register_title(title_number):
     title = api_client.get_title(title_number)
     return title_formatter.format_display_json(title) if title else None
-
-
-def _process_valid_login_attempt(form):
-    username = form.username.data
-    authorised = login_api_client.authenticate_user(username, form.password.data)
-
-    if authorised:
-        login_user(User(username))
-        next_url = request.args.get('next', 'title-search')
-        auditing.audit('User {} logged in'.format(username))
-        return redirect(next_url)
-    else:
-        # too many bad log-ins or invalid credentials
-        _introduce_wait_between_login_attempts()
-        return _login_page(form, show_unauthorised_message=True)
-
 
 def _get_address_search_response(search_term, page_number):
     search_term = search_term.upper()
@@ -291,11 +249,6 @@ def _should_show_full_title_pdf():
     return app.config.get('SHOW_FULL_TITLE_PDF')
 
 
-def _introduce_wait_between_login_attempts():
-    if app.config.get('SLEEP_BETWEEN_LOGINS', True):
-        time.sleep(NOF_SECS_BETWEEN_LOGINS)
-
-
 def _breadcumbs_for_title_details(title_number, search_term, display_page_number):
     search_breadcrumb = {'text': 'Search the land and property register', 'url': url_for('find_titles')}
     results_breadcrumb = {'text': 'Search results', 'url': url_for('find_titles_page', search_term=search_term,
@@ -317,26 +270,12 @@ def _normalise_postcode(postcode_in):
     return postcode
 
 
-def _login_page(form=None, show_unauthorised_message=False, next_url=None):
-    if not form:
-        form = SigninForm(csrf_enabled=_is_csrf_enabled())
-
-    return render_template(
-        'display_login.html',
-        form=form,
-        username=current_user.get_id(),
-        service_notice_html=app.config.get('SERVICE_NOTICE_HTML', None),
-        unauthorised_title=UNAUTHORISED_TITLE if show_unauthorised_message else None,
-        unauthorised_description=UNAUTHORISED_WORDING if show_unauthorised_message else None,
-        next=next_url,
-    )
-
-
-def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data):
+def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request):
+    username = _username_from_header(request)
     return render_template(
         'display_title.html',
         title=title,
-        username=current_user.get_id(),
+        username=username,
         search_term=search_term,
         breadcrumbs=breadcrumbs,
         show_pdf=show_pdf,
@@ -351,7 +290,7 @@ def _initial_search_page(request):
         'search.html',
         form=TitleSearchForm(),
         username=username,
-        #username=current_user.get_id(),
+        #username = _username_from_header(request),
     )
 
 
@@ -372,7 +311,7 @@ def _search_results_page(results, search_term, addressbase=False):
 
 
 def _cookies_page():
-    return render_template('cookies.html', username=current_user.get_id())
+    return render_template('cookies.html', username=_username_from_header(request))
 
 
 def _create_string_date_only(datetoconvert):
