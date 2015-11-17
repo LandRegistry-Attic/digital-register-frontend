@@ -180,13 +180,14 @@ def find_titles():
 def find_titles_page(search_term=''):
     display_page_number = int(request.args.get('page') or 1)
     page_number = display_page_number - 1  # page_number is 0 indexed
+    username = _username_from_header(request)
 
     search_term = search_term.strip()
     if not search_term:
         return _initial_search_page(request)
     else:
         message_format = "SEARCH REGISTER: '{0}' was searched by {1}"
-        auditing.audit(message_format.format(search_term, _username_from_header(request)))
+        auditing.audit(message_format.format(search_term, username))
         return _get_address_search_response(search_term, page_number)
 
 
