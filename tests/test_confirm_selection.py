@@ -1,7 +1,13 @@
-from unittest import mock
+import os
+import mock
 from tests.fake_response import FakeResponse
-from service.server import confirm_selection, _get_register_title
+from service.server import confirm_selection, api_client
+from tests.test_search_request_interface import b_timestamp
+from service import search_request_interface
+from config import ROOT_DIR
 
+
+fake_title_path = os.path.join(ROOT_DIR, os.path.normpath('tests/data/fake_title.json'))
 
 search_results_html = \
 """
@@ -29,19 +35,25 @@ search_results_html = \
 class TestConfirmSelection:
     """
     Basic 'mock' checks of server.confirm_selection().
+
+    Mocking for:
+        * api_client.get_title (used by _get_register_title)
+        * search_request_interface
     """
 
-    # TODO: mock '_get_register_title()', to use 'fake_title.json'
+    # Get a fake title, for use by mocked api_client.get_title().
+    # N.B.: fake_title is a class-level variable, as 'pytest' discourages the use of __init__()!
+    fake_title = open(fake_title_path).readlines()      # (May raise an error; handled by pytest).
+
     # TODO: invoke 'confirm_selection()'
-    # TODO: continue to WP interface
 
     # Use tests/data/fake_title.json as a dummy title.
+    @mock.patch.object(api_client, 'get_title', return_value=fake_title)
     @mock.patch.object(search_request_interface.requests, 'post', return_value=FakeResponse(b_timestamp, 201))
-    def test_property_search_interface_returns_datetime_string_from_api_when_response_is_201(self, mock_post):
-        result = search_request_interface.insert('title123', '1.20', '00 Test Road, Test Town, Plymouth, PL1 1AB')
-        assert result == self.timestamp
+    def test_confirm_selection_renders_valid_form(self, mock_title, mock_post):
+        result = confirm_selection("DN1000", "LU1 1DZ")
 
-    @mock.patch.object(search_request_interface.requests, 'post', return_value=FakeResponse(None, 200))
-    def test_property_search_interface_returns_none_from_api_when_response_is_200(self, mock_post):
-        result = search_request_interface.update("MGIRDLER", self.timestamp, "2123652039 ")
-        assert result is None
+
+if __name__ == '__main__':
+    result = TestConfirmSelection()
+    import pdb; pdb.set_trace()
