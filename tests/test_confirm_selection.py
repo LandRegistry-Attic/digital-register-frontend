@@ -1,6 +1,5 @@
 import os
 import pytest  # type: ignore
-import json
 from unittest import mock
 from tests.fake_response import FakeResponse
 from service.server import confirm_selection, api_client, app, _get_register_title
@@ -57,4 +56,9 @@ class TestConfirmSelection:
 
 
 if __name__ == '__main__':
-    pytest.main()
+    from flask_wtf.csrf import CsrfProtect
+
+    CsrfProtect(app)
+
+    # Invoke 'pytest' as if from command line: python3 tests/test_confirm_selection.py
+    pytest.main('-x --pdb {}'.format(__file__))
