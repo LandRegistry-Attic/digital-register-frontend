@@ -37,77 +37,6 @@ def app_start():
         username=username,
         )
 
-@app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
-def confirm_selection(title_number, search_term):
-    """ DM US107 """
-
-    params = dict()
-    params['title'] = _get_register_title(request.args.get('title', title_number))
-    params['title_number'] = title_number
-    params['search_term'] = request.args.get('search_term', search_term)
-    params['display_page_number'] = 1
-    params['products_string'] = "unused"
-    params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-
-    # Last changed date - modified to remove colon in UTC offset, which python
-    # datetime.strptime() doesn't like >>>
-
-    datestring = params['title']['last_changed']
-    if len(datestring) == 25:
-        if datestring[22] == ':':
-            l = list(datestring)
-            del(l[22])
-            datestring = "".join(l)
-
-    dt_obj = datetime.strptime(datestring,"%Y-%m-%dT%H:%M:%S%z")
-    params['last_changed_datestring'] = \
-        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
-    params['last_changed_timestring'] = \
-        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
-                      '{:02d}'.format(dt_obj.minute),
-                      '{:02d}'.format(dt_obj.second))
-
-    username = _username_from_header(request)
-
-    return render_template(
-        'confirm_selection.html',
-        params=params,
-        username=username,
-        )
-
-
-@app.route('/spinner-page/', methods=['POST'])
-def spinner_page():
-    """
-    DM US107
-    The first page secured on webseal
-    """
-
-    worldpay_params = dict()
-    worldpay_params['title_number'] = request.form['title_number'].strip()
-    worldpay_params['username'] = _username_from_header
-
-    # more params to be confirmed by Richard (29/10/15)
-
-    return render_template(
-        'spinner-page.html',
-        params=worldpay_params,
-        )
-
-
-@app.route('/', methods=['GET'])
-@app.route('/search', methods=['GET'])
-def app_start():
-    """ DM US107
-    App entry point
-    - show search page
-    """
-    username = _username_from_header(request)
-    return render_template(
-        'search.html',
-        form=TitleSearchForm(),
-        username=username,
-        )
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
@@ -167,12 +96,16 @@ def confirm_selection(title_number, search_term):
 
 @app.route('/spinner-page/', methods=['POST'])
 def spinner_page():
-    """
-    "Inform the user we're about to re-direct them to Worldpay to pay for their purchase".
-    """
+    worldpay_params = dict()
+    worldpay_params['title_number'] = request.form['title_number'].strip()
+    worldpay_params['username'] = _username_from_header
 
+    # more params to be confirmed by Richard (29/10/15)
 
-    return render_template('spinner-page.html')
+    return render_template(
+        'spinner-page.html',
+        params=worldpay_params,
+    )
 
 
 @app.route('/health', methods=['GET'])
@@ -269,9 +202,11 @@ def find_titles_page(search_term=''):
         auditing.audit(message_format.format(search_term, username))
         return _get_address_search_response(search_term, page_number)
 
+
 def _get_register_title(title_number):
     title = api_client.get_title(title_number)
     return title_formatter.format_display_json(title) if title else None
+
 
 def _get_address_search_response(search_term, page_number):
     search_term = search_term.upper()
@@ -362,6 +297,7 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
         is_caution_title=title_utils.is_caution_title(title),
     )
 
+
 def _individual_property_result(title, display_page_number, search_term, breadcrumbs):
     return render_template(
         'property_result.html',
@@ -378,7 +314,6 @@ def _initial_search_page(request):
         'search.html',
         form=TitleSearchForm(),
         username=username,
-        #username = _username_from_header(request),
     )
 
 
