@@ -49,3 +49,4 @@ logging_config.setup_logging()
 if app.config['DEBUG'] is False:
     # Retain traceback when DEBUG = True
     error_handler.setup_errors(app)
+error_handler.setup_errors(app)
