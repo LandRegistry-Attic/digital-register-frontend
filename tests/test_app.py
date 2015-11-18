@@ -3,22 +3,25 @@ US107 (log in)
 These tests are for US107 only, so tests for PDF and title are not present.
 """
 
-from datetime import datetime
-from io import BytesIO
 import json
-import mock
-from PyPDF2 import PdfFileReader
 import pytest
-from unittest.mock import call
+from unittest import mock
 from werkzeug.datastructures import Headers
-from lxml.html import document_fromstring
-
-from config import CONFIG_DICT  # type: ignore
 import service  # type: ignore
 from service.server import app  # type: ignore
 from .fake_response import FakeResponse  # type: ignore
 
 TEST_USERNAME = 'username1'
+
+with open('tests/data/fake_title.json', 'r') as fake_title_file:
+    fake_title_file_json_string = fake_title_file.read()
+    fake_title_bytes = str.encode(fake_title_file_json_string)
+    fake_title = FakeResponse(fake_title_bytes)
+
+with open('tests/data/fake_no_titles.json', 'r') as fake_no_titles_file:
+    fake_no_titles_file_json_string = fake_no_titles_file.read()
+    fake_no_titles_bytes = str.encode(fake_no_titles_file_json_string)
+    fake_no_titles = FakeResponse(fake_no_titles_bytes)
 
 with open('tests/data/fake_postcode_search_result.json', 'r') as fake_postcode_results_json_file:
     fake_postcode_search_results_json_string = fake_postcode_results_json_file.read()
@@ -47,11 +50,38 @@ class TestSearchTerm:
 
     def setup_method(self, method):
         self.app = app.test_client()
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     def test_get_title_search_page(self):
         response = self.app.get('/title-search')
         assert response.status_code == 200
         assert 'Search the land and property register' in str(response.data)
+
+    @mock.patch('requests.get', return_value=fake_title)
+    @mock.patch.object(service.api_client, 'get_official_copy_data')
+    def test_title_search_success(self, mock_get_official_copy, mock_get):
+        response = self.app.post('/title-search', data={'search_term': 'DN1000'}, follow_redirects=True, headers=self.headers)
+        assert response.status_code == 200
+        page_content = response.data.decode()
+        assert 'DN1000' in page_content
+        assert '28 August 2014' in page_content
+        assert '12:37:13' in page_content
+        assert '17 Hazelbury Crescent' in page_content
+        assert 'Luton' in page_content
+        assert 'LU1 1DZ' in page_content
+
+    @mock.patch('requests.get', return_value=fake_no_titles)
+    def test_title_search_plain_text_value_format(self, mock_get):
+        response = self.app.post('/title-search', data={'search_term': 'some text'}, follow_redirects=True)
+        assert '0 results found' in response.data.decode()
+
+    @mock.patch('service.auditing.audit')
+    @mock.patch('requests.get', return_value=fake_no_titles)
+    def test_title_search_audits_the_events(self, mock_get, mock_audit):
+        search_term = 'search term'
+        self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
+        audit_text = "SEARCH REGISTER: '{}' was searched by {}".format(search_term, TEST_USERNAME)
+        mock_audit.assert_called_once_with(audit_text)
 
     @mock.patch('requests.get', return_value=unavailable_title)
     def test_title_search_title_not_found(self, mock_get):

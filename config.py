@@ -27,7 +27,6 @@ CONFIG_DICT = {
     'GOOGLE_ANALYTICS_API_KEY': google_analytics_api_key,
     'LOGGING': True,
     'LOGGING_CONFIG_FILE_PATH': logging_config_file_path,
-    'LOGIN_API': login_api,
     'PERMANENT_SESSION_LIFETIME': timedelta(minutes=15),
     'REGISTER_TITLE_API': register_title_api,
     'SECRET_KEY': secret_key,
@@ -77,4 +76,3 @@ elif settings == 'test':
     CONFIG_DICT['DISABLE_CSRF_PREVENTION'] = True
     CONFIG_DICT['FAULT_LOG_FILE_PATH'] = '/dev/null'
     CONFIG_DICT['LOGGING'] = False
-    CONFIG_DICT['SLEEP_BETWEEN_LOGINS'] = False
