@@ -52,6 +52,7 @@ class TestConfirmSelection:
     @mock.patch.object(search_request_interface.requests, 'post', return_value=FakeResponse(b_timestamp, 201))
     def test_confirm_selection_renders_valid_form_when_response_is_200(self, mock_get, mock_post):
         response = self.app.get('/confirm-selection/DN1000/LU1%201DZ')
+        import pdb; pdb.set_trace()
         assert response.status_code == 200
 
 
@@ -61,4 +62,5 @@ if __name__ == '__main__':
     CsrfProtect(app)
 
     # Invoke 'pytest' as if from command line: python3 tests/test_confirm_selection.py
+    # [Requires '. ./environment.sh' beforehand].
     pytest.main('-x --pdb {}'.format(__file__))
