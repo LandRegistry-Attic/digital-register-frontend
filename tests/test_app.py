@@ -52,6 +52,7 @@ with open('tests/data/official_copy_response.json', 'r') as official_copy_respon
 
 unavailable_title = FakeResponse('', 404)
 
+
 # DM US107
 class TestSearchTerm:
 
@@ -132,6 +133,7 @@ class TestSearchTerm:
         actual_call = mock_get.mock_calls[0]
         url_param = actual_call[1][0]
         assert url_param.endswith('title_search_postcode/{}'.format(search_term))
+
 
 class TestAuthenticated:
     """

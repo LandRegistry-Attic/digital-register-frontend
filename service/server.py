@@ -8,7 +8,7 @@ import re
 import time
 
 from service import (address_utils, api_client, app, auditing, health_checker,
-                        title_formatter, title_utils)
+                     title_formatter, title_utils)
 from service.forms import TitleSearchForm, SigninForm
 
 
@@ -27,16 +27,15 @@ LOGGER = logging.getLogger(__name__)
 @app.route('/', methods=['GET'])
 @app.route('/search', methods=['GET'])
 def app_start():
-    """ DM US107
-    App entry point
-    - show search page
-    """
+    # App entry point
+
     username = _username_from_header(request)
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
-        )
+    )
+
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
@@ -60,7 +59,7 @@ def confirm_selection(title_number, search_term):
             del(l[22])
             datestring = "".join(l)
 
-    dt_obj = datetime.strptime(datestring,"%Y-%m-%dT%H:%M:%S%z")
+    dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
     params['last_changed_datestring'] = \
         "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
     params['last_changed_timestring'] = \
@@ -74,16 +73,11 @@ def confirm_selection(title_number, search_term):
         'confirm_selection.html',
         params=params,
         username=username,
-        )
+    )
 
 
 @app.route('/spinner-page/', methods=['POST'])
 def spinner_page():
-    """
-    DM US107
-    The first page secured on webseal
-    """
-
     worldpay_params = dict()
     worldpay_params['title_number'] = request.form['title_number'].strip()
     worldpay_params['username'] = _username_from_header
@@ -93,7 +87,7 @@ def spinner_page():
     return render_template(
         'spinner-page.html',
         params=worldpay_params,
-        )
+    )
 
 
 @app.route('/health', methods=['GET'])
@@ -195,6 +189,7 @@ def _get_register_title(title_number):
     title = api_client.get_title(title_number)
     return title_formatter.format_display_json(title) if title else None
 
+
 def _get_address_search_response(search_term, page_number):
     search_term = search_term.upper()
     if _is_title_number(search_term):
@@ -291,7 +286,6 @@ def _initial_search_page(request):
         'search.html',
         form=TitleSearchForm(),
         username=username,
-        #username = _username_from_header(request),
     )
 
 
