@@ -2,7 +2,7 @@ import os
 import pytest  # type: ignore
 from unittest import mock
 from tests.fake_response import FakeResponse
-from service.server import confirm_selection, api_client, app, _get_register_title
+from service.server import app
 from tests.test_search_request_interface import b_timestamp
 from service import search_request_interface
 from config import ROOT_DIR
@@ -37,19 +37,15 @@ class TestConfirmSelection:
         hidden_lines = [line for line in page_content.splitlines() if 'hidden' in line]
         hidden_text = '\n'.join(hidden_lines)
 
-        price_value = app.config['TITLE_REGISTER_SUMMARY_PRICE'].split(';')[1]
+        price_value = app.config['TITLE_REGISTER_SUMMARY_PRICE']
 
         # TODO: get (and compare) 'cartId' value
-        assert 'id="title_number" value="DN1000"' in hidden_text
-        assert 'id="price" value="&amp;pound;1.20 (incl. VAT)"' in hidden_text
-        assert 'id="address_lines" value="[&#39;17 Hazelbury Crescent&#39;,' in hidden_text
         assert 'name="cartId" value="' in hidden_text
-        assert 'name="amount" value="&amp;pound;{}"'.format(price_value) in hidden_text
+        assert 'name="amount" value="{}"'.format(price_value) in hidden_text
         assert 'name="MC_timestamp" value="' + b_timestamp.decode("utf-8") in hidden_text
         assert 'name="MC_titleNumber" value="DN1000"' in hidden_text
-        assert 'name="MC_purchaseType" value="registerOnly"' in hidden_text
-        assert 'name="MC_searchType" value="D"' in hidden_text
-
+        assert 'name="MC_purchaseType" value="summaryView"' in hidden_text
+        assert 'name="MC_searchType" value="A"' in hidden_text
 
 if __name__ == '__main__':
     from flask_wtf.csrf import CsrfProtect

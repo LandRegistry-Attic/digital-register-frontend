@@ -9,7 +9,7 @@
 
 <h1 class="heading-xlarge collapse-bottom">Summary of title {{params.title.number}}</h1>
 
-<p class="expand-bottom">This title was last changed on <b>{{params.last_changed_datestring}} at {{params.last_changed_timestring}}</p>
+<p class="expand-bottom">This title was last changed on <b>{{params.last_changed_datestring}} at {{params.last_changed_timestring}}</b></p>
 
 <div class="grid-row">
   <div class="column-two-thirds">
@@ -42,7 +42,7 @@
       <dd><b>Summary of Title Register</b></dd-->
       <dt>Amount to pay</dt>
       {% autoescape false %}
-      <dd><b>{{params.price}}</b></dd>
+      <dd><b>&pound;{{params.price}} (incl. VAT)</b></dd>
       {% endautoescape %}
     </dl>
 
@@ -50,9 +50,6 @@
 
     <!-- Send data to "Payment Service Interface", perhaps via a 'spinner' page. -->
     <form class="form" action="{{params.post_confirmation_url}}" method="post">
-      <input type="hidden" name="title_number" id="title_number" value="{{params.title_number}}"/>
-      <input type="hidden" name="price" id="price" value="{{params.price}}"/>
-      <input type="hidden" name="address_lines" id="address_lines" value="{{params.title.address_lines}}"/>
 
       <!-- Mandatory parameters -->
       <input type="hidden" id="cartId" name="cartId" value="{{worldpay_params.cartid}}">

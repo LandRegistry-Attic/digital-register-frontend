@@ -70,8 +70,8 @@ def confirm_selection(title_number, search_term):
     worldpay_params['amount'] = params['price']
     worldpay_params['mc_titlenumber'] = title_number
     worldpay_params['mc_timestamp'] = timestamp
-    worldpay_params['mc_purchasetype'] = 'registerOnly'
-    worldpay_params['mc_searchtype'] = 'D'
+    worldpay_params['mc_purchasetype'] = 'summaryView'
+    worldpay_params['mc_searchtype'] = 'A'
 
     # Last changed date - modified to remove colon in UTC offset, which python
     # datetime.strptime() doesn't like >>>

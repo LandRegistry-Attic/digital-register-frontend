@@ -16,7 +16,9 @@ session_cookie_secure = os.getenv('SESSION_COOKIE_SECURE', 'False').lower() != '
 more_proprietor_details = os.getenv('MORE_PROPRIETOR_DETAILS', 'False')
 show_full_title_data = os.getenv('SHOW_FULL_TITLE_DATA', 'True').lower() == 'true'
 show_full_title_pdf = os.getenv('SHOW_FULL_TITLE_PDF', 'True').lower() == 'true'
-title_register_summary_price = "&pound;1.20 (incl. VAT)"
+title_register_nominal_summary_price = float(os.getenv('TITLE_REGISTER_NOMINAL_SUMMARY_PRICE', 1))  # (Pound) 'WP_AUTH_CURR': 'GBP'
+standard_vat_rate = float(os.getenv('STANDARD_VAT_RATE', 20))        # %
+title_register_summary_price = float(title_register_nominal_summary_price * (100 + standard_vat_rate) / 100)
 payment_interface_url = os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555')
 search_request_interface_url = os.getenv('SEARCH_REQUEST_INTERFACE_URL', 'http://127.0.0.1:5353')
 post_confirmation_url = os.getenv('POST_CONFIRMATION_URL', payment_interface_url)
@@ -36,7 +38,7 @@ CONFIG_DICT = {
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
     'SEARCH_REQUEST_INTERFACE_URL': search_request_interface_url,
-    'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
+    'TITLE_REGISTER_SUMMARY_PRICE': '{:.2f}'.format(title_register_summary_price),
     'PAYMENT_INTERFACE_URL': payment_interface_url,
     'POST_CONFIRMATION_URL': post_confirmation_url,
 }  # type: Dict[str, Union[bool, str, timedelta]]
@@ -52,6 +54,7 @@ WORLDPAY_DICT = {
     'WP_INST_ID': os.getenv('WP_INST_ID', ''),
     'WP_ACCOUNT_ID': os.getenv('WP_ACCOUNT_ID', ''),
     'WP_AUTH_MODE': 'E',
+    'WP_PORTALIND': 'D',
     'WP_TEST_MODE': WP_TEST_MODE_ON,
     'WP_DEFAULT_COUNTRY': 'GB',
     'WP_AUTHORISATION_CALLBACK_URL': os.getenv('WP_AUTHORISATION_CALLBACK_URL', ''),        # 'WPAC'
