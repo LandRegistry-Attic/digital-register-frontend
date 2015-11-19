@@ -1,0 +1,111 @@
+# Translations template for PROJECT.
+# Copyright (C) 2015 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2015-11-19 14:06+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: service/templates/display_title.html:53
+msgid "Summary of"
+msgstr ""
+
+#: service/templates/display_title.html:53
+msgid "caution"
+msgstr ""
+
+#: service/templates/display_title.html:53
+msgid "title"
+msgstr ""
+
+#: service/templates/display_title.html:54
+msgid "This title was last changed on"
+msgstr ""
+
+#: service/templates/display_title.html:54
+msgid "at"
+msgstr ""
+
+#: service/templates/display_title.html:62
+msgid "Not Available"
+msgstr ""
+
+#: service/templates/display_title.html:67
+msgid "Title number"
+msgstr ""
+
+#: service/templates/display_title.html:69
+msgid "Cautioner"
+msgstr ""
+
+#: service/templates/display_title.html:69
+msgid "Owner"
+msgstr ""
+
+#: service/templates/display_title.html:87
+msgid "Lender"
+msgstr ""
+
+#: service/templates/display_title.html:107
+msgid "Tenure type"
+msgstr ""
+
+#: service/templates/display_title.html:112
+msgid "Price paid/stated"
+msgstr ""
+
+#: service/templates/display_title.html:118
+msgid "You'll only be able to view this information once"
+msgstr ""
+
+#: service/templates/display_title.html:119
+msgid ""
+"If you want to keep a copy, you'll need to print it out or take a screen "
+"shot."
+msgstr ""
+
+#: service/templates/display_title.html:121
+msgid "Print this page"
+msgstr ""
+
+#: service/templates/display_title.html:130
+msgid "The map relies on JavaScript being enabled in your browser."
+msgstr ""
+
+#: service/templates/display_title.html:133
+msgid ""
+"This map shows the property's rough extent and location, <b>not legal "
+"boundaries.</b>"
+msgstr ""
+
+#: service/templates/display_title.html:141
+msgid "If you have any problems with your purchase, you can call Land Registry on"
+msgstr ""
+
+#: service/templates/display_title.html:142
+msgid "For more contact methods, visit "
+msgstr ""
+
+#: service/templates/display_title.html:146
+msgid "What next"
+msgstr ""
+
+#: service/templates/display_title.html:148
+msgid "Search for another title using this service"
+msgstr ""
+
+#: service/templates/display_title.html:149
+msgid "Return to"
+msgstr ""
+

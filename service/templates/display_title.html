@@ -12,6 +12,17 @@
     height:320px !important;
     width:320px !important;
   }
+  .btn-href {
+    background: none;
+    border: 0;
+    font-size: 0.9em;
+    cursor: pointer;
+    text-decoration: underline;
+    padding-left:0;
+  }
+  .lang-form label {
+    font-size: 0.9em;
+  }
 </style>
 
 <div class="grid-row collapse-bottom">
@@ -19,12 +30,28 @@
       &nbsp;
   </div>
   <div class="column-third">
-    <p class="font-xsmall collapse-bottom">Language: <b>English</b> / <a href="/drv-15/summary_welsh">Welsh (Cymraeg)</a>.</p>
+
+    {# The following form resubmits the page if an alternate (english or welsh) #}
+    {# language is selected. The language code goes in g.locale. The form has #}
+    {# no action specified in order to resubmit the current page while maintaining #}
+    {# the query string. The route is a GET so the method is get, with 'language=' #}
+    {# added to the query string (ie, not POST + http header variables) #}
+
+    <form method="GET" class='lang-form'>
+      {% if g.locale == 'en' %}
+        <input type='hidden' name='language' value='cy'/>
+        <label for='submit-btn'>This page is also available</label><input id='submit-btn' type='submit' class='btn-href' value='in Welsh (Cymraeg)' />
+      {% else %}
+        <input type='hidden' name='language' value='en'/>
+        <label for='submit-btn'>This page is also available</label><input id='submit-btn' type='submit' class='btn-href' value='in English' />
+      {% endif %}
+    </form>
+
   </div>
 </div>
 
-<h1 class="heading-large">Summary of {% if is_caution_title %}caution {% endif %}title</h1>
-<p>This title was last changed on <b>{{ title.last_changed | date }}</b> at <b>{{ title.last_changed | time }}</b></p>
+<h1 class="heading-large">{{ _('Summary of') }} {% if is_caution_title %}{{ _('caution') }} {% endif %}{{ _('title') }}</h1>
+<p>{{ _('This title was last changed on') }} <b>{{ title.last_changed | date }}</b> {{ _('at') }} <b>{{ title.last_changed | time }}</b></p>
 
 <div class="grid-row">
   <div class="column-two-thirds">
@@ -32,14 +59,14 @@
     {% if title.address_lines %}
       {{ '<br>'.join(title.address_lines)|safe }}
     {% else %}
-      Not Available
+      {{ _('Not Available') }}
     {% endif %}
     </b></p>
 
     <dl class="definition-tabular expand-top-half">
-      <dt>Title number</dt>
+      <dt>{{ _('Title number') }}</dt>
       <dd><b>{{ title.number }}</b></dd>
-      <dt>{% if is_caution_title %}Cautioner{% else %}Owner{% endif %}{{ title.proprietors|length|pluralize }}</dt>
+      <dt>{% if is_caution_title %}{{ _('Cautioner') }}{% else %}{{ _('Owner') }}{% endif %}{{ title.proprietors|length|pluralize }}</dt>
       <dd>
         {% for proprietor in title.proprietors %}
           <h5 class="expand-bottom-half {% if loop.index != 1 %} expand-top-half {% endif %}">
@@ -57,7 +84,7 @@
         {% endfor %}
       </dd>
         {% if title.lenders %}
-          <dt>Lender{{ title.lenders|length|pluralize }}</dt>
+          <dt>{{ _('Lender') }}{{ title.lenders|length|pluralize }}</dt>
           <dd>
             {% for lender in title.lenders %}
               <h5 class="expand-bottom-half {% if loop.index != 1 %} expand-top-half {% endif %}">
@@ -77,21 +104,21 @@
         {% endif %}
 
         {% if not is_caution_title %}
-          <dt>Tenure type</dt>
+          <dt>{{ _('Tenure type') }}</dt>
           <dd><b>{{ title.tenure }}</b></dd>
         {% endif %}
 
         {% if title.ppi_data %}
-          <dt>Price paid/stated</dt>
+          <dt>{{ _('Price paid/stated') }}</dt>
           <dd><b>{{ title.ppi_data }}</b></dd>
         {% endif %}
       </dl>
 
       <div class="govuk-box-highlight">
-        <p><b>You'll only be able to view this information once</b><br>
-            If you want to keep a copy, you'll need to print it out or take a screen shot.</p>
+        <p><b>{{ _('You\'ll only be able to view this information once') }}</b><br>
+            {{ _('If you want to keep a copy, you\'ll need to print it out or take a screen shot.') }}</p>
 
-        <a class="button-print" href="javascript:window.print();">Print this page</a>
+        <a class="button-print" href="javascript:window.print();">{{ _('Print this page') }}</a>
 
       </div>
 
@@ -100,10 +127,10 @@
   <div class="column-third">
     <div id="map">
       <div class="panel-simple">
-        <p>The map relies on JavaScript being enabled in your browser.</p>
+        <p>{{ _('The map relies on JavaScript being enabled in your browser.') }}</p>
       </div>
     </div>
-    <p class="font-xsmall">This map shows the property's rough extent and location, <b>not legal boundaries.</b></p>
+    <p class="font-xsmall">{{ _('This map shows the property\'s rough extent and location, <b>not legal boundaries.</b>') }}</p>
   </div>
 
 </div>
@@ -111,15 +138,15 @@
 <div class="grid-row">
   <div class="text legal-division--top font-xsmall">
     <div class="panel-indent">
-      <p>If you have any problems with your purchase, you can call Land Registry on <b>0300 006 0411</b>.</p>
-      <p>For more contact methods, visit <a href="https://www.gov.uk/government/organisations/land-registry">www.gov.uk/government/organisations/land-registry</a></p>
+      <p>{{ _('If you have any problems with your purchase, you can call Land Registry on') }} <b>0300 006 0411</b>.</p>
+      <p>{{ _('For more contact methods, visit ') }}<a href="https://www.gov.uk/government/organisations/land-registry">www.gov.uk/government/organisations/land-registry</a></p>
     </div>
   </div>
   <div class="text printhidden">
-    <h6 class="heading-medium">What next</h6>
+    <h6 class="heading-medium">{{ _('What next') }}</h6>
     <ul>
-      <li><a href="/drv-15/search">Search for another title using this service</a></li>
-      <li><a href="https://gov.uk">Return to GOV.UK</a></li>
+      <li><a href="/drv-15/search">{{ _('Search for another title using this service') }}</a></li>
+      <li><a href="https://gov.uk">{{ _('Return to') }} GOV.UK</a></li>
     </ul>
   </div>
 </div>

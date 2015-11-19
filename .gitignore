@@ -41,8 +41,7 @@ nosetests.xml
 coverage.xml
 
 # Translations
-*.mo
-*.pot
+# .po and .mo removed as part of US222 (DM)
 
 # Django stuff:
 *.log
