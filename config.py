@@ -33,9 +33,10 @@ CONFIG_DICT = {
     'MORE_PROPRIETOR_DETAILS': more_proprietor_details,
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
-    'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
+    'SEARCH_REQUEST_INTERFACE_URL': search_request_interface_url,
+    'TITLE_REGISTER_SUMMARY_PRICE': '{:.2f}'.format(title_register_summary_price),
+    'PAYMENT_INTERFACE_URL': payment_interface_url,
     'POST_CONFIRMATION_URL': post_confirmation_url,
-    'PROPERTY_SEARCH_INTERFACE_URL': property_search_interface_url
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
 # <worldpay> (From https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
@@ -49,6 +50,7 @@ WORLDPAY_DICT = {
     'WP_INST_ID': os.getenv('WP_INST_ID', ''),
     'WP_ACCOUNT_ID': os.getenv('WP_ACCOUNT_ID', ''),
     'WP_AUTH_MODE': 'E',
+    'WP_PORTALIND': 'D',
     'WP_TEST_MODE': WP_TEST_MODE_ON,
     'WP_DEFAULT_COUNTRY': 'GB',
     'WP_CALLBACK_SERVER_URL': os.getenv('WP_CALLBACK_SERVER_URL', ''),

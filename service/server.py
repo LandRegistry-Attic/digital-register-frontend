@@ -1,11 +1,10 @@
-from datetime import datetime                                                                          # type: ignore
-from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for  # type: ignore
-from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 import json
 import logging
 import logging.config                                                                                  # type: ignore
 import re
-import time
+from datetime import datetime                                                                          # type: ignore
+from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
+from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 
 from service import (address_utils, api_client, app, auditing, health_checker,
                      title_formatter, title_utils)
@@ -27,28 +26,52 @@ LOGGER = logging.getLogger(__name__)
 @app.route('/', methods=['GET'])
 @app.route('/search', methods=['GET'])
 def app_start():
-    # App entry point
-    # App entry point
-
+    """ DM US107
+    App entry point
+    - show search page
+    """
     username = _username_from_header(request)
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
-    )
+        )
 
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
-    """ DM US107 """
+    """ Let user confirm a selection - i.e., place an order. """
+
+    title = _get_register_title(request.args.get('title', title_number))
 
     params = dict()
-    params['title'] = _get_register_title(request.args.get('title', title_number))
+    params['title'] = title
     params['title_number'] = title_number
     params['search_term'] = request.args.get('search_term', search_term)
     params['display_page_number'] = 1
     params['products_string'] = "unused"
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    params['post_confirmation_url'] = app.config['POST_CONFIRMATION_URL']
+
+    # Use DB API to add a record in T_PS_SRCH_REQ table, to be updated later if/when payment is made.
+    property_search_purch_addr = title['address_lines']
+
+    # Create DB record
+    try:
+        timestamp = search_request_interface.insert(title_number, params['price'], property_search_purch_addr)
+    except Exception as e:
+        # TODO: Should have a log call here.
+        abort(500)
+
+    # TODO: change the fixed values of 'cartid', 'mc_purchasetype' & 'mc_searchtype' to DRV search-related ones.
+    # User-related WorldPay parameters.
+    worldpay_params = dict()
+    worldpay_params['cartid'] = '0001444208589806RhrHOvIFk6liOWwHE7bKfy'    # [Could be session id. + user id. perhaps]
+    worldpay_params['amount'] = params['price']
+    worldpay_params['mc_titlenumber'] = title_number
+    worldpay_params['mc_timestamp'] = timestamp
+    worldpay_params['mc_purchasetype'] = 'summaryView'
+    worldpay_params['mc_searchtype'] = 'A'
 
     # Last changed date - modified to remove colon in UTC offset, which python
     # datetime.strptime() doesn't like >>>
@@ -301,6 +324,7 @@ def _individual_property_result(title, display_page_number, search_term, breadcr
         search_term=search_term,
         breadcrumbs=breadcrumbs,
     )
+
 
 def _initial_search_page(request):
     username = _username_from_header(request)
