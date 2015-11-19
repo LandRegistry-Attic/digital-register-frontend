@@ -16,7 +16,6 @@
       <input type="submit" value="Search" class="button search-button">
     </div>
   </form>
-
   <div class="grid-row">
     <div class="column-two-thirds">
       <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
@@ -24,10 +23,14 @@
         {% for title in results['titles'] %}
           <li>
             <h2 class="heading-small">
-              <a href="{{ url_for('get_title', title_number=title['title_number'], page=display_page_number, search_term=search_term) }}">{{ title['data']['address']['address_string'] }}</a>
+              {% if title['data'] %}
+                <a href="{{ url_for('get_title', title_number=title['title_number'], page=display_page_number, search_term=search_term) }}">{% if addressbase %}{{ title['address'] }}{% else %}{{ title['data']['address']['address_string'] }}{% endif %}</a>
+              {% else %}
+                {{ title['address'] }}
+              {% endif %}
             </h2>
             <div class="font-xsmall">
-                {% if title['data'].get('is_caution_title') %}Caution title {% else %}Title {% endif %} number {{ title['title_number'] }}<br>
+                {% if title['data'] and title['data'].get('is_caution_title') %}Caution title {% else %}Title {% endif %} number {{ title['title_number'] }}<br>
               <b>{{ title | tenure_info }}</b>
             </div>
           </li>

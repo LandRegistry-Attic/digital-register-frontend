@@ -1,10 +1,10 @@
 from collections import namedtuple
 import json
-import mock
-import pytest
-from werkzeug.exceptions import InternalServerError
+import mock  # type: ignore
+import pytest  # type: ignore
+from werkzeug.exceptions import InternalServerError  # type: ignore
 
-from service.server import app
+from service.server import app  # type: ignore
 
 
 login_json = '{{"credentials":{{"user_id":"{}","password":"{}"}}}}'
