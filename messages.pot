@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2015-11-19 14:06+0000\n"
+"POT-Creation-Date: 2015-11-20 13:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,95 +17,95 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 
-#: service/templates/display_title.html:53
+#: service/templates/display_title.html:52
 msgid "Summary of"
 msgstr ""
 
-#: service/templates/display_title.html:53
+#: service/templates/display_title.html:52
 msgid "caution"
 msgstr ""
 
-#: service/templates/display_title.html:53
+#: service/templates/display_title.html:52
 msgid "title"
 msgstr ""
 
-#: service/templates/display_title.html:54
+#: service/templates/display_title.html:53
 msgid "This title was last changed on"
 msgstr ""
 
-#: service/templates/display_title.html:54
+#: service/templates/display_title.html:53
 msgid "at"
 msgstr ""
 
-#: service/templates/display_title.html:62
+#: service/templates/display_title.html:61
 msgid "Not Available"
 msgstr ""
 
-#: service/templates/display_title.html:67
+#: service/templates/display_title.html:66
 msgid "Title number"
 msgstr ""
 
-#: service/templates/display_title.html:69
+#: service/templates/display_title.html:68
 msgid "Cautioner"
 msgstr ""
 
-#: service/templates/display_title.html:69
+#: service/templates/display_title.html:68
 msgid "Owner"
 msgstr ""
 
-#: service/templates/display_title.html:87
+#: service/templates/display_title.html:86
 msgid "Lender"
 msgstr ""
 
-#: service/templates/display_title.html:107
+#: service/templates/display_title.html:106
 msgid "Tenure type"
 msgstr ""
 
-#: service/templates/display_title.html:112
+#: service/templates/display_title.html:111
 msgid "Price paid/stated"
 msgstr ""
 
-#: service/templates/display_title.html:118
+#: service/templates/display_title.html:117
 msgid "You'll only be able to view this information once"
 msgstr ""
 
-#: service/templates/display_title.html:119
+#: service/templates/display_title.html:118
 msgid ""
 "If you want to keep a copy, you'll need to print it out or take a screen "
 "shot."
 msgstr ""
 
-#: service/templates/display_title.html:121
+#: service/templates/display_title.html:120
 msgid "Print this page"
 msgstr ""
 
-#: service/templates/display_title.html:130
+#: service/templates/display_title.html:129
 msgid "The map relies on JavaScript being enabled in your browser."
 msgstr ""
 
-#: service/templates/display_title.html:133
+#: service/templates/display_title.html:132
 msgid ""
 "This map shows the property's rough extent and location, <b>not legal "
 "boundaries.</b>"
 msgstr ""
 
-#: service/templates/display_title.html:141
+#: service/templates/display_title.html:146
 msgid "If you have any problems with your purchase, you can call Land Registry on"
 msgstr ""
 
-#: service/templates/display_title.html:142
+#: service/templates/display_title.html:147
 msgid "For more contact methods, visit "
 msgstr ""
 
-#: service/templates/display_title.html:146
+#: service/templates/display_title.html:151
 msgid "What next"
 msgstr ""
 
-#: service/templates/display_title.html:148
+#: service/templates/display_title.html:153
 msgid "Search for another title using this service"
 msgstr ""
 
-#: service/templates/display_title.html:149
+#: service/templates/display_title.html:154
 msgid "Return to"
 msgstr ""
 

@@ -349,23 +349,27 @@ def _strip_delimiters(json_in):
     Remove all delimiters and not notes from json
     """
     json_out = json_in
-    for i, sub_register in enumerate(json_in['official_copy_data']['sub_registers']):
-        for j, entry in enumerate(sub_register['entries']):
-            '''
-            Unicode characters:
-            35 - Hash #
-            37 - Percentage %
-            42 - Asterix *
-            60 - Less than <
-            61 - Equals =
-            62 - Greater than >
-            172 - Not note ¬
-            '''
-            delimiter_array = [35, 37, 42, 60, 61, 62, 172]
-            txt = json_in['official_copy_data']['sub_registers'][i]['entries'][j]['full_text']
-            for delimiter in delimiter_array:
-                txt = txt.replace(chr(delimiter), "")
-            json_out['official_copy_data']['sub_registers'][i]['entries'][j]['full_text'] = txt
+    try:
+        for i, sub_register in enumerate(json_in['official_copy_data']['sub_registers']):
+            for j, entry in enumerate(sub_register['entries']):
+                '''
+                Unicode characters:
+                35 - Hash #
+                37 - Percentage %
+                42 - Asterix *
+                60 - Less than <
+                61 - Equals =
+                62 - Greater than >
+                172 - Not note ¬
+                '''
+                delimiter_array = [35, 37, 42, 60, 61, 62, 172]
+                txt = json_in['official_copy_data']['sub_registers'][i]['entries'][j]['full_text']
+                for delimiter in delimiter_array:
+                    txt = txt.replace(chr(delimiter), "")
+                    json_out['official_copy_data']['sub_registers'][i]['entries'][j]['full_text'] = txt
+    except Exception as e:
+        # For when SHOW_FULL_TITLE_DATA = False
+        pass
 
     return json_out
 
