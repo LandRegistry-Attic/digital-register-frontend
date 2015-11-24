@@ -57,6 +57,7 @@ with open('tests/data/official_copy_response.json', 'r') as official_copy_respon
 
 unavailable_title = FakeResponse('', 404)
 
+
 class TestViewTitle:
 
     def setup_method(self, method):
@@ -444,6 +445,7 @@ class TestHealthcheck:
         assert response.data.decode() == '{"status": "ok"}'
         assert response.status_code == 200
 
+
 class TestSearchTerm:
 
     def setup_method(self, method):
@@ -454,6 +456,7 @@ class TestSearchTerm:
     def test_title_search_title_not_found(self, mock_get):
         response = self.app.post('/title-search', data={'search_term': 'DT1000'}, follow_redirects=True)
         assert '0 results found' in response.data.decode()
+
 
 class TestAuthenticated:
     """
