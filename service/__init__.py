@@ -1,6 +1,5 @@
 import faulthandler                   # type: ignore
 from flask import Flask               # type: ignore
-from flask_login import LoginManager  # type: ignore
 
 from config import CONFIG_DICT
 from service import logging_config, error_handler, static, title_utils, template_filters
@@ -14,11 +13,6 @@ app.config.update(CONFIG_DICT)
 
 static.register_assets(app)
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = '/login'
-login_manager.session_protection = "strong"
-
 for (filter_name, filter_method) in template_filters.get_all_filters().items():
     app.jinja_env.filters[filter_name] = filter_method
 
@@ -30,4 +24,7 @@ def inject_google_analytics():
     return {'google_api_key': GOOGLE_ANALYTICS_API_KEY}
 
 logging_config.setup_logging()
+if app.config['DEBUG'] is False:
+    # Retain traceback when DEBUG = True
+    error_handler.setup_errors(app)
 error_handler.setup_errors(app)
