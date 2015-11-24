@@ -20,7 +20,8 @@ def _():
     Note: 'test card' numbers at http://support.worldpay.com/support/kb/bg/testandgolive/tgl5103.html.
     """
 
-    _worldpay_dict.update({'mc_timestamp': datetime.now()})
+    # N.B.: need fixed value for 'mc_timestamp', to suit WPAC test configuration.
+    _worldpay_dict.update({'mc_timestamp': '2015-11-20 11:54:23.861921'})
     _worldpay_dict.update({'payment_interface_url': app.config['PAYMENT_INTERFACE_URL']})
 
     return render_template('dummy_confirm_selection.html', worldpay_params=_worldpay_dict)

@@ -48,16 +48,17 @@ CONFIG_DICT.update({'DEBUG': True})
 WP_TEST_MODE_ON = 100
 WP_TEST_MODE_OFF = 0
 
+# N.B.: 'WP_AUTHORISATION_CALLBACK_URL' must not be prefixed by 'http://' or it will be silently rejected by Worldpay!!
 WORLDPAY_DICT = {
     'WORLDPAY_REDIRECT_URL': 'https://secure-test.worldpay.com/wcc/purchase',
     'WP_AUTH_CURR': 'GBP',
     'WP_INST_ID': os.getenv('WP_INST_ID', ''),
     'WP_ACCOUNT_ID': os.getenv('WP_ACCOUNT_ID', ''),
     'WP_AUTH_MODE': 'E',
-    'WP_PORTALIND': 'D',
+    'WP_PORTALIND': 'Y',
     'WP_TEST_MODE': WP_TEST_MODE_ON,
     'WP_DEFAULT_COUNTRY': 'GB',
-    'WP_AUTHORISATION_CALLBACK_URL': os.getenv('WP_AUTHORISATION_CALLBACK_URL', ''),        # 'WPAC'
+    'WP_AUTHORISATION_CALLBACK_URL': os.getenv('WP_AUTHORISATION_CALLBACK_URL', ''),    # -> 'WPAC' service.
     'ACTION_URL1': '/download.do',
     'ACTION_URL2': '/QuickEnquiryInit.do',
     'ACTION_URL3': ''

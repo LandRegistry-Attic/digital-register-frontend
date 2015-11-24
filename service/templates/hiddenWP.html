@@ -23,8 +23,8 @@
 
         <!-- Custom parameters passed in from "payment request" form -->
         <!-- See http://support.worldpay.com/support/kb/bg/pdf/rhtml.pdf for details -->
-        <!-- Strictly speaking, "MC_timestamp" should be "M_timestamp", as it is for WPAC only -->
-        <input type="hidden" id="MC_timestamp" name="MC_timestamp" value="{{worldpay_params.mc_timestamp}}">
+        <!-- Strictly speaking, "C_timestamp" should be "M_timestamp", as it is for WPAC only -->
+        <input type="hidden" id="C_timestamp" name="C_timestamp" value="{{worldpay_params.c_timestamp}}">
         <input type="hidden" id="MC_purchaseType" name="MC_purchaseType" value="{{worldpay_params.mc_purchasetype}}">
         <input type="hidden" id="MC_titleNumber" name="MC_titleNumber"	value="{{worldpay_params.mc_titlenumber}}">
         <input type="hidden" id="MC_searchType" name="MC_searchType" value="{{worldpay_params.mc_searchtype}}">
@@ -38,7 +38,7 @@
         <input type="hidden" id="country" name="country" value="{{worldpay_params.wp_default_country}}">
 
         <!-- Custom parameters, from configuration file -->
-        <input type="hidden" id="MC_portalInd" name="MC_portalInd" value="{{worldpay_params.mc_portalind}}">
+        <input type="hidden" id="MC_portalInd" name="MC_portalInd" value="{{worldpay_params.wp_portalind}}">
         <input type="hidden" id="MC_callbackUrl" name="MC_callbackUrl" value="{{worldpay_params.wp_authorisation_callback_url}}">
         <input type="hidden" id="C_returnURL" name="C_returnURL" value="{{worldpay_params.action_url1}}">
         <input type="hidden" id="C_returnURLCancel" name="C_returnURLCancel" value="{{worldpay_params.action_url2}}">

@@ -7,6 +7,15 @@
 <body>
 
 <h1 class="heading-xlarge collapse-bottom">WorldPay check</h1>
+<h2>Valid test card numbers:</h2>
+    <pre>
+        JCB     3528000700000000
+        Maestro 6759649826438453
+                6799990100000000019
+        Mastercard
+                5555555555554444
+                5454545454545454
+    </pre>
 
 <div class="grid-row">
     <div class="column-two-thirds">
@@ -15,9 +24,10 @@
         <form class="form" action="{{worldpay_params.payment_interface_url}}" method="post">
 
             <!-- user parameters to be passed on -->
-            <input type="hidden" id="cartId" name="cartId" value="0001444208589806RhrHOvIFk6liOWwHE7bKfy">
+            {# N.B.: 'cartId' may need this particular value, to suit WPAC test configuration #}
+            <input type="hidden" id="cartId" name="cartId" value="0001350377259404c-tY8OoDNJkdHGr6FCgqkAw">
             <input type="hidden" id="amount" name="amount"	value="3.0">
-            <input type="hidden" id="desc" name="desc" value="REGISTER VIEW">
+            <input type="hidden" id="desc" name="desc" value="Register View">
             <input type="hidden" id="forenames" name="forenames" value="Forenames">
             <input type="hidden" id="surname" name="surname" value="Surname">
             <input type="hidden" id="email" name="email" value="Richard.Prosser@landregistry.gsi.gov.uk">
@@ -25,10 +35,11 @@
             <input type="hidden" id="postcode" name="postcode" value="PL1 1AA">
 
             <!-- custom parameters to be passed on -->
-            <input type="hidden" id="MC_timestamp" name="MC_timestamp" value="{{worldpay_params.mc_timestamp}}">
+            {# N.B.: "MC_titleNumber" value has to be "LA265", to suit WPAC test configuration. #}
+            <input type="hidden" id="C_timestamp" name="C_timestamp" value="{{worldpay_params.mc_timestamp}}">
             <input type="hidden" id="MC_purchaseType" name="MC_purchaseType" value="registerOnly">
             <input type="hidden" id="MC_titleNumber" name="MC_titleNumber"	value="LA265">
-            <input type="hidden" id="MC_searchType" name="MC_searchType" value="T">
+            <input type="hidden" id="MC_searchType" name="MC_searchType" value="D">
 
             <button type="submit" class="button" >Buy Now</button>
         </form>
