@@ -17,7 +17,7 @@
 <form  id="redirect" action="{{worldpay_params.worldpay_redirect_url}}" method="POST">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
   <!-- Mandatory parameters passed in from "payment request" form -->
-  <input type="hidden" id="cartId" name="cartId" value="{{worldpay_params.cartId}}">
+  <input type="hidden" id="cartId" name="cartId" value="{{worldpay_params.cartid}}">
   <input type="hidden" id="amount" name="amount"	value="{{worldpay_params.amount}}">
 
   <!-- Optional parameters that may be passed in from "payment request" form -->
