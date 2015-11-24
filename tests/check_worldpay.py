@@ -1,13 +1,7 @@
-import os
-from flask import Flask
 from flask import render_template
 from config import WORLDPAY_DICT, CONFIG_DICT, ROOT_DIR
-from datetime import datetime
+from service import app
 
-tmpl_dir = os.path.join(ROOT_DIR, os.path.normpath('service/templates'))
-
-app = Flask(__name__, template_folder=tmpl_dir)
-app.config.update(CONFIG_DICT)
 
 # Fix formatting issue (keys).
 _worldpay_dict = dict((k.lower(), v) for k,v in WORLDPAY_DICT.items())

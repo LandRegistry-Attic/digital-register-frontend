@@ -1,11 +1,6 @@
-import os
 from flask import Flask, render_template, request, abort
 from config import WORLDPAY_DICT, ROOT_DIR
-
-tmpl_dir = os.path.join(ROOT_DIR, os.path.normpath('service/templates'))
-
-app = Flask(__name__, template_folder=tmpl_dir)
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+from service import app
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -31,4 +26,4 @@ def worldpay():
 
 
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(host='0.0.0.0', port=5555, debug=True)

@@ -19,7 +19,7 @@ show_full_title_pdf = os.getenv('SHOW_FULL_TITLE_PDF', 'True').lower() == 'true'
 title_register_nominal_summary_price = float(os.getenv('TITLE_REGISTER_NOMINAL_SUMMARY_PRICE', 1))  # (Pound) 'WP_AUTH_CURR': 'GBP'
 standard_vat_rate = float(os.getenv('STANDARD_VAT_RATE', 20))        # %
 title_register_summary_price = float(title_register_nominal_summary_price * (100 + standard_vat_rate) / 100)
-payment_interface_url = os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555')
+payment_interface_url = os.getenv('PAYMENT_INTERFACE_URL', 'http://0.0.0.0:5555')
 search_request_interface_url = os.getenv('SEARCH_REQUEST_INTERFACE_URL', 'http://127.0.0.1:5353')
 post_confirmation_url = os.getenv('POST_CONFIRMATION_URL', payment_interface_url)
 
