@@ -1,12 +1,12 @@
-from datetime import datetime
-from io import BytesIO
-import json
-import mock
-from PyPDF2 import PdfFileReader
-import pytest
-from unittest.mock import call
-from werkzeug.datastructures import Headers
-from lxml.html import document_fromstring
+from datetime import datetime  # type: ignore
+from io import BytesIO  # type: ignore
+import json  # type: ignore
+import mock  # type: ignore
+from PyPDF2 import PdfFileReader  # type: ignore
+import pytest  # type: ignore
+from unittest.mock import call  # type: ignore
+from werkzeug.datastructures import Headers  # type: ignore
+from lxml.html import document_fromstring  # type: ignore
 
 from config import CONFIG_DICT  # type: ignore
 import service  # type: ignore
@@ -202,7 +202,6 @@ class TestViewTitle:
         assert coordinate_data in page_content
         assert 'geometry' in page_content
         assert 'coordinates' in page_content
-
 
     @mock.patch('service.auditing.audit')
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
@@ -476,11 +475,10 @@ class TestAuthenticated:
         assert 'username' in str(response.data)
 
 
-class TestWelsh(BaseServerTest):
+class TestWelsh:
 
     def setup_method(self, method):
         self.app = app.test_client()
-        self._log_in_user()
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
@@ -488,7 +486,7 @@ class TestWelsh(BaseServerTest):
         response = self.app.get("/titles/DN1000?language=cy")
         page_content = response.data.decode()
         assert response.status_code == 200
-        assert "Rhif y teitl" in page_content
+        assert "Rhif teitl" in page_content
         assert "Perchennog" in page_content
 
 if __name__ == '__main__':

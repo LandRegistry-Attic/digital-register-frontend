@@ -49,7 +49,16 @@
   </div>
 </div>
 
-<h1 class="heading-large">{{ _('Summary of') }} {% if is_caution_title %}{{ _('caution') }} {% endif %}{{ _('title') }}</h1>
+{# Slightly convoluted heading to cater for variations in Welsh #}
+<h1 class="heading-large">
+{% if is_caution_title %}
+{{ _('Summary of caution title') }}
+{% else %}
+{{ _('Summary of title') }}
+{% endif %}
+ {{ title.number }}
+</h1>
+
 <p>{{ _('This title was last changed on') }} <b>{{ title.last_changed | date }}</b> {{ _('at') }} <b>{{ title.last_changed | time }}</b></p>
 
 <div class="grid-row">
