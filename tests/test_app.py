@@ -1,12 +1,12 @@
-from datetime import datetime
-from io import BytesIO
-import json
-import mock
-from PyPDF2 import PdfFileReader
-import pytest
-from unittest.mock import call
-from werkzeug.datastructures import Headers
-from lxml.html import document_fromstring
+from datetime import datetime  # type: ignore
+from io import BytesIO  # type: ignore
+import json  # type: ignore
+import mock  # type: ignore
+from PyPDF2 import PdfFileReader  # type: ignore
+import pytest  # type: ignore
+from unittest.mock import call  # type: ignore
+from werkzeug.datastructures import Headers  # type: ignore
+from lxml.html import document_fromstring  # type: ignore
 
 from config import CONFIG_DICT  # type: ignore
 import service  # type: ignore
@@ -196,9 +196,12 @@ class TestViewTitle:
         coordinate_data = '[[[508263.97, 221692.13],'
         response = self.app.get('/titles/titleref')
         page_content = response.data.decode()
+        # import pdb; pdb.set_trace()
+
+        assert response.status_code == 200
+        assert coordinate_data in page_content
         assert 'geometry' in page_content
         assert 'coordinates' in page_content
-        assert coordinate_data in page_content
 
     @mock.patch('service.auditing.audit')
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
@@ -255,15 +258,12 @@ class TestViewTitle:
             assert mock_get_copy.mock_calls == []
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
-    @mock.patch.object(
-        service.api_client, 'get_official_copy_data', return_value=official_copy_response)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_get_title_returns_page_containing_official_copy_info_page_when_present(self, mock_get_copy, mock_get):
         title_number = 'AGL1234'
         response = self.app.get('/titles/{}'.format(title_number))
-
         assert response.status_code == 200
         response_body = response.data.decode()
-
         strings_to_find_on_page = [
             'AGL1234',
             'Register name : A',
@@ -473,6 +473,21 @@ class TestAuthenticated:
         response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         assert response.status_code == 200
         assert 'username' in str(response.data)
+
+
+class TestWelsh:
+
+    def setup_method(self, method):
+        self.app = app.test_client()
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    def test_welsh(self, mock_get_official_copy_data, mock_get):
+        response = self.app.get("/titles/DN1000?language=cy")
+        page_content = response.data.decode()
+        assert response.status_code == 200
+        assert "Rhif teitl" in page_content
+        assert "Perchennog" in page_content
 
 if __name__ == '__main__':
     pytest.main()
