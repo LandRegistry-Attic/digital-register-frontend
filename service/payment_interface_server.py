@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, abort
-from config import WORLDPAY_DICT, ROOT_DIR
+import logging
+from flask import render_template, request, abort
+from config import WORLDPAY_DICT
 from service import app
+
+LOGGER = logging.getLogger(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -21,7 +24,7 @@ def worldpay():
 
     # Any generic errors should be handled elsewhere ...
     except Exception as e:
-        # TODO: Should have a log call here.
+        LOGGER.error(e)
         abort(500)
 
 

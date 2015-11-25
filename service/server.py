@@ -60,7 +60,7 @@ def confirm_selection(title_number, search_term):
     try:
         timestamp = search_request_interface.insert(title_number, params['price'], property_search_purch_addr)
     except Exception as e:
-        # TODO: Should have a log call here.
+        LOGGER.error(e)
         abort(500)
 
     # TODO: change the fixed values of 'cartid', 'mc_purchasetype' & 'mc_searchtype' to DRV search-related ones.
