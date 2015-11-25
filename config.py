@@ -52,6 +52,7 @@ WP_TEST_MODE_OFF = 0
 WORLDPAY_DICT = {
     'WORLDPAY_REDIRECT_URL': 'https://secure-test.worldpay.com/wcc/purchase',
     'WP_AUTH_CURR': 'GBP',
+    'WP_UNIT_COUNT': 1,
     'WP_INST_ID': os.getenv('WP_INST_ID', ''),
     'WP_ACCOUNT_ID': os.getenv('WP_ACCOUNT_ID', ''),
     'WP_AUTH_MODE': 'E',
