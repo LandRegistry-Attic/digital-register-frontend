@@ -1,7 +1,6 @@
-import faulthandler                   # type: ignore
-from flask import Flask, request, g               # type: ignore
-from flask_login import LoginManager  # type: ignore
-from flask.ext.babel import Babel  # type: ignore
+import faulthandler                     # type: ignore
+from flask import Flask, request, g     # type: ignore
+from flask.ext.babel import Babel       # type: ignore
 
 from config import CONFIG_DICT
 from service import logging_config, error_handler, static, title_utils, template_filters
