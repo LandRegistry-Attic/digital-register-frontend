@@ -48,5 +48,5 @@ if __name__ == "__main__":
     elif opt == 'u':
         _update_translations()
     else:
-        print ("Invalid option (%s)" % opt)
+        print("Invalid option (%s)" % opt)
         sys.exit(0)
