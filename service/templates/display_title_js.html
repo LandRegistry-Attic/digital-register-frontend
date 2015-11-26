@@ -1,0 +1,189 @@
+{% extends "imports.html" %}
+
+
+{% block body %}
+  {% if is_caution_title %}
+    <span class="alert-flag-hi-viz">Caution against first registration</span>
+    <br>
+  {% endif %}
+
+<script src="/static/javascripts/jquery-1.11.3.js"></script>
+<script>
+  $("#language_support_p").css("display",null);
+  $(document).on('click', '#language_switch', function() {
+    var language = $(this).attr("data-language");
+    $(".language-en").css("display", (language==="en") ? "none" : "inherit");
+    $(".language-cy").css("display", (language==="en") ? "inherit" : "none");
+    $("#language_switch").text( (language==="cy") ? "Welsh (Cymraeg)" : "English" );
+    $("#language_switch").attr("data-language", (language==="en") ? "cy" : "en");
+  });
+</script>
+
+<style>
+#map {
+  height:320px !important;
+  width:320px !important;
+  }
+#language_switch {
+  font-weight: bold;
+  cursor: pointer;
+}
+</style>
+
+<div class="grid-row collapse-bottom">
+  <div class="column-two-thirds">
+      &nbsp;
+  </div>
+  <div class="column-third">
+    <noscript>
+      <div class="panel-simple">
+        <p>Welsh language support relies on JavaScript being enabled in your browser.</p>
+      </div>
+    </noscript>
+    <p class="font-xsmall collapse-bottom" id="language_support_p" style="display:none;">
+      This page is also available in <a id='language_switch' data-language='en'>Welsh (Cymraeg)</a>.
+    </p>
+  </div>
+</div>
+
+<h1 class="heading-large language-en">Summary of {% if is_caution_title %}caution {% endif %}title</h1>
+<h1 class="heading-large language-cy" style="display:none;">Crynodeb o {% if is_caution_title %}rhybudd {% endif %}deitl</h1>
+
+<p class="language-en">This title was last changed on <b>{{ title.last_changed | date }}</b> at <b>{{ title.last_changed | time }}</b></p>
+<p class="language-cy" style="display:none;">Newidiwyd y teitl hwn ddiwethaf ar <b>{{ title.last_changed | date }}</b> am <b>{{ title.last_changed | time }}</b></p>
+
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <p class="lede collapse-top"><b>
+    {% if title.address_lines %}
+      {{ '<br>'.join(title.address_lines)|safe }}
+    {% else %}
+      Not Available
+    {% endif %}
+    </b></p>
+
+    <dl class="definition-tabular expand-top-half">
+
+      <dt class="language-en">Title number</dt>
+      <dt class="language-cy" style="display:none;">Rhif y teitl</dt>
+      <dd><b>{{ title.number }}</b></dd>
+
+      <dt class="language-en">{% if is_caution_title %}Cautioner{% else %}Owner{% endif %}{{ title.proprietors|length|pluralize }}</dt>
+      <dt class="language-cy" style="display:none;">{% if is_caution_title %}Rhybuddiwr{% else %}Perchennog{% endif %}{{ title.proprietors|length|pluralize }}</dt>
+      <dd>
+        {% for proprietor in title.proprietors %}
+          <h5 class="expand-bottom-half {% if loop.index != 1 %} expand-top-half {% endif %}">
+            <span class="heading-small">{{ proprietor.name }}</span>{{ proprietor.name_extra_info }}
+          </h5>
+          {% if proprietor.co_reg_no %}
+            <div>{{ proprietor.co_reg_no }}</div>
+              {% if proprietor.company_location %}
+                <div>{{ proprietor.company_location }}</div>
+              {% endif %}
+          {% endif %}
+          {% for address in proprietor.addresses %}
+            <div>{{ '<br>'.join(address.lines)|safe }}</div>
+          {% endfor %}
+        {% endfor %}
+      </dd>
+
+      {% if title.lenders %}
+        <dt class="language-en">Lender{{ title.lenders|length|pluralize }}</dt>
+        <dt class="language-cy" style="display:none;">Benthyciwr{{ title.lenders|length|pluralize }}</dt>
+        <dd>
+          {% for lender in title.lenders %}
+            <h5 class="expand-bottom-half {% if loop.index != 1 %} expand-top-half {% endif %}">
+              <span class="heading-small">{{ lender.name }}</span>{{ lender.name_extra_info }}
+            </h5>
+            {% if lender.co_reg_no %}
+              <div>{{ lender.co_reg_no }}</div>
+            {% endif %}
+            {% if lender.company_location %}
+              <div>{{ lender.company_location }}</div>
+            {% endif %}
+            {% for address in lender.addresses %}
+              <div>{{ '<br>'.join(address.lines)|safe }}</div>
+            {% endfor %}
+          {% endfor %}
+        </dd>
+      {% endif %}
+
+      {% if not is_caution_title %}
+        <dt class="language-en">Tenure type</dt>
+        <dt class="language-cy" style="display:none;">Math o ddaliadaeth</dt>
+        <dd><b>{{ title.tenure }}</b></dd>
+      {% endif %}
+
+      {% if title.ppi_data %}
+        <dt class="language-en">Price paid/stated</dt>
+        <dt class="language-cy" style="display:none;">Pris a dalwyd/datganwyd</dt>
+        <dd><b>{{ title.ppi_data }}</b></dd>
+      {% endif %}
+    </dl>
+
+    <div class="govuk-box-highlight">
+      <span class="language-en" style="font-weight:bold;">You'll only be able to view this information once</span><br>
+      <span class="language-cy" style="font-weight:bold; display:none;">Byddwch ond yn gallu gweld y wybodaeth hon unwaith</span><br>
+
+      <span class="language-en">If you want to keep a copy, you'll need to print it out or take a screen shot</span><br>
+      <span class="language-cy" style="display:none;">Os ydych chi am gadw copi , bydd angen i chi ei hargraffu neu gymryd ergyd sgrin</span><br>
+
+      <span class="language-en"><a class="button-print" href="javascript:window.print();">Print this page</a></span>
+      <span class="language-cy" style="display:none;"><a class="button-print" href="javascript:window.print();">Argraffu'r dudalen</a></span>
+    </div>
+
+  </div>
+
+  <div class="column-third">
+    <div id="map">
+      <div class="panel-simple">
+        <p>The map relies on JavaScript being enabled in your browser.</p>
+      </div>
+    </div>
+    <p class="font-xsmall language-en">This map shows the property's rough extent and location, <b>not legal boundaries.</b></p>
+    <p class="font-xsmall language-cy" style="display:none;">Mae'r map hwn yn dangos maint yr eiddo garw a lleoliad, <b>nid yw ffiniau cyfreithiol.</b></p>
+  </div>
+
+</div>
+
+<div class="grid-row">
+  <div class="text legal-division--top font-xsmall">
+    <div class="panel-indent">
+      <p class="language-en">If you have any problems with your purchase, you can call Land Registry on <b>0300 006 0411</b>.</p>
+      <p class="language-cy" style="display:none;">Os oes gennych unrhyw broblemau gyda'ch pryniant , gallwch ffonio Gofrestrfa Tir ar <b>0300 006 0411</b>.</p>
+
+      <p class="language-en">For more contact methods, visit <a href="https://www.gov.uk/government/organisations/land-registry">www.gov.uk/government/organisations/land-registry</a></p>
+      <p class="language-cy" style="display:none;">I gael mwy o ddulliau cyswllt, ewch i <a href="https://www.gov.uk/government/organisations/land-registry">www.gov.uk/government/organisations/land-registry</a></p>
+
+    </div>
+  </div>
+  <div class="text printhidden">
+    <h6 class="heading-medium language-en">What next</h6>
+    <h6 class="heading-medium language-cy" style="display:none;">Beth nesaf</h6>
+    <ul>
+      <li>
+        <a class="language-en" href="/drv-15/search">Search for another title using this service</a>
+        <a class="language-cy" style="display:none;" href="/drv-15/search">Chwilio am deitl arall gan ddefnyddio’r gwasanaeth hwn</a>
+      </li>
+      <li>
+        <a class="language-en" href="https://gov.uk">Return to GOV.UK</a>
+        <a class="language-cy" style="display:none;" href="https://gov.uk">Yn ôl i GOV.UK</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block js_bottom %}
+<script type='text/javascript'>
+  var indexData = {"crs": {"properties": {"name": "urn:ogc:def:crs:EPSG::27700"}, "type": "name"}, "geometry": {"coordinates": [[[441187.5, 112344.0], [441186.0, 112354.0], [441193.0, 112356.5], [441194.5, 112346.5]]], "type": "Polygon"}, "properties": {"colour": 25, "feature_id": 4019, "graphic_type": "Bordered Polygon", "render_attributes": {"border_colour": 25, "border_width": 0, "exterior_edge_colour": 1, "exterior_edge_thickness": 2, "exterior_edge_thickness_units": "Pixels", "fill_colour": 25, "fill_style": 9, "render_level": "0"}, "width": 0}, "type": "Feature"}
+  var elem = document.getElementById("language_support_p");
+  elem.style.display = null;
+</script>
+
+<script src="/static/javascripts/map.js"></script>
+<link rel="stylesheet" href="/static/vendor/leaflet-0.7.3/leaflet.css" />
+<link rel="stylesheet" href="/static/stylesheets/application.css" />
+
+{% endblock %}

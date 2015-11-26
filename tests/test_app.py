@@ -1,38 +1,34 @@
-from datetime import datetime
-from io import BytesIO
-import json
+from datetime import datetime  # type: ignore
+from io import BytesIO  # type: ignore
+import json  # type: ignore
 import mock  # type: ignore
 from PyPDF2 import PdfFileReader  # type: ignore
 import pytest  # type: ignore
 from unittest.mock import call  # type: ignore
+from werkzeug.datastructures import Headers  # type: ignore
+from lxml.html import document_fromstring  # type: ignore
 
 from config import CONFIG_DICT  # type: ignore
 import service  # type: ignore
 from service.server import app  # type: ignore
 from .fake_response import FakeResponse  # type: ignore
 
-
 TEST_USERNAME = 'username1'
 
-with open('tests/data/fake_title.json', 'r') as fake_title_json_file:
-    fake_title_json_string = fake_title_json_file.read()
-    fake_title_bytes = str.encode(fake_title_json_string)
+with open('tests/data/fake_title.json', 'r') as fake_title_file:
+    fake_title_file_json_string = fake_title_file.read()
+    fake_title_bytes = str.encode(fake_title_file_json_string)
     fake_title = FakeResponse(fake_title_bytes)
 
-with open('tests/data/fake_title_no_edition_date.json', 'r') as fake_title_no_edition_json_file:
-    fake_title_no_edition_json_string = fake_title_no_edition_json_file.read()
-    fake_title_no_edition_bytes = str.encode(fake_title_no_edition_json_string)
-    fake_title_no_edition = FakeResponse(fake_title_no_edition_bytes)
-
-with open('tests/data/fake_title_with_charge.json', 'r') as fake_charge_title_json_file:
-    fake_charge_title_json_string = fake_charge_title_json_file.read()
-    fake_charge_title_bytes = str.encode(fake_charge_title_json_string)
-    fake_charge_title = FakeResponse(fake_charge_title_bytes)
-
-with open('tests/data/fake_no_titles.json', 'r') as fake_no_titles_json_file:
-    fake_no_titles_json_string = fake_no_titles_json_file.read()
-    fake_no_titles_bytes = str.encode(fake_no_titles_json_string)
+with open('tests/data/fake_no_titles.json', 'r') as fake_no_titles_file:
+    fake_no_titles_file_json_string = fake_no_titles_file.read()
+    fake_no_titles_bytes = str.encode(fake_no_titles_file_json_string)
     fake_no_titles = FakeResponse(fake_no_titles_bytes)
+
+with open('tests/data/fake_title_with_charge.json', 'r') as fake_title_with_charge_file:
+    fake_title_with_charge_file_json_string = fake_title_with_charge_file.read()
+    fake_title_with_charge_bytes = str.encode(fake_title_with_charge_file_json_string)
+    fake_charge_title = FakeResponse(fake_title_with_charge_bytes)
 
 with open('tests/data/fake_postcode_search_result.json', 'r') as fake_postcode_results_json_file:
     fake_postcode_search_results_json_string = fake_postcode_results_json_file.read()
@@ -46,15 +42,15 @@ with open('tests/data/fake_no_address_title.json', 'r') as fake_no_address_title
     fake_no_address_title_bytes = str.encode(fake_no_address_title_json_string)
     fake_no_address_title = FakeResponse(fake_no_address_title_bytes)
 
-with open('tests/data/address_only_no_regex_match.json', 'r') as address_only_no_regex_match_file:
-    address_only_no_regex_match_file_string = address_only_no_regex_match_file.read()
-    address_only_no_regex_match_file_bytes = str.encode(address_only_no_regex_match_file_string)
-    address_only_no_regex_match_title = FakeResponse(address_only_no_regex_match_file_bytes)
-
 with open('tests/data/fake_partial_address.json', 'r') as fake_partial_address_file:
     fake_partial_address_json_string = fake_partial_address_file.read()
     fake_partial_address_bytes = str.encode(fake_partial_address_json_string)
     fake_partial_address = FakeResponse(fake_partial_address_bytes)
+
+with open('tests/data/address_only_no_regex_match.json', 'r') as address_only_no_regex_match_title_file:
+    address_only_no_regex_match_title_json_string = address_only_no_regex_match_title_file.read()
+    address_only_no_regex_match_bytes = str.encode(address_only_no_regex_match_title_json_string)
+    address_only_no_regex_match_title = FakeResponse(address_only_no_regex_match_bytes)
 
 with open('tests/data/official_copy_response.json', 'r') as official_copy_response_file:
     official_copy_response = json.loads(official_copy_response_file.read())
@@ -62,34 +58,11 @@ with open('tests/data/official_copy_response.json', 'r') as official_copy_respon
 unavailable_title = FakeResponse('', 404)
 
 
-class BaseServerTest:
-
-    def _log_in_user(self):
-        with mock.patch('service.login_api_client.authenticate_user', return_value=True):
-            self.app.post('/login', data={'username': TEST_USERNAME, 'password': 'password1'}, follow_redirects=False)
-
-
-class TestViewTitleUnauthorised(BaseServerTest):
+class TestViewTitle:
 
     def setup_method(self, method):
         self.app = app.test_client()
-
-    def test_get_title_page_redirects_when_user_not_logged_in(self):
-        response = self.app.get('/titles/titleref')
-        assert response.status_code == 302
-
-        assert 'Location' in response.headers
-        assert response.headers['Location'].endswith('/login?next=%2Ftitles%2Ftitleref')
-
-
-class TestViewTitle(BaseServerTest):
-
-    def setup_method(self, method):
-        self.app = app.test_client()
-        self._log_in_user()
-
-        with mock.patch('service.login_api_client.authenticate_user', return_value=True):
-            self._log_in_user()
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
     def test_get_title_page_no_title(self, mock_get):
@@ -107,7 +80,7 @@ class TestViewTitle(BaseServerTest):
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_get_title_page_audits_the_event(self, mock_get_official_copy_data, mock_get, mock_audit):
-        self.app.get('/titles/titleref')
+        response = self.app.get('/titles/titleref', headers=self.headers)
 
         mock_audit.assert_called_once_with(
             "VIEW REGISTER: Title number titleref was viewed by {}".format(TEST_USERNAME)
@@ -223,9 +196,12 @@ class TestViewTitle(BaseServerTest):
         coordinate_data = '[[[508263.97, 221692.13],'
         response = self.app.get('/titles/titleref')
         page_content = response.data.decode()
+        # import pdb; pdb.set_trace()
+
+        assert response.status_code == 200
+        assert coordinate_data in page_content
         assert 'geometry' in page_content
         assert 'coordinates' in page_content
-        assert coordinate_data in page_content
 
     @mock.patch('service.auditing.audit')
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
@@ -282,15 +258,12 @@ class TestViewTitle(BaseServerTest):
             assert mock_get_copy.mock_calls == []
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
-    @mock.patch.object(
-        service.api_client, 'get_official_copy_data', return_value=official_copy_response)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_get_title_returns_page_containing_official_copy_info_page_when_present(self, mock_get_copy, mock_get):
         title_number = 'AGL1234'
         response = self.app.get('/titles/{}'.format(title_number))
-
         assert response.status_code == 200
         response_body = response.data.decode()
-
         strings_to_find_on_page = [
             'AGL1234',
             'Register name : A',
@@ -313,14 +286,11 @@ class TestViewTitle(BaseServerTest):
                 assert response_body.index(string_to_find) > response_body.index(previous_string)
 
 
-class TestDisplayTitlePdf(BaseServerTest):
+class TestDisplayTitlePdf:
 
     def setup_method(self, method):
         self.app = app.test_client()
-        self._log_in_user()
-
-        with mock.patch('service.login_api_client.authenticate_user', return_value=True):
-            self._log_in_user()
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
     def test_display_title_pdf_no_title(self, mock_get):
@@ -351,23 +321,6 @@ class TestDisplayTitlePdf(BaseServerTest):
         assert actual_kwargs['class_of_title'] == 'Absolute'
         assert actual_kwargs['sub_registers'] == official_copy_response['official_copy_data']['sub_registers']
 
-    @mock.patch('service.api_client.requests.get', return_value=fake_title_no_edition)
-    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    @mock.patch('service.server.render_template')
-    def test_display_title_pdf_renders_template_with_no_edition_date(self, mock_render, mock_get_official_copy_data, mock_get):
-        self.app.get('/titles/titleref.pdf')
-        actual_call = mock_render.mock_calls[0]
-        actual_args = actual_call[1]
-        actual_kwargs = actual_call[2]
-
-        assert actual_args[0] == 'full_title.html'
-        assert actual_kwargs['title_number'] == 'titleref'
-        assert actual_kwargs['last_entry_date'] == '3 February 3001 at 04:05:06'
-        assert actual_kwargs['issued_date'] == datetime.now().strftime('%-d %B %Y')
-        assert actual_kwargs['edition_date'] == 'No date given'
-        assert actual_kwargs['class_of_title'] == 'Unknown'
-        assert actual_kwargs['sub_registers'] == official_copy_response['official_copy_data']['sub_registers']
-
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_display_title_pdf_includes_official_copy_data(self, mock_get_official_copy_data, mock_get):
@@ -395,11 +348,11 @@ class TestDisplayTitlePdf(BaseServerTest):
             assert mock_get_copy.mock_calls == []
 
 
-class TestTitleSearch(BaseServerTest):
+class TestTitleSearch:
 
     def setup_method(self, method):
         self.app = app.test_client()
-        self._log_in_user()
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     def test_get_title_search_page(self):
         response = self.app.get('/title-search')
@@ -428,14 +381,9 @@ class TestTitleSearch(BaseServerTest):
     @mock.patch('requests.get', return_value=fake_no_titles)
     def test_title_search_audits_the_events(self, mock_get, mock_audit):
         search_term = 'search term'
-        self.app.post('/title-search', data={'search_term': search_term}, follow_redirects=True)
+        response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         audit_text = "SEARCH REGISTER: '{}' was searched by {}".format(search_term, TEST_USERNAME)
         mock_audit.assert_called_once_with(audit_text)
-
-    @mock.patch('requests.get', return_value=unavailable_title)
-    def test_title_search_title_not_found(self, mock_get):
-        response = self.app.post('/title-search', data={'search_term': 'DT1000'}, follow_redirects=True)
-        assert '0 results found' in response.data.decode()
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_success(self, mock_get):
@@ -476,17 +424,16 @@ class TestTitleSearch(BaseServerTest):
         assert url_param.endswith('title_search_postcode/{}'.format(search_term))
 
 
-class TestHealthcheck(BaseServerTest):
+class TestHealthcheck:
 
     def setup_method(self, method):
         self.app = app.test_client()
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     @mock.patch('service.api_client.requests.get', return_value=FakeResponse())
-    @mock.patch('service.login_api_client.requests.get', return_value=FakeResponse())
-    def test_health_calls_health_endpoints_of_apis(self, mock_login_api_get, mock_api_get):
+    def test_health_calls_health_endpoints_of_apis(self, mock_api_get):
         self.app.get('/health')
 
-        mock_login_api_get.assert_called_once_wth('{}health'.format(app.config['LOGIN_API']))
         mock_api_get.assert_called_once_wth('{}health'.format(app.config['REGISTER_TITLE_API']))
 
     @mock.patch('service.health_checker.perform_healthchecks', return_value=[])
@@ -498,42 +445,49 @@ class TestHealthcheck(BaseServerTest):
         assert response.data.decode() == '{"status": "ok"}'
         assert response.status_code == 200
 
-    def test_health_returns_errors_from_both_api_health_endpoints(self):
-        with mock.patch('requests.get') as mock_get:
-            mock_get.side_effect = [
-                FakeResponse(b'{"status": "error", "errors": ["e1", "e2"]}', 500),
-                FakeResponse(b'{"status": "error", "errors": ["e3", "e4"]}', 500),
-            ]
 
-            response = self.app.get('/health')
-        response_json = json.loads(response.data.decode())
+class TestSearchTerm:
 
-        assert response_json['status'] == 'error'
-        errors = response_json['errors']
+    def setup_method(self, method):
+        self.app = app.test_client()
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
-        assert len(errors) == 2
-        assert "digital-register-api health endpoint returned errors: ['e1', 'e2']" in errors
-        assert "login-api health endpoint returned errors: ['e3', 'e4']" in errors
+    @mock.patch('requests.get', return_value=unavailable_title)
+    def test_title_search_title_not_found(self, mock_get):
+        response = self.app.post('/title-search', data={'search_term': 'DT1000'}, follow_redirects=True)
+        assert '0 results found' in response.data.decode()
 
-        assert response.status_code == 500
 
-    def test_health_returns_handles_invalid_responses_from_apis(self):
-        with mock.patch('requests.get') as mock_get:
-            mock_get.side_effect = [
-                FakeResponse(b'{"status": "error"}', 500),
-                FakeResponse(b'not a json', 500),
-            ]
+class TestAuthenticated:
+    """
+    Put webseal header in HTTP headers, request page and ensure that username
+    page element is present in response (see layout.html)
+    """
+    def setup_method(self, method):
+        self.app = app.test_client()
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
-            response = self.app.get('/health')
-        response_json = json.loads(response.data.decode())
+    @mock.patch('requests.get', return_value=fake_address_search)
+    def test_authenticated(self, mock_get):
+        """ Does header contain 'iv-user' username field? """
+        response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
+        assert response.status_code == 200
+        assert 'username' in str(response.data)
 
-        assert response_json['status'] == 'error'
-        errors = response_json['errors']
 
-        assert len(errors) == 2
-        assert "digital-register-api health endpoint returned an invalid response: {'status': 'error'}" in errors
-        assert "login-api health endpoint returned an invalid response: not a json" in errors
-        assert response.status_code == 500
+class TestWelsh:
+
+    def setup_method(self, method):
+        self.app = app.test_client()
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    def test_welsh(self, mock_get_official_copy_data, mock_get):
+        response = self.app.get("/titles/DN1000?language=cy")
+        page_content = response.data.decode()
+        assert response.status_code == 200
+        assert "Rhif teitl" in page_content
+        assert "Perchennog" in page_content
 
 if __name__ == '__main__':
     pytest.main()
