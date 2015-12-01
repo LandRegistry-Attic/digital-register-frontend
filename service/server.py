@@ -165,7 +165,7 @@ def find_titles():
 
     search_term = request.form['search_term'].strip()
     if search_term:
-        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, code=301))
+        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number))
     else:
         # TODO: we should redirect to that page
         return _initial_search_page(request)
