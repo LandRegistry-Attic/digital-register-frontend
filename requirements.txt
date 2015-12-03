@@ -1,8 +1,8 @@
 Flask==0.10.1
 Flask-Assets==0.10
-flask-login==0.2.11
 Flask-WeasyPrint==0.5
 flask-wtf==0.9.3
+Flask-Babel==0.9
 itsdangerous==0.24
 Jinja2==2.7.3
 libsass==0.8.2
