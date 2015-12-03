@@ -55,12 +55,13 @@ def confirm_selection(title_number, search_term):
 
     # Use DB API to add a record in T_PS_SRCH_REQ table, to be updated later if/when payment is made.
     property_search_purch_addr = title['address_lines']
+    user_id = _username_from_header
 
     # Create DB record
     try:
-        timestamp = search_request_interface.insert(title_number, params['price'], property_search_purch_addr)
+        timestamp = search_request_interface.insert(title_number, params['price'], property_search_purch_addr, user_id)
     except Exception as e:
-        # TODO: Should have a log call here.
+        LOGGER.error(e)
         abort(500)
 
     # TODO: change the fixed values of 'cartid', 'mc_purchasetype' & 'mc_searchtype' to DRV search-related ones.
