@@ -1,137 +1,204 @@
 {
-    "titles": [
-        {
-            "data": {
-                "tenure": "Freehold",
-                "proprietors": [
-                    {
-                        "addresses": [
-                            {
-                                "auto_uppercase_override": true,
-                                "address_string": "21 High Murhill, Plymouth PL9 7FN",
-                                "address_type": "UNKNOWN"
-                            }
-                        ],
-                        "name": {
-                            "name_category": "LIMITED COMPANY OR PUBLIC LIMITED COMPANY",
-                            "auto_uppercase_override": true,
-                            "non_private_individual_name": "HEATHER POOLE PLC"
-                        }
-                    }
-                ],
-                "address": {
-                    "auto_uppercase_override": true,
-                    "house_no": "21",
-                    "town": "Plymouth",
-                    "postcode": "PL9 7FN",
-                    "address_string": "21 Murhill Lane, Saltram Meadow, Plymouth, (PL9 7FN)",
-                    "street_name": "Murhill Lane"
-                },
-                "last_application_timestamp": "1996-07-02T00:59:59+01:00"
-            },
-            "title_number": "AGL1000   "
+  "number_pages": 1,
+  "number_results": 11,
+  "page_number": 0,
+  "titles": [
+    {
+      "data": {
+        "address": {
+          "address_string": "21 Murhill Lane, Saltram Meadow, Plymouth, (PL9 7FN)",
+          "auto_uppercase_override": true,
+          "house_no": "21",
+          "postcode": "PL9 7FN",
+          "street_name": "Murhill Lane",
+          "town": "Plymouth"
         },
-        {
-            "data": {
-                "tenure": "Freehold",
-                "proprietors": [
-                    {
-                        "addresses": [
-                            {
-                                "auto_uppercase_override": true,
-                                "address_string": "21 High Murhill, Plymouth PL9 7FN",
-                                "address_type": "UNKNOWN"
-                            }
-                        ],
-                        "name": {
-                            "name_category": "LIMITED COMPANY OR PUBLIC LIMITED COMPANY",
-                            "auto_uppercase_override": true,
-                            "non_private_individual_name": "HEATHER POOLE PLC"
-                        }
-                    }
-                ],
-                "address": {
-                    "auto_uppercase_override": true,
-                    "house_no": "21",
-                    "town": "Plymouth",
-                    "postcode": "PL9 7FN",
-                    "address_string": "21 Murhill Lane, Saltram Meadow, Plymouth, (PL9 7FN)",
-                    "street_name": "Murhill Lane"
-                },
-                "last_application_timestamp": "1996-07-02T00:59:59+01:00"
-            },
-            "title_number": "AGL1000   "
+        "class_of_title": "Absolute",
+        "districts": [
+          "WOKINGHAM"
+        ],
+        "edition_date": "1996-07-01",
+        "is_caution_title": false,
+        "last_application_timestamp": "1996-07-02T00:59:59+01:00",
+        "lenders": [
+          {
+            "addresses": [
+              {
+                "address_string": "P.O. Box 156, Priory House, 38 Colmore Circus, Queensway, Birmingham B4 6AL",
+                "address_type": "UK"
+              }
+            ],
+            "name": {
+              "non_private_individual_name": "National Westminster Home Loans Limited"
+            }
+          },
+          {
+            "addresses": [
+              {
+                "address_string": "Dept. No. 2134 Tombstone Regional Securities Centre, P.O. Box 999, 21 New Road, Tombstone, Exeter EX22 0AW",
+                "address_type": "UK"
+              }
+            ],
+            "name": {
+              "non_private_individual_name": "The Bank PLC"
+            }
+          },
+          {
+            "addresses": [
+              {
+                "address_string": "P.O. Box 333, One Thousand Church Quay, Wales BS99 7AX",
+                "address_type": "UK"
+              }
+            ],
+            "name": {
+              "non_private_individual_name": "Plymouth & Wales PLC"
+            }
+          }
+        ],
+        "ppi_data": "The price stated to have been paid on 27 August 2004 was \u00a3300,000.",
+        "proprietors": [
+          {
+            "addresses": [
+              {
+                "address_string": "21 High Murhill, Plymouth PL9 7FN",
+                "address_type": "UNKNOWN",
+                "auto_uppercase_override": true
+              }
+            ],
+            "name": {
+              "auto_uppercase_override": true,
+              "name_category": "LIMITED COMPANY OR PUBLIC LIMITED COMPANY",
+              "non_private_individual_name": "HEATHER POOLE PLC"
+            }
+          }
+        ],
+        "tenure": "Freehold"
+      },
+      "title_number": "AGL1009"
+    },
+    {
+      "data": {
+        "address": {
+          "address_string": "21 Murhill Lane, Saltram Meadow, Plymouth, (PL9 7FN)",
+          "auto_uppercase_override": true,
+          "house_no": "21",
+          "postcode": "PL9 7FN",
+          "street_name": "Murhill Lane",
+          "town": "Plymouth"
         },
-        {
-            "data": {
-                "tenure": "Freehold",
-                "proprietors": [
-                    {
-                        "addresses": [
-                            {
-                                "auto_uppercase_override": true,
-                                "address_string": "21 Murhill Lane, Saltram Meadow, Plymouth, Devon PL9 7FN",
-                                "postal_county": "Kent",
-                                "address_type": "UK"
-                            }
-                        ],
-                        "name": {
-                            "name_category": "LIMITED COMPANY OR PUBLIC LIMITED COMPANY",
-                            "auto_uppercase_override": true,
-                            "trust_format": "CH",
-                            "charity_name": "The Royal Protection League Of Ginger Toms)",
-                            "surname": "JONES",
-                            "forename": "HEATHER"
-                        }
-                    },
-                    {
-                        "addresses": [
-                            {
-                                "auto_uppercase_override": true,
-                                "address_string": "8 Nowhere, Nowhere NW2 1NW",
-                                "postal_county": "Nowhere",
-                                "address_type": "UK"
-                            }
-                        ],
-                        "name": {
-                            "name_category": "LIMITED COMPANY OR PUBLIC LIMITED COMPANY",
-                            "auto_uppercase_override": true,
-                            "trust_format": "CH",
-                            "charity_name": "The Royal Protection League Of Ginger Toms)",
-                            "surname": "JONES",
-                            "forename": "JOHN"
-                        }
-                    },
-                    {
-                        "addresses": [
-                            {
-                                "auto_uppercase_override": true,
-                                "address_string": "23 Nowhere Street, Nowhere",
-                                "postal_county": "DEVON",
-                                "address_type": "UK"
-                            }
-                        ],
-                        "name": {
-                            "name_category": "LIMITED COMPANY OR PUBLIC LIMITED COMPANY",
-                            "auto_uppercase_override": true,
-                            "trust_format": "CH",
-                            "charity_name": "The Royal Protection League Of Ginger Toms)",
-                            "surname": "SMITH",
-                            "forename": "HEATHER"
-                        }
-                    }
-                ],
-                "address": {
-                    "auto_uppercase_override": true,
-                    "house_no": "23",
-                    "town": "Plymouth",
-                    "postcode": "PL9 7FN",
-                    "address_string": "23 Murhill Lane, Plymouth",
-                    "street_name": "Murhill Lane"
-                },
-                "last_application_timestamp": "2003-08-28T14:45:50+01:00"
-            },
-            "title_number": "AGL1003   "
-        }
-    ]
+        "class_of_title": "Absolute",
+        "districts": [
+          "WOKINGHAM"
+        ],
+        "edition_date": "1996-07-01",
+        "is_caution_title": false,
+        "last_application_timestamp": "1996-07-02T00:59:59+01:00",
+        "lenders": [
+          {
+            "addresses": [
+              {
+                "address_string": "P.O. Box 156, Priory House, 38 Colmore Circus, Queensway, Birmingham B4 6AL",
+                "address_type": "UK"
+              }
+            ],
+            "name": {
+              "non_private_individual_name": "National Westminster Home Loans Limited"
+            }
+          },
+          {
+            "addresses": [
+              {
+                "address_string": "Dept. No. 2134 Tombstone Regional Securities Centre, P.O. Box 999, 21 New Road, Tombstone, Exeter EX22 0AW",
+                "address_type": "UK"
+              }
+            ],
+            "name": {
+              "non_private_individual_name": "The Bank PLC"
+            }
+          },
+          {
+            "addresses": [
+              {
+                "address_string": "P.O. Box 333, One Thousand Church Quay, Wales BS99 7AX",
+                "address_type": "UK"
+              }
+            ],
+            "name": {
+              "non_private_individual_name": "Plymouth & Wales PLC"
+            }
+          }
+        ],
+        "proprietors": [
+          {
+            "addresses": [
+              {
+                "address_string": "21 High Murhill, Plymouth PL9 7FN",
+                "address_type": "UNKNOWN",
+                "auto_uppercase_override": true
+              }
+            ],
+            "name": {
+              "auto_uppercase_override": true,
+              "name_category": "LIMITED COMPANY OR PUBLIC LIMITED COMPANY",
+              "non_private_individual_name": "HEATHER POOLE PLC"
+            }
+          }
+        ],
+        "tenure": "Freehold"
+      },
+      "title_number": "AGL1010"
+    },
+    {
+      "data": {
+        "address": {
+          "address_string": "21 Murhill Lane, Saltram Meadow, Plymouth, (PL9 7FN)",
+          "auto_uppercase_override": true,
+          "house_no": "21",
+          "postcode": "PL9 7FN",
+          "street_name": "Murhill Lane",
+          "town": "Plymouth"
+        },
+        "class_of_title": "Absolute",
+        "districts": [
+          "WOKINGHAM"
+        ],
+        "edition_date": "1996-07-01",
+        "is_caution_title": false,
+        "last_application_timestamp": "1996-07-02T00:59:59+01:00",
+        "lenders": [
+          {
+            "addresses": [
+              {
+                "address_string": "P.O. Box 156, Priory House, 38 Colmore Circus, Queensway, Birmingham B4 6AL",
+                "address_type": "UK"
+              }
+            ],
+            "name": {
+              "non_private_individual_name": "National Westminster Home Loans Limited"
+            }
+          }
+        ],
+        "proprietors": [
+          {
+            "addresses": [
+              {
+                "address_string": "21 High Murhill, Plymouth PL9 7FN",
+                "address_type": "UNKNOWN",
+                "auto_uppercase_override": true
+              }
+            ],
+            "name": {
+              "auto_uppercase_override": true,
+              "company_reg_num": "12345678",
+              "name_category": "LIMITED COMPANY OR PUBLIC LIMITED COMPANY",
+              "name_supplimentary": "The New Corporation (supplimentary)",
+              "non_private_individual_name": "HEATHER POOLE PLC"
+            }
+          }
+        ],
+        "tenure": "Freehold"
+      },
+      "title_number": "AGL1011"
+    }
+  ]
 }

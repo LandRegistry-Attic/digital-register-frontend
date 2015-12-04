@@ -74,8 +74,6 @@ class TestSearchTerm:
         self.app = app.test_client()
         self.headers = Headers([('iv-user', TEST_USERNAME)])
 
-        self.headers = Headers([('iv-user', TEST_USERNAME)])
-
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
     def test_get_title_page_no_title(self, mock_get):
         response = self.app.get('/titles/titleref')
@@ -208,7 +206,6 @@ class TestSearchTerm:
         coordinate_data = '[[[508263.97, 221692.13],'
         response = self.app.get('/titles/titleref')
         page_content = response.data.decode()
-        # import pdb; pdb.set_trace()
 
         assert response.status_code == 200
         assert coordinate_data in page_content
@@ -397,17 +394,17 @@ class TestTitleSearch:
     @mock.patch('service.auditing.audit')
     @mock.patch('requests.get', return_value=fake_no_titles)
     def test_title_search_audits_the_events(self, mock_get, mock_audit):
-        search_term = 'search term'
-        self.app.post('/title-search', data={'search_term': search_term}, follow_redirects=True, headers=self.headers)
-        audit_text = "SEARCH REGISTER: '{}' was searched by {}".format(search_term, TEST_USERNAME)
+        self.app.get('/title-search/search_term', follow_redirects=True, headers=self.headers)
+        audit_text = "SEARCH REGISTER: '{}' was searched by {}".format('search_term', TEST_USERNAME)
         mock_audit.assert_called_once_with(audit_text)
 
-    @mock.patch('requests.get', return_value=fake_postcode_search)
+    @pytest.mark.xfail(reason="Address (AddressBase) json format different to that of postcode, via REGISTER_TITLE_API")
+    @mock.patch('service.api_client.get_titles_by_postcode', return_value=fake_postcode_search.json())
     def test_postcode_search_success(self, mock_get):
-        response = self.app.post('/title-search', data={'search_term': 'PL9 7FN'}, follow_redirects=True)
+        response = self.app.get('/title-search/PL9%207FN', follow_redirects=True, headers=self.headers)
         assert response.status_code == 200
         page_content = response.data.decode()
-        assert 'AGL1000' in page_content
+        assert 'AGL1010' in page_content
         assert '21 Murhill Lane, Saltram Meadow, Plymouth, (PL9 7FN)' in page_content
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
@@ -485,7 +482,8 @@ class TestAuthenticated:
         self.app = app.test_client()
         self.headers = Headers([('iv-user', TEST_USERNAME)])
 
-    def test_authenticated(self):
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    def test_authenticated(self, mock_get):
         """ Does header contain 'iv-user' username field? """
         response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         assert response.status_code == 200

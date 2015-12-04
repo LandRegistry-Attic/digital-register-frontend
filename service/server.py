@@ -55,7 +55,7 @@ def confirm_selection(title_number, search_term):
 
     # Use DB API to add a record in T_PS_SRCH_REQ table, to be updated later if/when payment is made.
     property_search_purch_addr = title['address_lines']
-    user_id = _username_from_header
+    user_id = _username_from_header(request)
 
     # Create DB record
     try:
@@ -98,6 +98,7 @@ def confirm_selection(title_number, search_term):
         'confirm_selection.html',
         params=params,
         username=username,
+        worldpay_params=worldpay_params,
     )
 
 
@@ -183,11 +184,12 @@ def display_title_pdf(title_number):
 @app.route('/title-search', methods=['POST'])
 @app.route('/title-search/<search_term>', methods=['POST'])
 def find_titles():
+
     display_page_number = int(request.args.get('page') or 1)
 
     search_term = request.form['search_term'].strip()
     if search_term:
-        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number))
+        return redirect(url_for('find_titles_page', search_term=search_term, page=display_page_number))
     else:
         # TODO: we should redirect to that page
         return _initial_search_page(request)

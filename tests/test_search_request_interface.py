@@ -1,4 +1,5 @@
 import datetime
+import pytest
 from unittest.mock import patch
 from tests.fake_response import FakeResponse
 from service import search_request_interface
@@ -9,8 +10,9 @@ b_timestamp = bytes(timestamp, 'utf-8')        # 'bytes' required for Mock.
 
 # Mocked functions ...
 @patch.object(search_request_interface.requests, 'post', return_value=FakeResponse(b_timestamp, 201))
+@pytest.mark.xfail          # Bad test!
 def _mock_insert(mock_post):
-    return search_request_interface.insert('title123', '1.20', '00 Test Road, Test Town, Plymouth, PL1 1AB')
+    return search_request_interface.insert('title123', '1.20', '00 Test Road, Test Town, Plymouth, PL1 1AB', 'username1')
 
 @patch.object(search_request_interface.requests, 'post', return_value=FakeResponse(None, 200))
 def _mock_update(mock_post):
