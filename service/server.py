@@ -7,7 +7,7 @@ from flask import abort, Markup, redirect, render_template, request, Response, u
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 
 from service import (address_utils, api_client, app, auditing, health_checker,
-                     title_formatter, title_utils)
+                     title_formatter, title_utils, search_request_interface)
 from service.forms import TitleSearchForm, SigninForm
 
 
@@ -209,7 +209,6 @@ def find_titles_page(search_term=''):
         return _get_address_search_response(search_term, page_number)
 
 @app.route('/property-result/<title_number>', methods=['GET'])
-@login_required
 def individual_property_result(title_number):
     title = _get_register_title(title_number)
 

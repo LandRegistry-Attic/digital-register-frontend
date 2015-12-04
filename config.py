@@ -14,8 +14,11 @@ session_cookie_secure = os.environ['SESSION_COOKIE_SECURE'].lower() != 'false'
 more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
-title_register_summary_price = "&pound;1.20 (incl. VAT)"
+title_register_nominal_summary_price = float(os.getenv('TITLE_REGISTER_NOMINAL_SUMMARY_PRICE', 1))  # (Pound) 'WP_AUTH_CURR': 'GBP'
+standard_vat_rate = float(os.getenv('STANDARD_VAT_RATE', 20))        # %
+title_register_summary_price = float(title_register_nominal_summary_price * (100 + standard_vat_rate) / 100)
 payment_interface_url = os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555')  # payment_interface_server.py
+search_request_interface_url = os.getenv('SEARCH_REQUEST_INTERFACE_URL', 'http://127.0.0.1:5353')
 post_confirmation_url = os.getenv('POST_CONFIRMATION_URL', payment_interface_url)
 
 
@@ -59,6 +62,8 @@ WORLDPAY_DICT = {
     'ACTION_URL3': ''
 }
 #</worldpay>
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # N.B: we do not want 'live' by default - it should be set explicitly in the environment, as required.
 settings = os.getenv('SETTINGS', 'DEV').lower()

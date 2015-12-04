@@ -1,6 +1,6 @@
 import os
 import pytest  # type: ignore
-from unittest import mock
+import mock
 from tests.fake_response import FakeResponse
 from service.server import app
 from tests.test_search_request_interface import b_timestamp
