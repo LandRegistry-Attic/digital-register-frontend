@@ -21,12 +21,12 @@
     <div class="column-two-thirds">
     <br/>
         <!-- 'worldpay_params' passed in via "render_template()" -->
-        <form class="form" action="{{worldpay_params.payment_interface_url}}" method="post">
+        <form class="form" action="{{worldpay_params.PAYMENT_INTERFACE_URL}}" method="post">
 
             <!-- user parameters to be passed on -->
             {# N.B.: 'cartId' may need this particular value, to suit WPAC test configuration #}
-            <input type="hidden" id="cartId" name="cartId" value="0001350377259404c-tY8OoDNJkdHGr6FCgqkAw">
-            <input type="hidden" id="amount" name="amount"	value="3.0">
+            <input type="hidden" id="cartId" name="cartId" value={{worldpay_params.cartId}}>
+            <input type="hidden" id="amount" name="amount"	value={{worldpay_params.amount}}>
             <input type="hidden" id="desc" name="desc" value="Register View">
             <input type="hidden" id="forenames" name="forenames" value="Forenames">
             <input type="hidden" id="surname" name="surname" value="Surname">
@@ -36,10 +36,14 @@
 
             <!-- custom parameters to be passed on -->
             {# N.B.: "MC_titleNumber" value has to be "LA265", to suit WPAC test configuration. #}
-            <input type="hidden" id="MC_timestamp" name="MC_timestamp" value="{{worldpay_params.mc_timestamp}}">
-            <input type="hidden" id="MC_purchaseType" name="MC_purchaseType" value="registerOnly">
-            <input type="hidden" id="MC_titleNumber" name="MC_titleNumber"	value="LA265">
-            <input type="hidden" id="MC_searchType" name="MC_searchType" value="D">
+            <input type="hidden" id="MC_unitCount" name="MC_unitCount" value="{{worldpay_params.MC_unitCount}}">
+            <input type="hidden" id="MC_timestamp" name="MC_timestamp" value="{{worldpay_params.MC_timestamp}}">
+            <input type="hidden" id="MC_purchaseType" name="MC_purchaseType" value="drvSummaryView">
+            <input type="hidden" id="MC_titleNumber" name="MC_titleNumber"	value={{worldpay_params.MC_titleNumber}}>
+            <input type="hidden" id="MC_searchType" name="MC_searchType" value="A">
+            <input type="hidden" id="C_returnURL" name="C_returnURL" value="{{worldpay_params.C_returnURL}}">
+            <input type="hidden" id="C_returnURLCancel" name="C_returnURLCancel" value="{{worldpay_params.C_returnURLCancel}}">
+            <input type="hidden" id="C_returnURLCallback" name="C_returnURLCallback" value="{{worldpay_params.C_returnURLCallback}}">
 
             <button type="submit" class="button" >Buy Now</button>
         </form>

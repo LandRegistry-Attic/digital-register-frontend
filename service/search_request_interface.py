@@ -17,11 +17,14 @@ def _get_params(params):
 def insert(title_number,
            fee_amt_quoted,
            property_search_purch_addr,
+           user_id,
            title_plan_required_indicator='Y',
            reg_view_required_indicator='Y',
            tenure_code='F',
            price_paid_indicator='Y',
-           flood_risk_report_required_indicator='N'
+           flood_risk_report_required_indicator='N',
+           drv_req_indicator='Y',
+           summary_required_indicator='N'
            ):
 
     """

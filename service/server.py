@@ -6,7 +6,7 @@ from datetime import datetime                                                   
 from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 
-from service import (address_utils, api_client, app, auditing, health_checker,
+from service import (address_utils, api_client, app, auditing, health_checker, utils,
                         title_formatter, title_utils, search_request_interface)
 from service.forms import TitleSearchForm, SigninForm
 
@@ -55,10 +55,11 @@ def confirm_selection(title_number, search_term):
 
     # Use DB API to add a record in T_PS_SRCH_REQ table, to be updated later if/when payment is made.
     property_search_purch_addr = title['address_lines']
+    user_id = _username_from_header
 
     # Create DB record
     try:
-        timestamp = search_request_interface.insert(title_number, params['price'], property_search_purch_addr)
+        timestamp = search_request_interface.insert(title_number, params['price'], property_search_purch_addr, user_id)
     except Exception as e:
         LOGGER.error(e)
         abort(500)
@@ -66,16 +67,20 @@ def confirm_selection(title_number, search_term):
     # TODO: change the fixed values of 'cartid', 'mc_purchasetype' & 'mc_searchtype' to DRV search-related ones.
     # User-related WorldPay parameters.
     worldpay_params = dict()
-    worldpay_params['cartid'] = '0001444208589806RhrHOvIFk6liOWwHE7bKfy'    # [Could be session id. + user id. perhaps]
+    worldpay_params['cartId'] = '0001444208589806RhrHOvIFk6liOWwHE7bKfy'    # [Could be session id. + user id. perhaps]
     worldpay_params['amount'] = params['price']
-    worldpay_params['mc_titlenumber'] = title_number
-    worldpay_params['mc_timestamp'] = timestamp
-    worldpay_params['mc_purchasetype'] = 'summaryView'
-    worldpay_params['mc_searchtype'] = 'A'
+    worldpay_params['MC_titleNumber'] = title_number
+    worldpay_params['MC_timestamp'] = timestamp
+    worldpay_params['MC_purchaseType'] = 'drvSummaryView'
+    worldpay_params['MC_searchType'] = 'A'
+
+    # Form valid URL for external remote access.
+    # N.B.: cannot use 'request.host' because that may return given setting (e.g. '0.0.0.0') rather than IP address.
+    ip_address = utils.get_ip_address()
+    worldpay_params['C_returnURL'] = worldpay_params['C_returnURL'].format(ip_address)
 
     # Last changed date - modified to remove colon in UTC offset, which python
     # datetime.strptime() doesn't like >>>
-
     datestring = params['title']['last_changed']
     if len(datestring) == 25:
         if datestring[22] == ':':
@@ -92,20 +97,6 @@ def confirm_selection(title_number, search_term):
                       '{:02d}'.format(dt_obj.second))
 
     return render_template('confirm_selection.html', params=params, worldpay_params=worldpay_params)
-
-
-@app.route('/spinner-page/', methods=['POST'])
-def spinner_page():
-    worldpay_params = dict()
-    worldpay_params['title_number'] = request.form['title_number'].strip()
-    worldpay_params['username'] = _username_from_header
-
-    # more params to be confirmed by Richard (29/10/15)
-
-    return render_template(
-        'spinner-page.html',
-        params=worldpay_params,
-    )
 
 
 @app.route('/health', methods=['GET'])

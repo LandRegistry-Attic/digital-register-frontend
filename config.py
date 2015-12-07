@@ -1,5 +1,5 @@
-from datetime import timedelta
 import os
+from datetime import timedelta
 from typing import Dict, Union
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -19,8 +19,8 @@ show_full_title_pdf = os.getenv('SHOW_FULL_TITLE_PDF', 'True').lower() == 'true'
 title_register_nominal_summary_price = float(os.getenv('TITLE_REGISTER_NOMINAL_SUMMARY_PRICE', 1))  # (Pound) 'WP_AUTH_CURR': 'GBP'
 standard_vat_rate = float(os.getenv('STANDARD_VAT_RATE', 20))        # %
 title_register_summary_price = float(title_register_nominal_summary_price * (100 + standard_vat_rate) / 100)
-payment_interface_url = os.getenv('PAYMENT_INTERFACE_URL', 'http://0.0.0.0:5555')
 search_request_interface_url = os.getenv('SEARCH_REQUEST_INTERFACE_URL', 'http://127.0.0.1:5353')
+payment_interface_url = os.getenv('PAYMENT_INTERFACE_URL', 'http://127.0.0.1:5555/wp')
 post_confirmation_url = os.getenv('POST_CONFIRMATION_URL', payment_interface_url)
 
 CONFIG_DICT = {
@@ -44,32 +44,16 @@ CONFIG_DICT = {
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
 # <worldpay> (Derived from https://gh-svn-d01.diti.lr.net/svn/eservices/branches/release1415/ECBX_PortServicesBackEnd).
-CONFIG_DICT.update({'DEBUG': True})
-WP_TEST_MODE_ON = 100
-WP_TEST_MODE_OFF = 0
-
-# N.B.: 'WP_AUTHORISATION_CALLBACK_URL' must not be prefixed by 'http://' or it will be silently rejected by Worldpay!!
 WORLDPAY_DICT = {
-    'WORLDPAY_REDIRECT_URL': 'https://secure-test.worldpay.com/wcc/purchase',
-    'WP_AUTH_CURR': 'GBP',
-    'WP_UNIT_COUNT': 1,
-    'WP_INST_ID': os.getenv('WP_INST_ID', ''),
-    'WP_ACCOUNT_ID': os.getenv('WP_ACCOUNT_ID', ''),
-    'WP_AUTH_MODE': 'E',
-    'WP_PORTALIND': 'Y',
-    'WP_TEST_MODE': WP_TEST_MODE_ON,
-    'WP_DEFAULT_COUNTRY': 'GB',
-    'WP_AUTHORISATION_CALLBACK_URL': os.getenv('WP_AUTHORISATION_CALLBACK_URL', ''),    # -> 'WPAC' service.
-    'ACTION_URL1': '/download.do',
-    'ACTION_URL2': '/QuickEnquiryInit.do',
-    'ACTION_URL3': ''
+    'C_returnURL': 'http://{}/titles/',
+    'C_returnURLCancel': '/title-search',
+    'C_returnURLCallback': ''
 }
 
 # N.B: we do not want 'live' by default - it should be set explicitly in the environment, as required.
 settings = os.getenv('SETTINGS', 'DEV').lower()
 
 if settings == 'live':
-    WORLDPAY_DICT['WP_TEST_MODE'] = WP_TEST_MODE_OFF
     CONFIG_DICT['DEBUG'] = False
 elif settings == 'dev':
     CONFIG_DICT['DEBUG'] = True

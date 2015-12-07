@@ -1,12 +1,14 @@
-from flask import render_template
-from config import WORLDPAY_DICT, CONFIG_DICT, ROOT_DIR
-from service import app
+import os
+from service import utils
+from flask import Flask, render_template
+from config import CONFIG_DICT
+#from service.server import app
+
+app = Flask(__name__,  template_folder='/vagrant/apps/digital-register-frontend/service/templates')
+app.config.update(CONFIG_DICT)
 
 
-# Fix formatting issue (keys).
-_worldpay_dict = dict((k.lower(), v) for k,v in WORLDPAY_DICT.items())
-
-@app.route('/', methods=['GET'])
+@app.route('/wp', methods=['GET'])
 def _():
     """
     Check that WorldPay 'sandbox' service is OK.
@@ -14,11 +16,23 @@ def _():
     Note: 'test card' numbers at http://support.worldpay.com/support/kb/bg/testandgolive/tgl5103.html.
     """
 
+    _worldpay_dict = dict()
+
     # N.B.: need fixed value for 'mc_timestamp', to suit WPAC test configuration.
-    _worldpay_dict.update({'mc_timestamp': '2015-11-20 11:54:23.861921'})
-    _worldpay_dict.update({'payment_interface_url': app.config['PAYMENT_INTERFACE_URL']})
+    _worldpay_dict['PAYMENT_INTERFACE_URL'] = app.config['PAYMENT_INTERFACE_URL']
+    _worldpay_dict['MC_unitCount'] = '1'
+    _worldpay_dict['MC_timestamp'] = os.getenv('WP_MC_timestamp', '')
+    _worldpay_dict['amount'] = os.getenv('WP_amount', '')
+    _worldpay_dict['MC_titleNumber'] = os.getenv('WP_MC_titleNumber', '')
+    _worldpay_dict['cartId'] = os.getenv('WP_cartId', '')
+
+    # Form valid URL for external remote access.
+    # N.B.: cannot use 'request.host' because that may return given setting (e.g. '0.0.0.0') rather than IP address.
+    ip_address = utils.get_ip_address()
+    _worldpay_dict['C_returnURL'] = 'http://{}/titles/'.format(ip_address)
 
     return render_template('dummy_confirm_selection.html', worldpay_params=_worldpay_dict)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
