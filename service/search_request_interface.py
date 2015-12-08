@@ -33,11 +33,14 @@ def insert(title_number,
     :param title_number: str
     :param fee_amt_quoted: float
     :param property_search_purch_addr: str
+    :param user_id: str
     :param title_plan_required_indicator: str ('bool' char)
     :param reg_view_required_indicator: str ('bool' char)
     :param tenure_code: str ('bool' char)
     :param price_paid_indicator: str ('bool' char)
     :param flood_risk_report_required_indicator: str ('bool' char)
+    :param drv_req_indicator: str ('bool' char)
+    :param summary_required_indicator: str ('bool' char)
 
     :return: timestamp of form 2015-11-05 10:42:42.482662
 
