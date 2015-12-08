@@ -17,6 +17,7 @@ UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
                               'feedback@digital.landregistry.gov.uk">'
                               'digital-register-feedback@digital.landregistry.gov.uk</a>.')
 # TODO: move this to the template
+UNAUTHORISED_TITLE = Markup('There was an error with your Username/Password combination.')
 TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
 POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 LOGGER = logging.getLogger(__name__)
@@ -27,7 +28,6 @@ LOGGER = logging.getLogger(__name__)
 def app_start():
     # App entry point
     username = _username_from_header(request)
-    _validates_user_group(request)
     return render_template(
         'search.html',
         form=TitleSearchForm(),
@@ -37,7 +37,7 @@ def app_start():
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
-    _validates_user_group(request)
+    """ DM US107 """
 
     params = dict()
     params['title'] = _get_register_title(request.args.get('title', title_number))
@@ -76,7 +76,6 @@ def confirm_selection(title_number, search_term):
 
 @app.route('/spinner-page/', methods=['POST'])
 def spinner_page():
-    _validates_user_group(request)
     worldpay_params = dict()
     worldpay_params['title_number'] = request.form['title_number'].strip()
     worldpay_params['username'] = _username_from_header
@@ -108,13 +107,11 @@ def healthcheck():
 
 @app.route('/cookies', methods=['GET'])
 def cookies():
-    _validates_user_group(request)
     return _cookies_page()
 
 
 @app.route('/titles/<title_number>', methods=['GET'])
 def get_title(title_number):
-    _validates_user_group(request)
     title = _get_register_title(title_number)
     username = _username_from_header(request)
 
@@ -141,7 +138,6 @@ def get_title(title_number):
 
 @app.route('/titles/<title_number>.pdf', methods=['GET'])
 def display_title_pdf(title_number):
-    _validates_user_group(request)
     if not _should_show_full_title_pdf():
         abort(404)
 
@@ -160,7 +156,6 @@ def display_title_pdf(title_number):
 @app.route('/title-search', methods=['POST'])
 @app.route('/title-search/<search_term>', methods=['POST'])
 def find_titles():
-    _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
 
     search_term = request.form['search_term'].strip()
@@ -174,7 +169,6 @@ def find_titles():
 @app.route('/title-search', methods=['GET'])
 @app.route('/title-search/<search_term>', methods=['GET'])
 def find_titles_page(search_term=''):
-    _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
     page_number = display_page_number - 1  # page_number is 0 indexed
     username = _username_from_header(request)
@@ -389,10 +383,3 @@ def _username_from_header(request):
     p = re.compile("[%][{0-9}][{0-9}]")
     user_id = p.sub("", user_id)
     return user_id
-
-
-def _validates_user_group(request):
-    # Get user group from WebSeal headers
-    user_group = request.headers.get("iv-groups", None)
-    if user_group != "drv":
-        abort(404)

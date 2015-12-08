@@ -14,7 +14,6 @@ from service.server import app  # type: ignore
 from .fake_response import FakeResponse  # type: ignore
 
 TEST_USERNAME = 'username1'
-TEST_USER_GROUP = 'drv'
 
 with open('tests/data/fake_title.json', 'r') as fake_title_file:
     fake_title_file_json_string = fake_title_file.read()
@@ -63,18 +62,18 @@ class TestViewTitle:
 
     def setup_method(self, method):
         self.app = app.test_client()
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
     def test_get_title_page_no_title(self, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert response.status_code == 404
         assert 'Page not found' in response.data.decode()
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_get_title_page(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert response.status_code == 200
 
     @mock.patch('service.auditing.audit')
@@ -90,14 +89,14 @@ class TestViewTitle:
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_date_formatting_on_title_page(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert '28 August 2014' in response.data.decode()
         assert '12:37:13' in response.data.decode()
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_address_on_title_page(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         page_content = response.data.decode()
         assert '17 Hazelbury Crescent' in page_content
         assert 'Luton' in page_content
@@ -106,7 +105,7 @@ class TestViewTitle:
     @mock.patch('service.api_client.requests.get', return_value=fake_partial_address)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_partial_address_on_title_page(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         page_content = response.data.decode()
         assert 'Hazelbury Crescent' in page_content
         assert 'Luton' in page_content
@@ -115,13 +114,13 @@ class TestViewTitle:
     @mock.patch('service.api_client.requests.get', return_value=fake_no_address_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_address_string_only_on_title_page(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert '17 Hazelbury Crescent<br>Luton<br>LU1 1DZ' in str(response.data)
 
     @mock.patch('service.api_client.requests.get', return_value=address_only_no_regex_match_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_address_string_500(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert response.status_code == 200
         assert 'West side of Narnia Road' in response.data.decode()
         assert 'MagicalTown' in response.data.decode()
@@ -129,7 +128,7 @@ class TestViewTitle:
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_proprietor_on_non_caution_title_page(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert response.status_code == 200
 
         response_data = response.data.decode()
@@ -143,7 +142,7 @@ class TestViewTitle:
     def test_cautioner_on_caution_title_page(
             self, mock_get_official_copy_data, mock_get, mock_is_caution_title):
 
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert response.status_code == 200
 
         response_data = response.data.decode()
@@ -154,21 +153,21 @@ class TestViewTitle:
     @mock.patch('service.api_client.requests.get', return_value=fake_charge_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_lender_on_title_page_with_charge(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert response.status_code == 200
         assert 'National Westminster Home Loans Limited' in response.data.decode()
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_lender_not_on_title_page_without_charge(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert response.status_code == 200
         assert 'National Westminster Home Loans Limited' not in response.data.decode()
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_tenure_on_non_caution_title_page(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert response.status_code == 200
         response_data = response.data.decode()
 
@@ -181,22 +180,23 @@ class TestViewTitle:
     def test_no_tenure_on_caution_title_page(
             self, mock_get_official_copy_data, mock_get, mock_is_caution_title):
 
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert response.status_code == 200
         assert 'Tenure' not in response.data.decode()
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_ppi_data_on_title_page(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert 'Price paid stated data' in response.data.decode()
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_index_geometry_on_title_page(self, mock_get_official_copy_data, mock_get):
         coordinate_data = '[[[508263.97, 221692.13],'
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         page_content = response.data.decode()
+        # import pdb; pdb.set_trace()
 
         assert response.status_code == 200
         assert coordinate_data in page_content
@@ -208,7 +208,7 @@ class TestViewTitle:
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_get_title_page_returns_500_when_error(self, mock_get_official_copy_data, mock_get, mock_audit):
         mock_get.side_effect = Exception('test exception')
-        response = self.app.get('/titles/titleref', headers=self.headers)
+        response = self.app.get('/titles/titleref')
         assert response.status_code == 500
         assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
         assert mock_audit.mock_calls == []
@@ -217,7 +217,7 @@ class TestViewTitle:
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_breadcrumbs_search_results_do_not_appear(self, mock_get_official_copy_data, mock_get):
         # This tests that when going directly to a title the search results breadcrumb doesn't show
-        response = self.app.get('/titles/DN1000', headers=self.headers)
+        response = self.app.get('/titles/DN1000')
         page_content = response.data.decode()
         assert 'Search the land and property register' in page_content
         assert 'Search results' not in page_content
@@ -226,7 +226,7 @@ class TestViewTitle:
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_breadcrumbs_search_results_appear(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/DN1000?search_term="testing"', headers=self.headers)
+        response = self.app.get('/titles/DN1000?search_term="testing"')
         page_content = response.data.decode()
         assert 'Search the land and property register' in page_content
         assert 'Search results' in page_content
@@ -235,7 +235,7 @@ class TestViewTitle:
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_get_more_proprietor_data(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/AGL1000', headers=self.headers)
+        response = self.app.get('/titles/AGL1000')
         page_content = response.data.decode()
         assert 'trading as RKJ Machinists PLC' in page_content
         assert 'Dr' in page_content
@@ -246,7 +246,7 @@ class TestViewTitle:
 
         with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_DATA': True}):
             title_number = 'AGL1234'
-            self.app.get('/titles/{}'.format(title_number), headers=self.headers)
+            self.app.get('/titles/{}'.format(title_number))
             mock_get_copy.assert_called_once_with(title_number)
 
     @mock.patch.object(service.api_client, 'get_official_copy_data')
@@ -254,14 +254,14 @@ class TestViewTitle:
 
         with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_DATA': False}):
             title_number = 'AGL1234'
-            self.app.get('/titles/{}'.format(title_number), headers=self.headers)
+            self.app.get('/titles/{}'.format(title_number))
             assert mock_get_copy.mock_calls == []
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_get_title_returns_page_containing_official_copy_info_page_when_present(self, mock_get_copy, mock_get):
         title_number = 'AGL1234'
-        response = self.app.get('/titles/{}'.format(title_number), headers=self.headers)
+        response = self.app.get('/titles/{}'.format(title_number))
         assert response.status_code == 200
         response_body = response.data.decode()
         strings_to_find_on_page = [
@@ -290,25 +290,25 @@ class TestDisplayTitlePdf:
 
     def setup_method(self, method):
         self.app = app.test_client()
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
     def test_display_title_pdf_no_title(self, mock_get):
-        response = self.app.get('/titles/titleref.pdf', headers=self.headers)
+        response = self.app.get('/titles/titleref.pdf')
         assert response.status_code == 404
         assert 'Page not found' in response.data.decode()
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_display_title_pdf(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref.pdf', headers=self.headers)
+        response = self.app.get('/titles/titleref.pdf')
         assert response.status_code == 200
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     @mock.patch('service.server.render_template')
     def test_display_title_pdf_renders_template(self, mock_render, mock_get_official_copy_data, mock_get):
-        self.app.get('/titles/titleref.pdf', headers=self.headers)
+        self.app.get('/titles/titleref.pdf')
         actual_call = mock_render.mock_calls[0]
         actual_args = actual_call[1]
         actual_kwargs = actual_call[2]
@@ -324,7 +324,7 @@ class TestDisplayTitlePdf:
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_display_title_pdf_includes_official_copy_data(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/titleref.pdf', headers=self.headers)
+        response = self.app.get('/titles/titleref.pdf')
         pdf = PdfFileReader(BytesIO(response.data))
         pdf_text = '\n'.join([page.extractText() for page in pdf.pages])
         sub_registers = official_copy_response['official_copy_data']['sub_registers']
@@ -337,14 +337,14 @@ class TestDisplayTitlePdf:
     def test_display_title_pdf_calls_api_client_for_full_info_when_enabled(self, mock_get_copy, mock_get):
         with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_PDF': True}):
             title_number = 'AGL1234'
-            self.app.get('/titles/{}.pdf'.format(title_number), headers=self.headers)
+            self.app.get('/titles/{}.pdf'.format(title_number))
             mock_get_copy.assert_called_once_with(title_number)
 
     @mock.patch.object(service.api_client, 'get_official_copy_data')
     def test_display_title_pdf_doesnt_call_api_client_for_full_info_when_disabled(self, mock_get_copy):
         with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_PDF': False}):
             title_number = 'AGL1234'
-            self.app.get('/titles/{}.pdf'.format(title_number), headers=self.headers)
+            self.app.get('/titles/{}.pdf'.format(title_number))
             assert mock_get_copy.mock_calls == []
 
 
@@ -352,21 +352,29 @@ class TestTitleSearch:
 
     def setup_method(self, method):
         self.app = app.test_client()
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     def test_get_title_search_page(self):
-        response = self.app.get('/title-search', headers=self.headers)
+        response = self.app.get('/title-search')
         assert response.status_code == 200
         assert 'Search the land and property register' in str(response.data)
 
     @mock.patch('requests.get', return_value=fake_title)
-    def test_title_search_redirects(self, mock_get):
-        response = self.app.post('/title-search', data=dict(search_term='DN1000'), headers=self.headers, follow_redirects=False)
-        assert response.status_code == 302
+    @mock.patch.object(service.api_client, 'get_official_copy_data')
+    def test_title_search_success(self, mock_get_official_copy, mock_get):
+        response = self.app.post('/title-search', data={'search_term': 'DN1000'}, follow_redirects=True)
+        assert response.status_code == 200
+        page_content = response.data.decode()
+        assert 'DN1000' in page_content
+        assert '28 August 2014' in page_content
+        assert '12:37:13' in page_content
+        assert '17 Hazelbury Crescent' in page_content
+        assert 'Luton' in page_content
+        assert 'LU1 1DZ' in page_content
 
     @mock.patch('requests.get', return_value=fake_no_titles)
     def test_title_search_plain_text_value_format(self, mock_get):
-        response = self.app.get('/title-search/some%20text', follow_redirects=True, headers=self.headers)
+        response = self.app.post('/title-search', data={'search_term': 'some text'}, follow_redirects=True)
         assert '0 results found' in response.data.decode()
 
     @mock.patch('service.auditing.audit')
@@ -379,26 +387,26 @@ class TestTitleSearch:
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_success(self, mock_get):
-        response = self.app.get('/title-search/PL9%207FN', follow_redirects=True, headers=self.headers)
+        response = self.app.post('/title-search', data={'search_term': 'PL9 7FN'}, follow_redirects=True)
         assert response.status_code == 200
         page_content = response.data.decode()
         assert 'AGL1000' in page_content
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_postcode_search_with_page_calls_api_correctly(self, mock_get):
-        self.app.get('/title-search/PL9%207FN?page=23', headers=self.headers)
+        self.app.get('/title-search/PL9%207FN?page=23')
         mock_get.assert_called_with('http://landregistry.local:8004/title_search_postcode/PL9 7FN', params={'page': 22})
 
     @mock.patch('requests.get', return_value=fake_address_search)
     def test_address_search_with_page_calls_api_correctly(self, mock_get):
-        self.app.get('/title-search/PLYMOUTH?page=23', headers=self.headers)
+        self.app.get('/title-search/PLYMOUTH?page=23')
         mock_get.assert_called_with('http://landregistry.local:8004/title_search_address/PLYMOUTH', params={'page': 22})
 
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_search_title_passes_postcode_to_api_with_space_added_when_missing(self, mock_get):
         search_term = 'PL98TB'
         expected_postcode = 'PL9 8TB'
-        self.app.get('/title-search/{}'.format(search_term), headers=self.headers)
+        self.app.get('/title-search/{}'.format(search_term))
 
         assert len(mock_get.mock_calls) == 1
         actual_call = mock_get.mock_calls[0]
@@ -408,7 +416,7 @@ class TestTitleSearch:
     @mock.patch('requests.get', return_value=fake_postcode_search)
     def test_search_title_passes_postcode_to_api_as_it_is_when_valid(self, mock_get):
         search_term = 'PL9 8TB'
-        self.app.get('/title-search/{}'.format(search_term), headers=self.headers)
+        self.app.get('/title-search/{}'.format(search_term))
 
         assert len(mock_get.mock_calls) == 1
         actual_call = mock_get.mock_calls[0]
@@ -420,7 +428,7 @@ class TestHealthcheck:
 
     def setup_method(self, method):
         self.app = app.test_client()
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     @mock.patch('service.api_client.requests.get', return_value=FakeResponse())
     def test_health_calls_health_endpoints_of_apis(self, mock_api_get):
@@ -442,11 +450,11 @@ class TestSearchTerm:
 
     def setup_method(self, method):
         self.app = app.test_client()
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     @mock.patch('requests.get', return_value=unavailable_title)
     def test_title_search_title_not_found(self, mock_get):
-        response = self.app.get('/title-search/DT1000', follow_redirects=True, headers=self.headers)
+        response = self.app.post('/title-search', data={'search_term': 'DT1000'}, follow_redirects=True)
         assert '0 results found' in response.data.decode()
 
 
@@ -457,7 +465,7 @@ class TestAuthenticated:
     """
     def setup_method(self, method):
         self.app = app.test_client()
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
 
     @mock.patch('requests.get', return_value=fake_address_search)
     def test_authenticated(self, mock_get):
@@ -471,36 +479,15 @@ class TestWelsh:
 
     def setup_method(self, method):
         self.app = app.test_client()
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_welsh(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get("/titles/DN1000?language=cy", headers=self.headers)
+        response = self.app.get("/titles/DN1000?language=cy")
         page_content = response.data.decode()
         assert response.status_code == 200
         assert "Rhif teitl" in page_content
         assert "Perchennog" in page_content
-
-
-class TestRightUserGroup:
-    # Further use of the webseal header - testing that
-    def setup_method(self, method):
-        self.app = app.test_client()
-
-    @mock.patch('requests.get', return_value=fake_address_search)
-    def test_correct_user_is_allowed_into_drv(self, mock_get):
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
-        response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
-        assert response.status_code == 200
-        assert 'Search results for' in str(response.data)
-
-    @mock.patch('requests.get', return_value=fake_address_search)
-    def test_incorrect_user_is_not_allowed_into_drv(self, mock_get):
-        self.headers = Headers([('iv-user', TEST_USERNAME)])
-        response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
-        assert response.status_code == 404
-
 
 if __name__ == '__main__':
     pytest.main()
