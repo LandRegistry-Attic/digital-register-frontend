@@ -487,13 +487,20 @@ class TestRightUserGroup:
     # Further use of the webseal header - testing that
     def setup_method(self, method):
         self.app = app.test_client()
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
 
     @mock.patch('requests.get', return_value=fake_address_search)
     def test_correct_user_is_allowed_into_drv(self, mock_get):
+        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
         response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         assert response.status_code == 200
         assert 'Search results for' in str(response.data)
+
+    @mock.patch('requests.get', return_value=fake_address_search)
+    def test_incorrect_user_is_not_allowed_into_drv(self, mock_get):
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
+        response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
+        assert response.status_code == 404
+
 
 if __name__ == '__main__':
     pytest.main()
