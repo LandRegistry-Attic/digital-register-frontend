@@ -9,36 +9,42 @@ This is the repo for the frontend of the digital register service. It is written
 ### Digital Register Frontend Acceptance tests status
 [![Build Status](http://52.16.47.1/job/digital-register-frontend-acceptance-tests/badge/icon)](http://52.16.47.1/job/digital-register-frontend-acceptance-tests/)
 
-## Setup
+## Execution
 
-To create a virtual env, run the following from a shell:
-
-```
-    mkvirtualenv -p /usr/bin/python3 digital-register-frontend
-    source environment.sh
-    pip install -r requirements.txt
-```
-
-## Run the tests
+### Run the tests
 
 To run the tests for the Digital Register, go to its folder and run `lr-run-tests`.
 
-## Run the acceptance tests
+### Run the acceptance tests
 
 To run the acceptance tests for the Digital Register, go to the `acceptance-tests` folder and run:
+
 ```
    ./run-tests.sh
 ```
 
 You will need to have a Postgres database running (see `db/lr-start-db` and `db/insert-fake-data` scripts in the [centos-dev-env](https://github.com/LandRegistry/centos-dev-env) project), as well as the digital-register-frontend and digital-register-api applications running on your development VM.
 
+Alternatively, simply run:
+
+    lr-run-acceptance-tests
+
 ## Run the server
 
 ### Run in dev mode
 
-To run the server in dev mode, execute the following command:
+To run the server in dev mode, go to its folder and execute the following command:
 
     lr-run-app
+
+Note that pre/post execution scripts are available, which can be customised during development:
+
+```
+   .setup.sh
+   .teardown.sh
+```
+
+See the 'centos-dev-env' repository for further details.
 
 ### Run using gunicorn
 
