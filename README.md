@@ -38,7 +38,7 @@ You will need to have a Postgres database running (see `db/lr-start-db` and `db/
 
 To run the server in dev mode, execute the following command:
 
-    ./run_flask_dev.sh
+    lr-run-app
 
 ### Run using gunicorn
 

@@ -71,3 +71,7 @@ service/static/lr-styleguide/js/styleguide-components.js
 LRPortalConfig.properties
 hiddenWPRedirect.jsp
 
+# Custom pre/post execution scripts
+.setup.sh
+.teardown.sh
+
