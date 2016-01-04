@@ -351,9 +351,7 @@ def _create_pdf_template(sub_registers, title, title_number):
 
 
 def _strip_delimiters(json_in):
-    """
-    Remove all delimiters and not notes from json
-    """
+    # Remove all delimiters and not notes from json
     json_out = json_in
     try:
         for i, sub_register in enumerate(json_in['official_copy_data']['sub_registers']):
@@ -381,18 +379,16 @@ def _strip_delimiters(json_in):
 
 
 def _username_from_header(request):
-    """ US107 """
-    """ Get username (if any) from WebSeal headers """
+    # Gets username, if any, from webseal headers
     user_id = request.headers.get("iv-user", None)
-    if user_id is None:
-        return None
-    p = re.compile("[%][{0-9}][{0-9}]")
-    user_id = p.sub("", user_id)
+    if user_id:
+        p = re.compile("[%][{0-9}][{0-9}]")
+        user_id = p.sub("", user_id)
     return user_id
 
 
 def _validates_user_group(request):
     # Get user group from WebSeal headers
-    user_group = request.headers.get("iv-groups", None)
-    if user_group != "drv":
+    user_group = request.headers.get("iv-groups", [])
+    if "drv" not in user_group:
         abort(404)
