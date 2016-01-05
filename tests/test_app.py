@@ -14,7 +14,7 @@ from service.server import app  # type: ignore
 from .fake_response import FakeResponse  # type: ignore
 
 TEST_USERNAME = 'username1'
-TEST_USER_GROUP = 'drv'
+TEST_USER_GROUP = ['drv', 'psu']
 
 with open('tests/data/fake_title.json', 'r') as fake_title_file:
     fake_title_file_json_string = fake_title_file.read()
