@@ -160,6 +160,7 @@ def display_title_pdf(title_number):
 @app.route('/title-search', methods=['POST'])
 @app.route('/title-search/<search_term>', methods=['POST'])
 def find_titles():
+    user_group = request.headers.get("iv-groups", "")
     _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
 
@@ -389,6 +390,6 @@ def _username_from_header(request):
 
 def _validates_user_group(request):
     # Get user group from WebSeal headers
-    user_group = request.headers.get("iv-groups", [])
-    if "drv" not in user_group:
+    user_group = request.headers.get("iv-groups", "")
+    if "DRV" not in user_group.upper():
         abort(404)
