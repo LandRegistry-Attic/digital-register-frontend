@@ -160,7 +160,6 @@ def display_title_pdf(title_number):
 @app.route('/title-search', methods=['POST'])
 @app.route('/title-search/<search_term>', methods=['POST'])
 def find_titles():
-    user_group = request.headers.get("iv-groups", "")
     _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
 
