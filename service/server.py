@@ -389,6 +389,6 @@ def _username_from_header(request):
 
 def _validates_user_group(request):
     # Get user group from WebSeal headers
-    user_group = request.headers.get("iv-groups", [])
-    if "drv" not in user_group:
+    user_group = request.headers.get("iv-groups", "")
+    if "DRV" not in user_group.upper():
         abort(404)
