@@ -196,7 +196,7 @@
           <p>
           {% if districts %}
             {% for district in districts %}
-              {{district}}&nbsp;
+              {{district['name']}} : {{district['county']}}&nbsp;
             {% endfor %}
           {% endif %}
           </p>
