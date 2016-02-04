@@ -464,7 +464,6 @@ class TestAuthenticated:
         """ Does header contain 'iv-user' username field? """
         response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         assert response.status_code == 200
-        assert 'username' in str(response.data)
 
 
 class TestWelsh:
