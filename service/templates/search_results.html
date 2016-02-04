@@ -30,7 +30,22 @@
               {% endif %}
             </h2>
             <div class="font-xsmall">
-                {% if title['data'] and title['data'].get('is_caution_title') %}Caution title {% else %}Title {% endif %} number {{ title['title_number'] }}<br>
+              {% if title['data'] %}
+                {% if title['data'].get('is_caution_title') %}Caution title {% else %}Title {% endif %} number {{ title['title_number'] }}<br>
+              {% else %}
+              <div class="font-xsmall">
+                <p class="collapse-bottom">No title information found</p>
+
+                <details>
+                  <summary>Why not?</summary>
+                  <div class="panel-indent">
+                    <img style="vertical-align: middle;margin-bottom:10px" src="/static/images/beta.png" alt="Beta">
+                    <p>There could be many reasons why we cannot provide you a title number at this time. Try the <a href="https://eservices.landregistry.gov.uk/www/wps/portal/!ut/p/b1/04_SjzS0MDc3NjeyNDDSj9CPykssy0xPLMnMz0vMAfGjzOKNjSxMDA1NjDwsjM3MDTxN3dyNDUNMjQ1MjPWDU_P0c6McFQGRbYf3/">existing Land Registry service</a> instead</p>
+                    <p>If you need additional help, please call Land Registry on 0300 006 0411.</p>
+                  </div>
+                </details>
+                </div>
+              {% endif %}
               <b>{{ title | tenure_info }}</b>
             </div>
           </li>
