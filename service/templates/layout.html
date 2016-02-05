@@ -54,23 +54,9 @@
         </div>
       {% endif %}
       <div class="column-third column-flip">
-        <div class="language">
-          {# The following form resubmits the page if an alternate (english or welsh) #}
-          {# language is selected. The language code goes in g.locale. The form has #}
-          {# no action specified in order to resubmit the current page while maintaining #}
-          {# the query string. The route is a GET so the method is get, with 'language=' #}
-          {# added to the query string (ie, not POST + http header variables) #}
-
-          <form method="GET" class='lang-form'>
-            {% if g.locale == 'en' %}
-              <input type='hidden' name='language' value='cy'/>
-              <label for='submit-btn'>English</label>|<input id='submit-btn' type='submit' class='btn-href' value='Cymraeg' />
-            {% else %}
-              <input type='hidden' name='language' value='en'/>
-              <input id='submit-btn' type='submit' class='btn-href' value='English' />|<label for='submit-btn'>Cymraeg</label>
-            {% endif %}
-          </form>
-        </div>
+        {% block welsh_language_toggle %}
+        {% endblock %}
+        
       </div>
     </div>
     {% block body %}{% endblock %}
