@@ -51,7 +51,6 @@ def confirm_selection(title_number, search_term):
         'confirm_selection.html',
         params=params,
         breadcrumbs=breadcrumbs
-    )
 
 
 @app.route('/spinner-page/', methods=['POST'])
