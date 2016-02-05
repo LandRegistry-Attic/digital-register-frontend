@@ -43,34 +43,12 @@ def confirm_selection(title_number, search_term):
     params['title'] = _get_register_title(request.args.get('title', title_number))
     params['title_number'] = title_number
     params['search_term'] = request.args.get('search_term', search_term)
-    params['display_page_number'] = 1
-    params['products_string'] = "unused"
+    params['display_page_number'] = int(request.args.get('page') or 1)
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-
-    # Last changed date - modified to remove colon in UTC offset, which python
-    # datetime.strptime() doesn't like >>>
-
-    datestring = params['title']['last_changed']
-    if len(datestring) == 25:
-        if datestring[22] == ':':
-            l = list(datestring)
-            del(l[22])
-            datestring = "".join(l)
-
-    dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
-    params['last_changed_datestring'] = \
-        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
-    params['last_changed_timestring'] = \
-        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
-                      '{:02d}'.format(dt_obj.minute),
-                      '{:02d}'.format(dt_obj.second))
-
-    username = _username_from_header(request)
 
     return render_template(
         'confirm_selection.html',
-        params=params,
-        username=username,
+        params=params
     )
 
 

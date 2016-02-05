@@ -2,58 +2,80 @@
 
 {% block body %}
 
-{% if is_caution_title %}
-    <span class="alert-flag-hi-viz">Caution against first registration</span>
-    <br>
-  {% endif %}
+  <div class="grid-row">
+      <!-- Limit width to two-thirds -->
 
-<h1 class="heading-xlarge collapse-bottom">Summary of title {{params.title.number}}</h1>
+      <div class="column-two-thirds">
 
-<p class="expand-bottom">This title was last changed on <b>{{params.last_changed_datestring}} at {{params.last_changed_timestring}}</p>
+        {% if is_caution_title %}
+          <span class="alert-flag-hi-viz">Caution against first registration</span>
+          <br>
+        {% endif %}
+        <!-- 1. Start Title information (number, address and tenure information) -->
+        <h1 class="heading-large">Get a summary of the {{ params['title']['tenure'] }} title for {{ params['title']['address_lines'][0] }}</h1>
+        <p class="lede">The summary is a cut-down version of the information Land Registry holds. It costs {{ params['price'] }}.</p>
+        <br>
+          <div class="text">
+            <p class="lede collapse-top">
+            {% if params['title']['address_lines'] %}
+              {{ '<br>'.join(params['title']['address_lines'])|safe }}
+            {% else %}
+              {{ _('Not Available') }}
+            {% endif %}
+            </p>
+            <dl class="definition-tabular">
+              <dt>Title Number</dt>
+              <dd>{{ params['title_number'] }}</dd>
+              <dt>Tenure Type</dt>
+              <dd>{{ params['title']['tenure'] }} </dd>
+            </dl>
+          </div>
+        <div class="panel-indent panel-indent-info">
+         <p>
+           If you require other types of tenure for this property, you will need to <a href="{{ url_for('find_titles') }}">search again</a>
+         </p>
+        </div>
+        <hr>
+        <div class="text">
+          <h2 class="heading-medium">What you'll get</h2>
+          <p>The summary can tell you</p>
+          <ul class="list-bullet">
+            <li>owner's name and address</li>
+            <li>what they paid for the property – you won’t get this if it was bought before April 2000, if no money changed hands, or if the owner didn’t buy it outright</li>
+            <li>if there is a mortgage on the property, the lender's name and  address</li>
+            <li>if it's a leasehold property, how long the lease is for</li>
+            <li>the rough extent and location of the property</li>
+          </ul>
+          <div class="panel-indent panel-indent-info">
+            <p>You'll be able to view the information on screen. <b>You'll only be able to view it once.</b> If you want to keep a copy, you'll need to print it out or take a screen shot.</p>
+          </div>
+          <hr>
+          <h2 class="heading-medium">You won't get</h2>
+          <p>You'll need to <a target="_blank" href="https://www.gov.uk/get-information-about-property-and-land">use a different Land Registry service</a> if you need more detailed information like</p>
+          <ul>
+            <li>the full legal register entry</li>
+            <li>details of access rights, rights of way, and restrictions</li>
+            <li>to prove who owns a property, for example in a court case or for a visa application</li>
+            <li>the official title plan showing indicative boundaries</li>
+            <li>a copy of the deeds</li>
+            <li>details of previous owners</li>
+          </ul>
+        </div>
+        <hr>
 
-<div class="grid-row">
-  <div class="column-two-thirds">
-    <div class="text">
-      <div itemscope itemtype="http://schema.org/PostalAddress" class="lede">
-        {% for line in params.title.address_lines %}
-          <span>{{line}}</span><br/>
-        {% endfor %}
+        <h2 class="heading-medium">You will need</h2><ul>
+          <li> a credit or debit card</li>
+          <li> a printer, if you want to print the summary to refer to later</li>
+        </ul>
+
+        <p class="collapse-bottom"><a href="{{ url_for('get_title', title_number=params['title_number'], page=params['display_page_number'], search_term=params['search_term']) }}" class="button">Buy title summary</a></p>
+        <p>for {{ params['price'] }}</p>
+
       </div>
-      <br/>
-
-      <dl class="definition-tabular">
-        <dt>Tenure type</dt>
-        <dd><b>{{params.title.tenure}}</b></dd>
-      </dl>
-    </div>
-
-    <div class="service-notice font-xsmall">
-      <p>The <b>title register</b> contains details about the property or land, including:</p>
-      <ul class="list-bullet">
-        <li>title number</li>
-        <li>who owns it</li>
-        <li>what they paid for it (properties only, if available)</li>
-        <li>any rights of way</li>
-      </ul>
     </div>
     <br/>
-    <dl class="definition-tabular font-xsmall">
-      <dt>Amount to pay</dt>
-      {% autoescape false %}
-      <dd><b>{{params.price}}</b></dd>
-      {% endautoescape %}
-    </dl>
+    <!-- Offer user a link back to the Search Results -->
+    <a href="{{ url_for('find_titles_page', search_term=params['search_term'], page=params['display_page_number']) }}">Back to search results</a>
 
-    <br/>
-
-    <form class="form" action="{{ url_for('spinner_page') }}" method="post">
-      <input type='hidden' name='title_number' id='title_number' value="{{params.title_number}}"/>
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-      <button type="submit" class="button" >Buy Now</button>
-    </form>
-
-  </div>
-
-</div>
 
 {% endblock %}
