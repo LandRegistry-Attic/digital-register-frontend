@@ -46,43 +46,38 @@ def confirm_selection(title_number, search_term):
 
     params = dict()
     params['title'] = _get_register_title(request.args.get('title', title_number))
-    params['title_number'] = title_number
-    params['search_term'] = request.args.get('search_term', search_term)
-    params['display_page_number'] = int(request.args.get('page') or 1)
-    params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-    breadcrumbs = _breadcumbs_for_title_details(params['title_number'], params['search_term'], params['display_page_number'])
+    params['display_page_number'] = 1
+    params['MC_titleNumber'] = title_number
+    params['MC_searchType'] = request.args.get('search_term', search_term)
+    params['MC_timestamp'] = _get_time()
+    params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
+    params['MC_unitCount'] = '1'
+    params['desc'] = "unused"
+    params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    params['cartId'] = os.getenv('WP_CARTID', 'r9kXm_Pg-VFlRma2vgHm51Q')
 
-    return render_template(
-        'confirm_selection.html',
-        params=params,
-        breadcrumbs=breadcrumbs
-    )
+    # Last changed date - modified to remove colon in UTC offset, which python
+    # datetime.strptime() doesn't like >>>
 
+    datestring = params['title']['last_changed']
+    if len(datestring) == 25:
+        if datestring[22] == ':':
+            l = list(datestring)
+            del(l[22])
+            datestring = "".join(l)
 
-@app.route('/spinner-page/', methods=['POST'])
-def spinner_page():
-    _validates_user_group(request)
-    payment_params = dict()
-    payment_params['MC_titleNumber'] = request.form['title_number'].strip()
-    payment_params['username'] = _username_from_header
-    # TODO HTTPreferer code here? To pass onwards.
-    payment_params['referer'] = 'placeholder'
-    payment_params['payment_interface_url'] = 'https://preprod.registerview.landregistryconcept.co.uk/paymenti/wp'   # LRPI 'wp' endpoint
-    payment_params['MC_unitCount'] = '1'
-    payment_params['MC_timestamp'] = _get_time
-    payment_params['amount'] = os.getenv('WP_AMOUNT', '2.0')
-    payment_params['cartId'] = os.getenv('WP_CARTID', 'r9kXm_Pg-VFlRma2vgHm51Q')
-    # TODO this will be dynamic in the future
-    payment_params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
-    payment_params['MC_searchType'] = os.getenv('WP_MC_SEARCHTYPE', 'D')
+    dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
+    params['last_changed_datestring'] = \
+        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
+    params['last_changed_timestring'] = \
+        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
+                      '{:02d}'.format(dt_obj.minute),
+                      '{:02d}'.format(dt_obj.second))
 
-    response = api_client.send_to_payment_service_provider(payment_params)
-    print('back: {}'.format(response))
+    username = _username_from_header(request)
 
-    return response
-    # record transaction in results table
-    # TODO call to results table via db_tasks
-    # TODO add to queue
+    action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
+    return render_template('confirm_selection.html', params=params, action_url=action_url)
 
 
 @app.route('/health', methods=['GET'])

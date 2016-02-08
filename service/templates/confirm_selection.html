@@ -83,6 +83,7 @@
       <span class="collapse-bottom font-xsmall"><small>for {{ params['price'] | safe }}</small></span></p>
     <!-- </div> -->
 
+<<<<<<< HEAD
     <script>
       var msg = document.createElement('span');
       msg.classList.add('error-message');
@@ -101,6 +102,19 @@
       }
     </script>
 </div>
+=======
+    <form class="form" action="{{ action_url }}" method="post">
+      <input type='hidden' name='MC_titleNumber' id='MC_titleNumber' value="{{params.MC_titleNumber}}"/>
+      <input type='hidden' name='MC_searchType' id='MC_searchType' value="{{params.MC_searchType}}"/>
+      <input type='hidden' name='MC_timestamp' id='MC_timestamp' value="{{params.MC_timestamp}}"/>
+      <input type='hidden' name='MC_purchaseType' id='MC_purchaseType' value="{{params.MC_purchaseType}}"/>
+      <input type='hidden' name='MC_unitCount' id='MC_unitCount' value="{{params.MC_unitCount}}"/>
+      <input type='hidden' name='cartId' id='cartId' value="{{params.cartId}}"/>
+      <input type='hidden' name='amount' id='amount' value="{{params.amount}}"/>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <button type="submit" class="button" >Buy Now</button>
+    </form>
+>>>>>>> * Arrives at WorldPay from DRV front-end.
 
 <div style="width:30%;float:right;">
   <div id="map" style="height: 0 !important; padding-bottom: 100% !important; width: 100% !important;">
