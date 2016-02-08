@@ -1,8 +1,10 @@
 import requests  # type: ignore
+from flask import redirect  # type: ignore
 
 from service import app
 
 REGISTER_TITLE_API_URL = app.config['REGISTER_TITLE_API']
+LAND_REGISTRY_PAYMENT_INTERFACE_URI = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
 
 
 def get_title(title_number):
@@ -59,6 +61,13 @@ def get_official_copy_data(title_number):
         )
 
         raise Exception(error_msg_format.format(response.status_code))
+
+
+def send_to_payment_service_provider(payment_parameters):
+    response = requests.post('{}/wp'.format(LAND_REGISTRY_PAYMENT_INTERFACE_URI), data=payment_parameters)
+    print('in api_client')
+    print(response)
+    return response
 
 
 def _to_json(response):

@@ -24,6 +24,7 @@ CONFIG_DICT = {
     'LOGGING_CONFIG_FILE_PATH': logging_config_file_path,
     'PERMANENT_SESSION_LIFETIME': timedelta(minutes=15),
     'REGISTER_TITLE_API': register_title_api,
+    'LAND_REGISTRY_PAYMENT_INTERFACE_URI': os.environ['LAND_REGISTRY_PAYMENT_INTERFACE_URI'],
     'SECRET_KEY': secret_key,
     'SERVICE_NOTICE_HTML': service_notice_html,
     'SESSION_COOKIE_SECURE': session_cookie_secure,

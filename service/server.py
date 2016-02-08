@@ -1,15 +1,15 @@
 from datetime import datetime                                                                          # type: ignore
-from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for, session  # type: ignore
+from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 import json
 import logging
 import logging.config                                                                                  # type: ignore
 import re
-import time
+import os
 
 from service import (address_utils, api_client, app, auditing, health_checker,
                      title_formatter, title_utils)
-from service.forms import TitleSearchForm, SigninForm
+from service.forms import TitleSearchForm
 
 # TODO: move this to the template
 UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
@@ -62,16 +62,27 @@ def confirm_selection(title_number, search_term):
 @app.route('/spinner-page/', methods=['POST'])
 def spinner_page():
     _validates_user_group(request)
-    worldpay_params = dict()
-    worldpay_params['title_number'] = request.form['title_number'].strip()
-    worldpay_params['username'] = _username_from_header
+    payment_params = dict()
+    payment_params['MC_titleNumber'] = request.form['title_number'].strip()
+    payment_params['username'] = _username_from_header
+    # TODO HTTPreferer code here? To pass onwards.
+    payment_params['referer'] = 'placeholder'
+    payment_params['payment_interface_url'] = 'https://preprod.registerview.landregistryconcept.co.uk/paymenti/wp'   # LRPI 'wp' endpoint
+    payment_params['MC_unitCount'] = '1'
+    payment_params['MC_timestamp'] = _get_time
+    payment_params['amount'] = os.getenv('WP_AMOUNT', '2.0')
+    payment_params['cartId'] = os.getenv('WP_CARTID', 'r9kXm_Pg-VFlRma2vgHm51Q')
+    # TODO this will be dynamic in the future
+    payment_params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
+    payment_params['MC_searchType'] = os.getenv('WP_MC_SEARCHTYPE', 'D')
 
-    # more params to be confirmed by Richard (29/10/15)
+    response = api_client.send_to_payment_service_provider(payment_params)
+    print('back: {}'.format(response))
 
-    return render_template(
-        'spinner-page.html',
-        params=worldpay_params,
-    )
+    return response
+    # record transaction in results table
+    # TODO call to results table via db_tasks
+    # TODO add to queue
 
 
 @app.route('/health', methods=['GET'])
@@ -376,6 +387,13 @@ def _username_from_header(request):
 
 def _validates_user_group(request):
     # Get user group from WebSeal headers
-    user_group = request.headers.get("iv-groups", "")
-    if "DRV" not in user_group.upper():
-        abort(404)
+    # user_group = request.headers.get("iv-groups", "")
+    # if "DRV" not in user_group.upper():
+    #     abort(404)
+    pass
+
+
+def _get_time():
+    # Postgres datetime format is YYYY-MM-DD MM:HH:SS.mm
+    _now = datetime.now()
+    return _now.strftime("%Y-%m-%d %H:%M:%S.%f")
