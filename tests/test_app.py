@@ -464,7 +464,6 @@ class TestAuthenticated:
         """ Does header contain 'iv-user' username field? """
         response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         assert response.status_code == 200
-        assert 'username' in str(response.data)
 
 
 class TestWelsh:
@@ -493,7 +492,6 @@ class TestRightUserGroup:
         self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
         response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         assert response.status_code == 200
-        assert 'Search results for' in str(response.data)
 
     @mock.patch('requests.get', return_value=fake_address_search)
     def test_incorrect_user_is_not_allowed_into_drv(self, mock_get):

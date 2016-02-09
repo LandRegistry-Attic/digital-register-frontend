@@ -30,8 +30,15 @@
               {% endif %}
             </h2>
             <div class="font-xsmall">
-                {% if title['data'] and title['data'].get('is_caution_title') %}Caution title {% else %}Title {% endif %} number {{ title['title_number'] }}<br>
+              Title number: {{ title['title_number'] }}<br>
               <b>{{ title | tenure_info }}</b>
+              {% if title['data'] and title['data'].get('is_caution_title') %}
+                <details class="font-xsmall">
+                  <summary>What's this?</summary>
+                  <p>A caution against first registration protects an interest in land which hasn’t yet been registered with the Land Registry. It entitles the person who registered the caution to be told if someone tries to register the land, and object to completion of the registration until their claim has been considered.</p>
+                  <a rel="external" href="https://www.gov.uk/government/publications/caution-against-first-registration/practice-guide-3-cautions-against-first-registration">More about cautions against first registration</a>
+                </details>
+              {% endif %}
             </div>
           </li>
         {% endfor %}
@@ -60,6 +67,14 @@
         </div>
         <div id="pagination" style="text-align: center">Page {{ display_page_number }} of {{ results['number_pages'] }}</div>
       {% endif %}
+    </div>
+    <div id="help-sidebar" class="column-third">
+      <h2 style="border-top: 10px solid #005ea5;padding-top:25px;" class="heading-medium">Help finding the right property</h2>
+      <p>
+        <img style="display: block;margin-bottom:10px" src="/static/images/beta.png" alt="">
+        This is a beta service. If you're not seeing the search results you expect please <a rel="external" href="mailto:digital-register-feedback@digital.landregistry.gov.uk">let us know</a>
+      </p>
+      <p>If you're having trouble finding the property or land you're looking for, try the <a href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">existing Land Registry service</a> instead</p>
     </div>
   </div>
 {% endblock %}
