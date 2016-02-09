@@ -141,7 +141,18 @@ def get_title(title_number):
             username)
         )
 
-        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request)
+        receipt = {
+            "date": "25 Jan 2016",
+            "address": "Land Registry, PO Box 6344, Coventry CV3 9LL",
+            "invoice_number": "ABC1234578",
+            "description": "Summary of title FAKE177634",
+            "net": "£1.67",
+            "vat": "£0.33",
+            "total": "£2.00",
+            "reg_number": "GB 8888 181 53"
+        }
+
+        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt)
     else:
         abort(404)
 
@@ -277,7 +288,7 @@ def _normalise_postcode(postcode_in):
     return postcode
 
 
-def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request):
+def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt):
     username = _username_from_header(request)
     return render_template(
         'display_title.html',
@@ -288,6 +299,7 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
         show_pdf=show_pdf,
         full_title_data=full_title_data,
         is_caution_title=title_utils.is_caution_title(title),
+        receipt=receipt,
     )
 
 
