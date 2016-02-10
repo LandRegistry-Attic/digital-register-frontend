@@ -45,10 +45,12 @@ def confirm_selection(title_number, search_term):
     params['search_term'] = request.args.get('search_term', search_term)
     params['display_page_number'] = int(request.args.get('page') or 1)
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    breadcrumbs = _breadcumbs_for_title_details(params['title_number'], params['search_term'], params['display_page_number'])
 
     return render_template(
         'confirm_selection.html',
-        params=params
+        params=params,
+        breadcrumbs=breadcrumbs
     )
 
 
