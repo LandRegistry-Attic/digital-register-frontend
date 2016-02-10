@@ -60,7 +60,11 @@
     </ul>
     <!-- <p>You'll need to <a target="_blank" href="https://www.gov.uk/get-information-about-property-and-land">use a different Land Registry service</a> if you need more detailed information or to prove ownership in court.</p> -->
     <div class="notice" style="background-color:#fff2d3;padding: 25px">
+<<<<<<< HEAD
       <img src="/static/govuk_frontend_toolkit/images/icon-important.png" alt="" style="float: left;margin-right: 15px;" />
+=======
+      <img src="/public/lr-style-guide/lr-styleguide/images/icon-important.png" alt="" style="float: left;margin-right: 15px;" />
+>>>>>>> bef3cdb... WIP changed to use new proto design
       <p style="overflow:hidden;margin:0;"><strong class="bold-small">You'll only be able to view the information once</strong><br>
         If you want to keep a copy you can print it out</p>
     </div>
@@ -76,11 +80,18 @@
         </label>
       </div>
 
+<<<<<<< HEAD
     <!--  <form action="../worldpay_1" method="POST" onsubmit="return checkRightToCancel()"> -->
     <!--    <input name="id" value="{{id}}" type="hidden" /> -->
     <!--    <input type="submit" style="margin:10px 0" class="button" value="Buy title summary"> -->
     <!-- </form> -->
       <p class="collapse-bottom"><a href="{{ url_for('get_title', title_number=params['title_number'], page=params['display_page_number'], search_term=params['search_term']) }}" class="button">Buy title summary</a></p>
+=======
+      <form action="../worldpay_1" method="POST" onsubmit="return checkRightToCancel()">
+        <input name="id" value="{{id}}" type="hidden" />
+        <input type="submit" style="margin:10px 0" class="button" value="Buy title summary">
+      </form>
+>>>>>>> bef3cdb... WIP changed to use new proto design
       <br><span class="collapse-bottom font-xsmall"><small>for &pound;2 inc VAT</small></small></p>
     <!-- </div> -->
 
@@ -105,7 +116,11 @@
 
 
 <div style="width:30%;float:right;">
+<<<<<<< HEAD
   <div id="map" style="height: 0 !important; padding-bottom: 100% !important;width: 100% !important;">
+=======
+  <div id="map">
+>>>>>>> bef3cdb... WIP changed to use new proto design
     <div class="panel-simple">
       <p>The map relies on JavaScript being enabled in your browser.</p>
     </div>
