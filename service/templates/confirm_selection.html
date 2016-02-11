@@ -28,14 +28,14 @@
             <a rel="external" href="https://www.gov.uk/government/publications/caution-against-first-registration/practice-guide-3-cautions-against-first-registration">More about cautions against first registration</a>
           {% endif %}
 
-          {% if params['title']['tenure'].upper == 'LEASEHOLD' %}
+          {% if params['title']['tenure'].upper() == 'LEASEHOLD' %}
             <p>You only own a leasehold property for a fixed period of time. You'll have a legal agreement the landlord (sometimes known as the ‘freeholder’) called a ‘lease’. This tells you how many years you’ll own the property.</p>
             <p>Most flats are leasehold. Houses can be leasehold too and usually are if they’re bought through a shared ownership scheme.</p>
             <p>The leasehold and freehold are registered separately with the Land Registry. Each has its own title documents. <b class="bold-xsmall">You are buying a summary of the leasehold owner, not the freehold.</b></p>
 
             <a rel="external" href="https://www.gov.uk/leasehold-property/overview">More about Leasehold on GOV.UK</a>
 
-          {% elif params['title']['tenure'].upper == 'FREEHOLD' %}
+          {% elif params['title']['tenure'].upper() == 'FREEHOLD' %}
             <p>You own a freehold building and land outright. It is yours until you sell it or give it away.</p>
             <p>Most houses are freehold. Most flats are leasehold. That means someone else owns the freehold for the building the flat is in. <b class="bold-xsmall">If you want to know who owns a particular flat, you probably need the leasehold.</b></p>
             <p>Houses can also be leasehold and usually are if they’re bought through a shared ownership scheme.</p>
@@ -50,9 +50,9 @@
 
     <h2 class="heading-medium collapse-top">The summary will tell you</h2>
     <ul class="list-bullet">
-      {% if params['title']['tenure'].upper == 'FREEHOLD' %}
+      {% if params['title']['tenure'].upper() == 'FREEHOLD' %}
         <li>current owner’s name and address</li>
-      {% elif params['title']['tenure'].upper == 'LEASEHOLD' %}
+      {% elif params['title']['tenure'].upper() == 'LEASEHOLD' %}
         <li>current leaseholder’s name and address</li>
       {% endif %}
       <li>what they paid for the property – If the whole property was sold on the open market, after April 2000. <span class="font-xsmall">(<a href="https://www.gov.uk/guidance/about-the-price-paid-data#data-excluded-from-the-house-price-index-and-price-paid-data" class="font-xsmall">what does this mean?</a>)</span></li>
@@ -60,7 +60,7 @@
     </ul>
     <!-- <p>You'll need to <a target="_blank" href="https://www.gov.uk/get-information-about-property-and-land">use a different Land Registry service</a> if you need more detailed information or to prove ownership in court.</p> -->
     <div class="notice" style="background-color:#fff2d3;padding: 25px">
-      <img src="/public/lr-style-guide/lr-styleguide/images/icon-important.png" alt="" style="float: left;margin-right: 15px;" />
+      <img src="/static/govuk_frontend_toolkit/images/icon-important.png" alt="" style="float: left;margin-right: 15px;" />
       <p style="overflow:hidden;margin:0;"><strong class="bold-small">You'll only be able to view the information once</strong><br>
         If you want to keep a copy you can print it out</p>
     </div>
