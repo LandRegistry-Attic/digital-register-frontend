@@ -62,7 +62,6 @@ def confirm_selection(title_number, search_term):
     username = _username_from_header(request)
     api_client.save_search_request(username, params)
 
-
     # Last changed date - modified to remove colon in UTC offset, which python
     # datetime.strptime() doesn't like >>>
 

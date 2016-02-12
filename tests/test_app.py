@@ -512,18 +512,12 @@ class TestConfirmSelection:
     def get_selection(self):
         return self.app.get('{}/titleref/searchterm'.format(self.base_url), headers=self.headers)
 
-    @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
-    @mock.patch('service.api_client.save_search_request', return_value=("ok", 200))
-    def test_get_confirmation_page_no_title(self, mock_get, mock_save):
-        response = self.get_selection()
-        assert response.status_code == 404
-        assert 'Page not found' in response.data.decode()
-
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.save_search_request', return_value=("ok", 200))
-    def test_get_confirmation_page(self, mock_get_official_copy_data, mock_get, mock_save):
+    def test_get_confirmation_page(self, mock_save, mock_get):
         response = self.get_selection()
         assert response.status_code == 200
+
 
 if __name__ == '__main__':
     pytest.main()
