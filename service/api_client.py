@@ -65,8 +65,16 @@ def get_official_copy_data(title_number):
 
 def send_to_payment_service_provider(payment_parameters):
     response = requests.post('{}/wp'.format(LAND_REGISTRY_PAYMENT_INTERFACE_URI), data=payment_parameters)
-    print('in api_client')
-    print(response)
+    return response
+
+
+def save_search_request(username, search_parameters):
+
+    params = search_parameters
+    params['user_id'] = username
+
+    response = requests.post('{}/save_search_request'.format(REGISTER_TITLE_API_URL), data=params)
+
     return response
 
 

@@ -1,14 +1,12 @@
-from datetime import datetime                                                                          # type: ignore
-from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
-from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 import json
 import logging
 import logging.config                                                                                  # type: ignore
 import re
 import os
-
-from service import (address_utils, api_client, app, auditing, health_checker,
-                     title_formatter, title_utils)
+from datetime import datetime                                                                          # type: ignore
+from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
+from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
+from service import (address_utils, api_client, app, auditing, health_checker, title_formatter, title_utils)
 from service.forms import TitleSearchForm
 
 # TODO: move this to the template
@@ -53,8 +51,17 @@ def confirm_selection(title_number, search_term):
     params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
     params['MC_unitCount'] = '1'
     params['desc'] = "unused"
+
+    # TODO: get price from a data store so that it can be reliably verified after payment has been processed.
     params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+
+    # TODO: check whether 'cartId' is required or not; if so, make it unique (per 'product').
     params['cartId'] = os.getenv('WP_CARTID', 'r9kXm_Pg-VFlRma2vgHm51Q')
+
+    # Save user's search details.
+    username = _username_from_header(request)
+    api_client.save_search_request(username, params)
+
 
     # Last changed date - modified to remove colon in UTC offset, which python
     # datetime.strptime() doesn't like >>>
@@ -73,8 +80,6 @@ def confirm_selection(title_number, search_term):
         "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
                       '{:02d}'.format(dt_obj.minute),
                       '{:02d}'.format(dt_obj.second))
-
-    username = _username_from_header(request)
 
     action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
     return render_template('confirm_selection.html', params=params, action_url=action_url)
@@ -105,7 +110,13 @@ def cookies():
 
 @app.route('/titles/<title_number>', methods=['GET'])
 def get_title(title_number):
+    """
+    Show title (result) if user is logged in, has paid and hasn't viewed before.
+    """
+
+    # Check for log-in
     _validates_user_group(request)
+
     title = _get_register_title(title_number)
     username = _username_from_header(request)
 

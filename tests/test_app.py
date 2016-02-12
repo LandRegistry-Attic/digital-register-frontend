@@ -426,7 +426,7 @@ class TestHealthcheck:
     def test_health_calls_health_endpoints_of_apis(self, mock_api_get):
         self.app.get('/health')
 
-        mock_api_get.assert_called_once_wth('{}health'.format(app.config['REGISTER_TITLE_API']))
+        mock_api_get.assert_called_once_with('{}health'.format(app.config['REGISTER_TITLE_API']))
 
     @mock.patch('service.health_checker.perform_healthchecks', return_value=[])
     def test_health_returns_ok_when_health_checker_returns_no_errors(
@@ -499,6 +499,31 @@ class TestRightUserGroup:
         response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         assert response.status_code == 404
 
+
+
+class TestConfirmSelection:
+
+    base_url = '/confirm-selection'
+
+    def setup_method(self, method):
+        self.app = app.test_client()
+        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
+
+    def get_selection(self):
+        return self.app.get('{}/titleref/searchterm'.format(self.base_url), headers=self.headers)
+
+    @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
+    @mock.patch('service.api_client.save_search_request', return_value=("ok", 200))
+    def test_get_confirmation_page_no_title(self, mock_get, mock_save):
+        response = self.get_selection()
+        assert response.status_code == 404
+        assert 'Page not found' in response.data.decode()
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.save_search_request', return_value=("ok", 200))
+    def test_get_confirmation_page(self, mock_get_official_copy_data, mock_get, mock_save):
+        response = self.get_selection()
+        assert response.status_code == 200
 
 if __name__ == '__main__':
     pytest.main()
