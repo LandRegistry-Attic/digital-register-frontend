@@ -65,7 +65,7 @@
         If you want to keep a copy you can print it out</p>
     </div>
 
-      <h2 class="heading-medium">The summary costs £2</h2>
+      <h2 class="heading-medium">The summary costs {{ params['price'] | safe }}</h2>
       <p>You can pay by credit or debit card.</p>
       <p>You'll get the summary as soon as you've paid. But to do so you must agree to lose your right to cancel.</p>
       <div class="form-group expand-bottom-half" id="right_to_cancel_group">
@@ -81,7 +81,7 @@
     <!--    <input type="submit" style="margin:10px 0" class="button" value="Buy title summary"> -->
     <!-- </form> -->
       <p class="collapse-bottom"><a href="{{ url_for('get_title', title_number=params['title_number'], page=params['display_page_number'], search_term=params['search_term']) }}" class="button">Buy title summary</a></p>
-      <br><span class="collapse-bottom font-xsmall"><small>for &pound;2 inc VAT</small></small></p>
+      <br><span class="collapse-bottom font-xsmall"><small>for {{ params['price'] | safe }} inc VAT</small></small></p>
     <!-- </div> -->
 
     <script>
@@ -121,8 +121,8 @@
 </div>
 
 <script type='text/javascript'>
-var indexData = {"crs": {"properties": {"name": "urn:ogc:def:crs:EPSG::27700"}, "type": "name"}, "geometry": {"coordinates": [[[441187.5, 112344.0], [441186.0, 112354.0], [441193.0, 112356.5], [441194.5, 112346.5]]], "type": "Polygon"}, "properties": {"colour": 25, "feature_id": 4019, "graphic_type": "Bordered Polygon", "render_attributes": {"border_colour": 25, "border_width": 0, "exterior_edge_colour": 1, "exterior_edge_thickness": 2, "exterior_edge_thickness_units": "Pixels", "fill_colour": 25, "fill_style": 9, "render_level": "0"}, "width": 0}, "type": "Feature"}
-//var indexData = {{ params['title']['indexPolygon'] | tojson }};
+//var indexData = {"crs": {"properties": {"name": "urn:ogc:def:crs:EPSG::27700"}, "type": "name"}, "geometry": {"coordinates": [[[441187.5, 112344.0], [441186.0, 112354.0], [441193.0, 112356.5], [441194.5, 112346.5]]], "type": "Polygon"}, "properties": {"colour": 25, "feature_id": 4019, "graphic_type": "Bordered Polygon", "render_attributes": {"border_colour": 25, "border_width": 0, "exterior_edge_colour": 1, "exterior_edge_thickness": 2, "exterior_edge_thickness_units": "Pixels", "fill_colour": 25, "fill_style": 9, "render_level": "0"}, "width": 0}, "type": "Feature"}
+var indexData = {{ params['title']['indexPolygon'] | tojson }};
 </script>
 
 <script src="/static/javascripts/map.js"></script>
