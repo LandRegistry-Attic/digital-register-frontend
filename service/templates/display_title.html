@@ -5,6 +5,14 @@
     height:320px !important;
     width:320px !important;
   }
+  .btn-href {
+    background: none;
+    border: 0;
+    font-size: 0.9em;
+    cursor: pointer;
+    text-decoration: underline;
+    padding-left:0;
+  }
 
   .lang-form label {
     font-size: 0.9em;
@@ -136,7 +144,7 @@
     </div>
 
   <div class="column-third">
-    <div id="map">
+    <div id="map" class="polygon" style="height: 0 !important; padding-bottom: 100% !important;width: 100% !important;">
       <div class="panel-simple">
         <p>{{ _('The map relies on JavaScript being enabled in your browser.') }}</p>
       </div>
@@ -162,7 +170,7 @@
   <div class="text printhidden">
     <h6 class="heading-medium">{{ _('What next') }}</h6>
     <ul>
-      <li><a href="/drv-15/search">{{ _('Search for another title using this service') }}</a></li>
+      <li><a href="{{ url_for('find_titles') }}">{{ _('Search for another title using this service') }}</a></li>
       <li><a href="https://gov.uk">{{ _('Return to') }} GOV.UK</a></li>
     </ul>
   </div>
