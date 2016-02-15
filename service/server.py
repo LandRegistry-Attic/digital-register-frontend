@@ -146,9 +146,9 @@ def get_title(title_number):
             "address": "Land Registry, PO Box 6344, Coventry CV3 9LL",
             "invoice_number": "ABC1234578",
             "description": "Summary of title FAKE177634",
-            "net": "£1.67",
-            "vat": "£0.33",
-            "total": "£2.00",
+            "net": "£2.50",
+            "vat": "£0.50",
+            "total": "£3.00",
             "reg_number": "GB 8888 181 53"
         }
 
