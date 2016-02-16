@@ -28,10 +28,15 @@ def app_start():
     # App entry point
     username = _username_from_header(request)
     _validates_user_group(request)
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    print('xxxxxxxxx')
+    print(price)
+    print('xxxxxxxxx')
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
+        price=price,
     )
 
 
@@ -43,34 +48,14 @@ def confirm_selection(title_number, search_term):
     params['title'] = _get_register_title(request.args.get('title', title_number))
     params['title_number'] = title_number
     params['search_term'] = request.args.get('search_term', search_term)
-    params['display_page_number'] = 1
-    params['products_string'] = "unused"
+    params['display_page_number'] = int(request.args.get('page') or 1)
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-
-    # Last changed date - modified to remove colon in UTC offset, which python
-    # datetime.strptime() doesn't like >>>
-
-    datestring = params['title']['last_changed']
-    if len(datestring) == 25:
-        if datestring[22] == ':':
-            l = list(datestring)
-            del(l[22])
-            datestring = "".join(l)
-
-    dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
-    params['last_changed_datestring'] = \
-        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
-    params['last_changed_timestring'] = \
-        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
-                      '{:02d}'.format(dt_obj.minute),
-                      '{:02d}'.format(dt_obj.second))
-
-    username = _username_from_header(request)
+    breadcrumbs = _breadcumbs_for_title_details(params['title_number'], params['search_term'], params['display_page_number'])
 
     return render_template(
         'confirm_selection.html',
         params=params,
-        username=username,
+        breadcrumbs=breadcrumbs
     )
 
 
@@ -162,10 +147,10 @@ def display_title_pdf(title_number):
 def find_titles():
     _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
-
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     search_term = request.form['search_term'].strip()
     if search_term:
-        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number))
+        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, price=price))
     else:
         # TODO: we should redirect to that page
         return _initial_search_page(request)
@@ -285,10 +270,12 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
 
 def _initial_search_page(request):
     username = _username_from_header(request)
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
+        price=price,
     )
 
 
