@@ -5,7 +5,7 @@
 <div style="width:66%;float:left;">
     <!-- 1. Start Title information (number, address and tenure information) -->
     <h1 class="heading-large collapse-top">Confirm your order</h1>
-    <p class="">You’ll get a summary of the information Land Registry holds for the following property title.</p>
+    <p class="">You’ll get a summary of the information Land Registry holds for this property title:</p>
 
     <dl class="definition-tabular expand-top-half">
       <dt>Address</dt>
@@ -43,8 +43,7 @@
           {% endif %}
           </div>
         </details>
-
-        <p class="font-xsmall">If you require other types of tenure for this property, <a href="#" onClick="history.go(-1); return false;">go back</a> and select the one you need.</p>
+        <p class="font-xsmall">A property can have both a freehold and a leasehold title. To get a different tenure for this address, <a href="{{ url_for('find_titles_page', search_term=params['search_term'], page=params['display_page_number']) }}">go back</a> and select the one you need.</p>
       </dd>
     </dl>
 
@@ -55,7 +54,7 @@
       {% elif params['title']['tenure'].upper() == 'LEASEHOLD' %}
         <li>current leaseholder’s name and address</li>
       {% endif %}
-      <li>what they paid for the property – If the whole property was sold on the open market, after April 2000. <span class="font-xsmall">(<a href="https://www.gov.uk/guidance/about-the-price-paid-data#data-excluded-from-the-house-price-index-and-price-paid-data" class="font-xsmall">what does this mean?</a>)</span></li>
+      <li>what they paid for the property – you won’t get this if it was bought before April 2000, if no money changed hands, or if the owner didn’t buy it outright</li>
       <li>if there is a mortgage on the property, the lender’s name and  address</li>
     </ul>
     <!-- <p>You'll need to <a target="_blank" href="https://www.gov.uk/get-information-about-property-and-land">use a different Land Registry service</a> if you need more detailed information or to prove ownership in court.</p> -->
@@ -67,12 +66,12 @@
 
       <h2 class="heading-medium">The summary costs {{ params['price'] | safe }}</h2>
       <p>You can pay by credit or debit card.</p>
-      <p>You'll get the summary as soon as you've paid. But to do so you must agree to lose your right to cancel.</p>
+      <p>You need to accept the following terms to continue.</p>
       <div class="form-group expand-bottom-half" id="right_to_cancel_group">
         <label class="block-label" for="right_to_cancel">
         <input id="right_to_cancel" name="right_to_cancel" type="checkbox" value="right_to_cancel">
-        I agree that you will provide the summary as soon as I've paid.<br>
-        I accept that I will lose my right to cancel the contract as soon as the summary is displayed.
+        I agree that you will provide the summary as soon as I’ve paid.<br>
+        I accept that I will lose my right to cancel the contract once the summary is displayed.
         </label>
       </div>
 
@@ -80,14 +79,14 @@
     <!--    <input name="id" value="{{id}}" type="hidden" /> -->
     <!--    <input type="submit" style="margin:10px 0" class="button" value="Buy title summary"> -->
     <!-- </form> -->
-      <p class="collapse-bottom"><a href="{{ url_for('get_title', title_number=params['title_number'], page=params['display_page_number'], search_term=params['search_term']) }}" class="button">Buy title summary</a></p>
-      <br><span class="collapse-bottom font-xsmall"><small>for {{ params['price'] | safe }} inc VAT</small></small></p>
+      <p class="collapse-bottom"><a href="{{ url_for('get_title', title_number=params['title_number'], page=params['display_page_number'], search_term=params['search_term']) }}" class="button" onclick="return checkRightToCancel()">Buy title summary</a></p>
+      <span class="collapse-bottom font-xsmall"><small>for {{ params['price'] | safe }}</small></small></p>
     <!-- </div> -->
 
     <script>
       var msg = document.createElement('span');
       msg.classList.add('error-message');
-      msg.textContent = 'You need to agree to receive the summary right away and that you’ll lose your right to cancel';
+      msg.textContent = 'You need to agree to receive the summary straight away and that you’ll lose your right to cancel';
       var rightToCancelGroup = document.getElementById('right_to_cancel_group');
       function checkRightToCancel() {
         if(msg.parentNode) {
