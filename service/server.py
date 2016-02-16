@@ -28,10 +28,15 @@ def app_start():
     # App entry point
     username = _username_from_header(request)
     _validates_user_group(request)
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    print('xxxxxxxxx')
+    print(price)
+    print('xxxxxxxxx')
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
+        price=price,
     )
 
 
@@ -142,10 +147,10 @@ def display_title_pdf(title_number):
 def find_titles():
     _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
-
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     search_term = request.form['search_term'].strip()
     if search_term:
-        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number))
+        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, price=price))
     else:
         # TODO: we should redirect to that page
         return _initial_search_page(request)
@@ -265,10 +270,12 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
 
 def _initial_search_page(request):
     username = _username_from_header(request)
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
+        price=price,
     )
 
 
