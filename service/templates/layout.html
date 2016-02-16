@@ -53,12 +53,10 @@
           </div>
         </div>
       {% endif %}
-      <div class="column-quarter column-flip">
-        <div class="account">
-          {% if username %}
-            {{username}}
-          {% endif %}
-        </div>
+      <div class="column-third column-flip">
+        {% block welsh_language_toggle %}
+        {% endblock %}
+        
       </div>
     </div>
     {% block body %}{% endblock %}
