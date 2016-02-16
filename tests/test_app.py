@@ -500,7 +500,6 @@ class TestRightUserGroup:
         assert response.status_code == 404
 
 
-
 class TestConfirmSelection:
 
     base_url = '/confirm-selection'
