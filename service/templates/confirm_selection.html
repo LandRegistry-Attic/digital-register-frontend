@@ -80,7 +80,7 @@
     <!--    <input type="submit" style="margin:10px 0" class="button" value="Buy title summary"> -->
     <!-- </form> -->
       <p class="collapse-bottom"><a href="{{ url_for('get_title', title_number=params['title_number'], page=params['display_page_number'], search_term=params['search_term']) }}" class="button" onclick="return checkRightToCancel()">Buy title summary</a></p>
-      <span class="collapse-bottom font-xsmall"><small>for {{ params['price'] | safe }}</small></small></p>
+      <span class="collapse-bottom font-xsmall"><small>for {{ params['price'] | safe }}</small></span></p>
     <!-- </div> -->
 
     <script>
@@ -102,9 +102,8 @@
     </script>
 </div>
 
-
 <div style="width:30%;float:right;">
-  <div id="map" style="height: 0 !important; padding-bottom: 100% !important;width: 100% !important;">
+  <div id="map" style="height: 0 !important; padding-bottom: 100% !important; width: 100% !important;">
     <div class="panel-simple">
       <p>The map relies on JavaScript being enabled in your browser.</p>
     </div>
