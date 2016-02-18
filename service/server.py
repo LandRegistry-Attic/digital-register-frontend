@@ -1,15 +1,13 @@
-from datetime import datetime                                                                          # type: ignore
-from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for, session  # type: ignore
-from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 import json
 import logging
 import logging.config                                                                                  # type: ignore
 import re
-import time
-
-from service import (address_utils, api_client, app, auditing, health_checker,
-                     title_formatter, title_utils)
-from service.forms import TitleSearchForm, SigninForm
+import os
+from datetime import datetime                                                                          # type: ignore
+from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
+from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
+from service import (address_utils, api_client, app, auditing, health_checker, title_formatter, title_utils)
+from service.forms import TitleSearchForm
 
 # TODO: move this to the template
 UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
@@ -46,32 +44,44 @@ def confirm_selection(title_number, search_term):
 
     params = dict()
     params['title'] = _get_register_title(request.args.get('title', title_number))
-    params['title_number'] = title_number
-    params['search_term'] = request.args.get('search_term', search_term)
-    params['display_page_number'] = int(request.args.get('page') or 1)
-    params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-    breadcrumbs = _breadcumbs_for_title_details(params['title_number'], params['search_term'], params['display_page_number'])
+    params['display_page_number'] = 1
+    params['MC_titleNumber'] = title_number
+    params['MC_searchType'] = request.args.get('search_term', search_term)
+    params['MC_timestamp'] = _get_time()
+    params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
+    params['MC_unitCount'] = '1'
+    params['desc'] = "unused"
 
-    return render_template(
-        'confirm_selection.html',
-        params=params,
-        breadcrumbs=breadcrumbs
-    )
+    # TODO: get price from a data store so that it can be reliably verified after payment has been processed.
+    params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
 
+    # TODO: check whether 'cartId' is required or not; if so, make it unique (per 'product').
+    params['cartId'] = os.getenv('WP_CARTID', 'r9kXm_Pg-VFlRma2vgHm51Q')
 
-@app.route('/spinner-page/', methods=['POST'])
-def spinner_page():
-    _validates_user_group(request)
-    worldpay_params = dict()
-    worldpay_params['title_number'] = request.form['title_number'].strip()
-    worldpay_params['username'] = _username_from_header
+    # Save user's search details.
+    username = _username_from_header(request)
+    api_client.save_search_request(username, params)
 
-    # more params to be confirmed by Richard (29/10/15)
+    # Last changed date - modified to remove colon in UTC offset, which python
+    # datetime.strptime() doesn't like >>>
 
-    return render_template(
-        'spinner-page.html',
-        params=worldpay_params,
-    )
+    datestring = params['title']['last_changed']
+    if len(datestring) == 25:
+        if datestring[22] == ':':
+            l = list(datestring)
+            del(l[22])
+            datestring = "".join(l)
+
+    dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
+    params['last_changed_datestring'] = \
+        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
+    params['last_changed_timestring'] = \
+        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
+                      '{:02d}'.format(dt_obj.minute),
+                      '{:02d}'.format(dt_obj.second))
+
+    action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
+    return render_template('confirm_selection.html', params=params, action_url=action_url)
 
 
 @app.route('/health', methods=['GET'])
@@ -99,7 +109,13 @@ def cookies():
 
 @app.route('/titles/<title_number>', methods=['GET'])
 def get_title(title_number):
+    """
+    Show title (result) if user is logged in, has paid and hasn't viewed before.
+    """
+
+    # Check for log-in
     _validates_user_group(request)
+
     title = _get_register_title(title_number)
     username = _username_from_header(request)
 
@@ -379,3 +395,9 @@ def _validates_user_group(request):
     user_group = request.headers.get("iv-groups", "")
     if "DRV" not in user_group.upper():
         abort(404)
+
+
+def _get_time():
+    # Postgres datetime format is YYYY-MM-DD MM:HH:SS.mm
+    _now = datetime.now()
+    return _now.strftime("%Y-%m-%d %H:%M:%S.%f")

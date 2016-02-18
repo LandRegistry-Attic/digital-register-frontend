@@ -14,7 +14,7 @@ session_cookie_secure = os.environ['SESSION_COOKIE_SECURE'].lower() != 'false'
 more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
-title_register_summary_price = "&pound;3 inc VAT"
+title_register_summary_price = "3.0"
 
 CONFIG_DICT = {
     'DEBUG': DEBUG,
@@ -24,6 +24,7 @@ CONFIG_DICT = {
     'LOGGING_CONFIG_FILE_PATH': logging_config_file_path,
     'PERMANENT_SESSION_LIFETIME': timedelta(minutes=15),
     'REGISTER_TITLE_API': register_title_api,
+    'LAND_REGISTRY_PAYMENT_INTERFACE_URI': os.environ['LAND_REGISTRY_PAYMENT_INTERFACE_URI'],
     'SECRET_KEY': secret_key,
     'SERVICE_NOTICE_HTML': service_notice_html,
     'SESSION_COOKIE_SECURE': session_cookie_secure,
