@@ -75,15 +75,9 @@
         </label>
       </div>
 
-    <!--  <form action="../worldpay_1" method="POST" onsubmit="return checkRightToCancel()"> -->
-    <!--    <input name="id" value="{{id}}" type="hidden" /> -->
-    <!--    <input type="submit" style="margin:10px 0" class="button" value="Buy title summary"> -->
-    <!-- </form> -->
       <p class="collapse-bottom"><a href="{{ url_for('get_title', title_number=params['title_number'], page=params['display_page_number'], search_term=params['search_term']) }}" class="button" onclick="return checkRightToCancel()">Buy title summary</a></p>
       <span class="collapse-bottom font-xsmall"><small>for {{ params['price'] | safe }}</small></span></p>
-    <!-- </div> -->
 
-<<<<<<< HEAD
     <script>
       var msg = document.createElement('span');
       msg.classList.add('error-message');
@@ -101,8 +95,6 @@
         }
       }
     </script>
-</div>
-=======
     <form class="form" action="{{ action_url }}" method="post">
       <input type='hidden' name='MC_titleNumber' id='MC_titleNumber' value="{{params.MC_titleNumber}}"/>
       <input type='hidden' name='MC_searchType' id='MC_searchType' value="{{params.MC_searchType}}"/>
@@ -113,7 +105,7 @@
       <input type='hidden' name='amount' id='amount' value="{{params.amount}}"/>
       <button type="submit" class="button" >Buy Now</button>
     </form>
->>>>>>> * Arrives at WorldPay from DRV front-end.
+</div>
 
 <div style="width:30%;float:right;">
   <div id="map" style="height: 0 !important; padding-bottom: 100% !important; width: 100% !important;">
