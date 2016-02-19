@@ -27,9 +27,6 @@ def app_start():
     username = _username_from_header(request)
     _validates_user_group(request)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-    print('xxxxxxxxx')
-    print(price)
-    print('xxxxxxxxx')
     return render_template(
         'search.html',
         form=TitleSearchForm(),
@@ -42,8 +39,11 @@ def app_start():
 def confirm_selection(title_number, search_term):
     _validates_user_group(request)
 
+    breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, 1)
+
     params = dict()
     params['title'] = _get_register_title(request.args.get('title', title_number))
+    params['title_number'] = title_number
     params['display_page_number'] = 1
     params['MC_titleNumber'] = title_number
     params['MC_searchType'] = request.args.get('search_term', search_term)
@@ -51,6 +51,7 @@ def confirm_selection(title_number, search_term):
     params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
     params['MC_unitCount'] = '1'
     params['desc'] = "unused"
+    params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
 
     # TODO: get price from a data store so that it can be reliably verified after payment has been processed.
     params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
@@ -62,26 +63,8 @@ def confirm_selection(title_number, search_term):
     username = _username_from_header(request)
     api_client.save_search_request(username, params)
 
-    # Last changed date - modified to remove colon in UTC offset, which python
-    # datetime.strptime() doesn't like >>>
-
-    datestring = params['title']['last_changed']
-    if len(datestring) == 25:
-        if datestring[22] == ':':
-            l = list(datestring)
-            del(l[22])
-            datestring = "".join(l)
-
-    dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
-    params['last_changed_datestring'] = \
-        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
-    params['last_changed_timestring'] = \
-        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
-                      '{:02d}'.format(dt_obj.minute),
-                      '{:02d}'.format(dt_obj.second))
-
     action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
-    return render_template('confirm_selection.html', params=params, action_url=action_url)
+    return render_template('confirm_selection.html', params=params, action_url=action_url, breadcrumbs=breadcrumbs)
 
 
 @app.route('/health', methods=['GET'])

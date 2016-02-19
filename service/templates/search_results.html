@@ -48,10 +48,12 @@
               {% endif %}
               <b>{{ title | tenure_info }}</b>
               {% if title['data'] and title['data'].get('is_caution_title') %}
-                <details class="font-xsmall">
+                <details>
                   <summary>What's this?</summary>
-                  <p>A caution against first registration protects an interest in land which hasn’t yet been registered with the Land Registry. It entitles the person who registered the caution to be told if someone tries to register the land, and object to completion of the registration until their claim has been considered.</p>
-                  <a rel="external" href="https://www.gov.uk/government/publications/caution-against-first-registration/practice-guide-3-cautions-against-first-registration">More about cautions against first registration</a>
+                  <div class="panel-indent">
+                      <p>A caution against first registration protects an interest in land which hasn’t yet been registered with the Land Registry. It entitles the person who registered the caution to be told if someone tries to register the land, and object to completion of the registration until their claim has been considered.</p>
+                      <a rel="external" href="https://www.gov.uk/government/publications/caution-against-first-registration/practice-guide-3-cautions-against-first-registration">More about cautions against first registration</a>
+                  </div>
                 </details>
               {% endif %}
             </div>
