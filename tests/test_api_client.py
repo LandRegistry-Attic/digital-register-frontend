@@ -5,12 +5,15 @@ from tests.fake_response import FakeResponse
 from service import api_client
 
 
-class CustomHTTPException(Exception):
-    pass
+class TestApiClient(unittest.TestCase):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.register_title_api_url = api_client.REGISTER_TITLE_API_URL.rstrip('/')
 
 
-class TestApiClient:
-
+class TestGetOfficialCopyData(TestApiClient):
 
     @mock.patch.object(api_client.requests, 'get', return_value=FakeResponse(b'', 404))
     def test_get_official_copy_data_calls_the_right_api_endpoint(self, mock_get):
@@ -46,17 +49,18 @@ class TestApiClient:
         assert 'API returned an unexpected response (500)' in str(e)
 
 
-class TestApiClientSaveSearchRequest(unittest.TestCase):
+class TestSaveSearchRequest(TestApiClient):
 
-    register_title_api_url = api_client.REGISTER_TITLE_API_URL.rstrip('/')
-    url = '{}/save_search_request'.format(register_title_api_url)
     cart_id = '5e1577160107a635dfb9c1d31089cad3ee3fd99a'
     data = dict()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.url = '{}/save_search_request'.format(self.register_title_api_url)
 
     def make_api_call(self, params=data):
         return api_client.save_search_request(params)
-
 
     @mock.patch.object(api_client.requests, 'post', return_value=FakeResponse(bytes(cart_id, 'utf-8'), 200))
     def test_save_search_request_returns_cart_id_from_api_when_response_is_200(self, mock_post):
@@ -65,7 +69,6 @@ class TestApiClientSaveSearchRequest(unittest.TestCase):
 
         assert self.cart_id == response.text
 
-
     @mock.patch.object(api_client.requests, 'post', return_value=FakeResponse(bytes(cart_id, 'utf-8'), 200))
     def test_save_search_request_calls_the_right_api_endpoint(self, mock_post):
 
@@ -73,37 +76,33 @@ class TestApiClientSaveSearchRequest(unittest.TestCase):
 
         mock_post.assert_called_once_with(self.url, data=self.data)
 
-
     # Derived from http://engineroom.trackmaven.com/blog/real-life-mocking ...
-    # TODO: make unit test work!
-    @mock.patch('service.error_handler.error_handler')
-    @mock.patch('service.api_client.requests.post')
+    # Note: "autospec=True" ensures that we match the mocked object's attributes.
+    @mock.patch('service.error_handler.error_handler', autospec=True)
+    @mock.patch('service.api_client.requests.post', autospec=True)
     def test_save_search_request_http_error(self, mock_post, mock_http_error_handler):
         """
         Test getting an HTTP error.
         """
 
-        # Construct our mock response object, giving it relevant expected
-        # behaviours
+        # Construct our mock response object, giving it relevant expected behaviours.
         mock_response = mock.Mock()
-        http_error = api_client.requests.exceptions.HTTPError()
-        mock_response.raise_for_status.side_effect = http_error
+        http_error = api_client.requests.exceptions.HTTPError
+        mock_response.raise_for_status.side_effect = http_error()
 
         # Assign our mock response as the result of our patched function
         mock_post.return_value = mock_response
 
-        # Make our patched error handler raise a custom exception
-        mock_http_error_handler.side_effect = CustomHTTPException()
+        with self.assertRaises(http_error):
 
-        with self.assertRaises(CustomHTTPException):
             self.make_api_call()
 
-        # Check that our function made the expected internal calls
-        mock_post.assert_called_once_with(url=self.url)
-        self.assertEqual(1, mock_response.raise_for_status.call_count)
+            # Check that our function made the expected internal calls
+            mock_post.assert_called_once_with(self.url, data=self.data)
+            self.assertEqual(1, mock_response.raise_for_status.call_count)
 
-        # Make sure we did not attempt to deserialize the response
-        self.assertEqual(0, mock_response.json.call_count)
+            # Make sure we did not attempt to deserialize the response
+            self.assertEqual(0, mock_response.json.call_count)
 
-        # Make sure our HTTP error handler is called
-        mock_http_error_handler.assert_called_once_with(http_error)
+            # Make sure our HTTP error handler is called
+            mock_http_error_handler.assert_called_once_with(http_error)

@@ -401,4 +401,3 @@ def _validates_user_group(request):
     user_group = request.headers.get("iv-groups", "")
     if "DRV" not in user_group.upper():
         abort(404)
-
