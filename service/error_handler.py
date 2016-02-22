@@ -8,7 +8,7 @@ ERROR_404_WORDING = 'Page not found'
 ERROR_404_DESCRIPTION = 'If you entered a web address please check it was correct.'
 LOGGER = logging.getLogger(__name__)
 
-error_template="error.html"
+error_template = "error.html"
 
 
 def error_handler(error):
