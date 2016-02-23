@@ -65,7 +65,7 @@
         If you want to keep a copy you can print it out</p>
     </div>
 
-      <h2 class="heading-medium">The summary costs £{{ params['price'] }} inc VAT</h2>
+      <h2 class="heading-medium">The summary costs {{ price_text | safe }}</h2>
       <p>You can pay by credit or debit card.</p>
       <p>You need to accept the following terms to continue.</p>
       <div class="form-group expand-bottom-half" id="right_to_cancel_group">
@@ -77,7 +77,7 @@
       </div>
 
       <p class="collapse-bottom"><a href="{{ url_for('get_title', title_number=params['title_number'], page=params['display_page_number'], search_term=params['search_term']) }}" class="button" onclick="return checkRightToCancel()">Buy title summary</a></p>
-      <span class="collapse-bottom font-xsmall"><small>for £{{ params['price'] }} inc VAT</small></span></p>
+      <span class="collapse-bottom font-xsmall"><small>for {{ price_text | safe }}</small></span></p>
 
     <script>
       var msg = document.createElement('span');

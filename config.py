@@ -15,6 +15,7 @@ more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
 title_register_summary_price = "3.00"
+title_register_summary_price_text = "&pound" + title_register_summary_price + " inc VAT"
 
 CONFIG_DICT = {
     'DEBUG': DEBUG,
@@ -32,6 +33,7 @@ CONFIG_DICT = {
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
     'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
+    'TITLE_REGISTER_SUMMARY_PRICE_TEXT': title_register_summary_price_text,
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
 settings = os.environ.get('SETTINGS')

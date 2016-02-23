@@ -27,11 +27,13 @@ def app_start():
     username = _username_from_header(request)
     _validates_user_group(request)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
         price=price,
+        price_text=price_text,
     )
 
 
@@ -52,6 +54,8 @@ def confirm_selection(title_number, search_term):
     params['MC_unitCount'] = '1'
     params['desc'] = "unused"
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    params['price_text'] = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
 
     # TODO: get price from a data store so that it can be reliably verified after payment has been processed.
     params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
@@ -64,7 +68,7 @@ def confirm_selection(title_number, search_term):
     api_client.save_search_request(username, params)
 
     action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
-    return render_template('confirm_selection.html', params=params, action_url=action_url, breadcrumbs=breadcrumbs)
+    return render_template('confirm_selection.html', params=params, action_url=action_url, breadcrumbs=breadcrumbs, price_text=price_text,)
 
 
 @app.route('/health', methods=['GET'])
@@ -147,9 +151,10 @@ def find_titles():
     _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     search_term = request.form['search_term'].strip()
     if search_term:
-        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, price=price))
+        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, price=price, price_text=price_text,))
     else:
         # TODO: we should redirect to that page
         return _initial_search_page(request)
@@ -270,11 +275,13 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
 def _initial_search_page(request):
     username = _username_from_header(request)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
         price=price,
+        price_text=price_text,
     )
 
 
