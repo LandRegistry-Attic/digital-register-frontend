@@ -178,12 +178,14 @@ class TestViewTitle:
     @mock.patch('service.title_utils.is_caution_title', return_value=True)
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_no_tenure_on_caution_title_page(
+    def test_tenure_on_caution_title_page(
             self, mock_get_official_copy_data, mock_get, mock_is_caution_title):
-
         response = self.app.get('/titles/titleref', headers=self.headers)
         assert response.status_code == 200
-        assert 'Tenure' not in response.data.decode()
+        response_data = response.data.decode()
+
+        assert 'Tenure type' in response_data
+        assert 'Freehold' in response_data
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
