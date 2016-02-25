@@ -78,7 +78,6 @@ def save_search_request(search_parameters):
 
     response = requests.post('{}/save_search_request'.format(REGISTER_TITLE_API_URL), data=search_parameters)
     response.raise_for_status()
-
     return response
 
 

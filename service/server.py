@@ -48,11 +48,12 @@ def confirm_selection(title_number, search_term):
     params['title_number'] = title_number
     params['display_page_number'] = 1
     params['MC_titleNumber'] = title_number
-    params['MC_searchType'] = request.args.get('search_term', search_term)
+    # should one of: A, D, M, T, I
+    params['MC_searchType'] = 'D'
     params['MC_timestamp'] = api_client._get_time()
     params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
     params['MC_unitCount'] = '1'
-    params['desc'] = "unused"
+    params['desc'] = request.args.get('search_term', search_term)
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     params['price_text'] = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
@@ -81,8 +82,8 @@ def confirm_selection(title_number, search_term):
                       '{:02d}'.format(dt_obj.second))
 
     # Save user's search details.
-    params['cartId'] = api_client.save_search_request(params)
-
+    response = api_client.save_search_request(params)
+    params['cartId'] = response.text
     action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
     return render_template('confirm_selection.html', params=params, action_url=action_url, breadcrumbs=breadcrumbs, price_text=price_text,)
 
