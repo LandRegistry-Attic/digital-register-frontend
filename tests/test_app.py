@@ -478,7 +478,7 @@ class TestWelsh:
         response = self.app.get("/titles/DN1000?language=cy", headers=self.headers)
         page_content = response.data.decode()
         assert response.status_code == 200
-        assert "Rhif teitl" in page_content
+        assert "Crynodeb o deitl" in page_content
         assert "Perchennog" in page_content
 
 
