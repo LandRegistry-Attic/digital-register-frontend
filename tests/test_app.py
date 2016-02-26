@@ -363,7 +363,7 @@ class TestTitleSearch:
 
     @mock.patch('requests.get', return_value=fake_title)
     def test_title_search_redirects(self, mock_get):
-        response = self.app.post('/title-search', data=dict(search_term='DN1000'), headers=self.headers, follow_redirects=False)
+        response = self.app.post('/title-search', data=dict(search_term='DN1000'), headers=self.headers, follow_redirects=False)  # type: ignore
         assert response.status_code == 302
 
     @mock.patch('requests.get', return_value=fake_no_titles)
