@@ -62,6 +62,15 @@ def get_official_copy_data(title_number):
         raise Exception(error_msg_format.format(response.status_code))
 
 
+# TODO: Invoke from server.py!
+def send_to_payment_service_provider(payment_parameters):
+
+    response = requests.post('{}/wp'.format(LAND_REGISTRY_PAYMENT_INTERFACE_URI), data=payment_parameters)
+    response.raise_for_status()
+
+    return response
+
+
 def save_search_request(search_parameters):
     """
     Saves user's Search Request and returns the 'cart id.'
@@ -69,7 +78,6 @@ def save_search_request(search_parameters):
 
     response = requests.post('{}/save_search_request'.format(REGISTER_TITLE_API_URL), data=search_parameters)
     response.raise_for_status()
-
     return response
 
 
