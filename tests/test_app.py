@@ -58,6 +58,8 @@ with open('tests/data/official_copy_response.json', 'r') as official_copy_respon
 
 unavailable_title = FakeResponse('', 404)
 
+api_saved_to_results_db_response = FakeResponse(b'"cartId": "123"', 200)
+
 
 class TestViewTitle:
 
@@ -363,7 +365,7 @@ class TestTitleSearch:
 
     @mock.patch('requests.get', return_value=fake_title)
     def test_title_search_redirects(self, mock_get):
-        response = self.app.post('/title-search', data=dict(search_term='DN1000'), headers=self.headers, follow_redirects=False)
+        response = self.app.post('/title-search', data=dict(search_term='DN1000'), headers=self.headers, follow_redirects=False)  # type: ignore
         assert response.status_code == 302
 
     @mock.patch('requests.get', return_value=fake_no_titles)
@@ -510,13 +512,10 @@ class TestConfirmSelection:
         self.app = app.test_client()
         self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
 
-    def get_selection(self):
-        return self.app.get('{}/titleref/searchterm'.format(self.base_url), headers=self.headers)
-
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
-    @mock.patch('service.api_client.save_search_request', return_value=("ok", 200))
+    @mock.patch('service.api_client.save_search_request', return_value=api_saved_to_results_db_response)
     def test_get_confirmation_page(self, mock_save, mock_get):
-        response = self.get_selection()
+        response = self.app.get('{}/titleref/searchterm'.format(self.base_url), headers=self.headers)
         assert response.status_code == 200
 
 

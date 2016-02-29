@@ -84,35 +84,16 @@
         </label>
       </div>
 
-      <p class="collapse-bottom"><a href="{{ url_for('get_title', title_number=params['title_number'], page=params['display_page_number'], search_term=params['search_term']) }}" class="button" onclick="return checkRightToCancel()">Buy title summary</a></p>
-      <span class="collapse-bottom font-xsmall"><small>for {{ price_text | safe }}</small></span></p>
-
-    <script>
-      var msg = document.createElement('span');
-      msg.classList.add('error-message');
-      msg.textContent = 'You need to agree to receive the summary straight away and that you’ll lose your right to cancel';
-      var rightToCancelGroup = document.getElementById('right_to_cancel_group');
-      function checkRightToCancel() {
-        if(msg.parentNode) {
-          msg.parentNode.removeChild(msg);
-          rightToCancelGroup.classList.remove('error');
-        }
-        if(!document.getElementById('right_to_cancel').checked) {
-          rightToCancelGroup.classList.add('error');
-          rightToCancelGroup.appendChild(msg);
-          return false;
-        }
-      }
-    </script>
     <form class="form" action="{{ action_url }}" method="post">
       <input type='hidden' name='MC_titleNumber' id='MC_titleNumber' value="{{params.MC_titleNumber}}"/>
       <input type='hidden' name='MC_searchType' id='MC_searchType' value="{{params.MC_searchType}}"/>
       <input type='hidden' name='MC_timestamp' id='MC_timestamp' value="{{params.MC_timestamp}}"/>
       <input type='hidden' name='MC_purchaseType' id='MC_purchaseType' value="{{params.MC_purchaseType}}"/>
       <input type='hidden' name='MC_unitCount' id='MC_unitCount' value="{{params.MC_unitCount}}"/>
+      <input type='hidden' name='MC_userId' id='MC_userId' value="{{params.MC_userId}}"/>
       <input type='hidden' name='cartId' id='cartId' value="{{params.cartId}}"/>
       <input type='hidden' name='amount' id='amount' value="{{params.amount}}"/>
-      <button type="submit" class="button" >Buy Now</button>
+      <button type="submit" class="button" onclick="return checkRightToCancel()">Buy title summary</button>
     </form>
 </div>
 
@@ -133,8 +114,24 @@
 </div>
 
 <script type='text/javascript'>
-//var indexData = {"crs": {"properties": {"name": "urn:ogc:def:crs:EPSG::27700"}, "type": "name"}, "geometry": {"coordinates": [[[441187.5, 112344.0], [441186.0, 112354.0], [441193.0, 112356.5], [441194.5, 112346.5]]], "type": "Polygon"}, "properties": {"colour": 25, "feature_id": 4019, "graphic_type": "Bordered Polygon", "render_attributes": {"border_colour": 25, "border_width": 0, "exterior_edge_colour": 1, "exterior_edge_thickness": 2, "exterior_edge_thickness_units": "Pixels", "fill_colour": 25, "fill_style": 9, "render_level": "0"}, "width": 0}, "type": "Feature"}
+
 var indexData = {{ params['title']['indexPolygon'] | tojson }};
+
+var msg = document.createElement('span');
+msg.classList.add('error-message');
+msg.textContent = 'You need to agree to receive the summary straight away and that you’ll lose your right to cancel';
+var rightToCancelGroup = document.getElementById('right_to_cancel_group');
+function checkRightToCancel() {
+  if(msg.parentNode) {
+    msg.parentNode.removeChild(msg);
+    rightToCancelGroup.classList.remove('error');
+  }
+  if(!document.getElementById('right_to_cancel').checked) {
+    rightToCancelGroup.classList.add('error');
+    rightToCancelGroup.appendChild(msg);
+    return false;
+  }
+}
 </script>
 
 <script src="/static/javascripts/map.js"></script>

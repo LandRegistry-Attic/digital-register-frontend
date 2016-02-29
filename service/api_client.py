@@ -1,14 +1,13 @@
 import requests  # type: ignore
-from flask import redirect  # type: ignore
-
+from datetime import datetime                                                                          # type: ignore
 from service import app
 
-REGISTER_TITLE_API_URL = app.config['REGISTER_TITLE_API']
+REGISTER_TITLE_API_URL = app.config['REGISTER_TITLE_API'].rstrip('/')
 LAND_REGISTRY_PAYMENT_INTERFACE_URI = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
 
 
 def get_title(title_number):
-    response = requests.get('{}titles/{}'.format(REGISTER_TITLE_API_URL, title_number))
+    response = requests.get('{}/titles/{}'.format(REGISTER_TITLE_API_URL, title_number))
 
     if response.status_code == 200:
         return _to_json(response)
@@ -25,7 +24,7 @@ def get_title(title_number):
 # TODO: check response status
 def get_titles_by_postcode(postcode, page_number):
     response = requests.get(
-        '{}title_search_postcode/{}'.format(REGISTER_TITLE_API_URL, postcode),
+        '{}/title_search_postcode/{}'.format(REGISTER_TITLE_API_URL, postcode),
         params={'page': page_number}
     )
 
@@ -35,7 +34,7 @@ def get_titles_by_postcode(postcode, page_number):
 # TODO: check response status
 def get_titles_by_address(address, page_number):
     response = requests.get(
-        '{}title_search_address/{}'.format(REGISTER_TITLE_API_URL, address),
+        '{}/title_search_address/{}'.format(REGISTER_TITLE_API_URL, address),
         params={'page': page_number}
     )
 
@@ -43,12 +42,12 @@ def get_titles_by_address(address, page_number):
 
 
 def check_health():
-    return requests.get('{0}health'.format(REGISTER_TITLE_API_URL))
+    return requests.get('{0}/health'.format(REGISTER_TITLE_API_URL))
 
 
 def get_official_copy_data(title_number):
     response = requests.get(
-        '{}titles/{}/official-copy'.format(REGISTER_TITLE_API_URL, title_number)
+        '{}/titles/{}/official-copy'.format(REGISTER_TITLE_API_URL, title_number)
     )
 
     if response.status_code == 200:
@@ -63,18 +62,22 @@ def get_official_copy_data(title_number):
         raise Exception(error_msg_format.format(response.status_code))
 
 
+# TODO: Invoke from server.py!
 def send_to_payment_service_provider(payment_parameters):
+
     response = requests.post('{}/wp'.format(LAND_REGISTRY_PAYMENT_INTERFACE_URI), data=payment_parameters)
+    response.raise_for_status()
+
     return response
 
 
-def save_search_request(username, search_parameters):
+def save_search_request(search_parameters):
+    """
+    Saves user's Search Request and returns the 'cart id.'
+    """
 
-    params = search_parameters
-    params['user_id'] = username
-
-    response = requests.post('{}/save_search_request'.format(REGISTER_TITLE_API_URL), data=params)
-
+    response = requests.post('{}/save_search_request'.format(REGISTER_TITLE_API_URL), data=search_parameters)
+    response.raise_for_status()
     return response
 
 
@@ -83,3 +86,9 @@ def _to_json(response):
         return response.json()
     except Exception as e:
         raise Exception('API response body is not JSON', e)
+
+
+def _get_time():
+    # Postgres datetime format is YYYY-MM-DD MM:HH:SS.mm
+    _now = datetime.now()
+    return _now.strftime("%Y-%m-%d %H:%M:%S.%f")

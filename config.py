@@ -14,10 +14,10 @@ session_cookie_secure = os.environ['SESSION_COOKIE_SECURE'].lower() != 'false'
 more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
-title_register_summary_price = "3.00"
-title_register_summary_price_text = "&pound" + title_register_summary_price + " inc VAT"
+title_register_summary_price = 3.0          # Numeric value required for DB2 etc.
+title_register_summary_price_text = "&pound{} inc VAT".format(title_register_summary_price)
 
-CONFIG_DICT = {
+CONFIG_DICT = {  # type: ignore
     'DEBUG': DEBUG,
     'FAULT_LOG_FILE_PATH': fault_log_file_path,
     'GOOGLE_ANALYTICS_API_KEY': google_analytics_api_key,
@@ -32,7 +32,7 @@ CONFIG_DICT = {
     'MORE_PROPRIETOR_DETAILS': more_proprietor_details,
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
-    'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,
+    'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,   # type: ignore
     'TITLE_REGISTER_SUMMARY_PRICE_TEXT': title_register_summary_price_text,
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
