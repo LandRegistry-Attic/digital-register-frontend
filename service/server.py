@@ -117,8 +117,10 @@ def get_title(title_number):
     Show title (result) if user is logged in, has paid and hasn't viewed before.
     """
 
+    # TODO potentially remove this code
+    # store username in session once logged in?
     # Check for log-in
-    _validates_user_group(request)
+    #_validates_user_group(request)
 
     title = _get_register_title(title_number)
     username = _username_from_header(request)
