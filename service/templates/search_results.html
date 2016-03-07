@@ -34,15 +34,14 @@
                 Title number: {{ title['title_number'] }}<br>
               {% else %}
               <div class="font-xsmall">
-                <p class="collapse-bottom">No title information found</p>
-
+                <p class="collapse-bottom"></p>
                 <details>
-                  <summary>Why not?</summary>
-                  <div class="panel-indent">
-                    <img style="vertical-align: middle;margin-bottom:10px" src="/static/images/beta.png" alt="Beta">
-                    <p>There could be many reasons why we cannot provide you a title number at this time. Try the <a href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">existing Land Registry service</a> instead</p>
-                    <p>If you need additional help, please call Land Registry on 0300 006 0411.</p>
-                  </div>
+                  <summary>No title information found</summary>
+                  <p>This may be because:</p>
+                  <ul>
+                  <li> <img style="vertical-align: middle;display:inline;margin-right:0.25em" src="/static/images/beta.png" alt="Beta">  This service is being rebuilt so some titles aren’t available here yet. Try <a href="https://eservices.landregistry.gov.uk/www/wps/portal/!ut/p/b1/04_SjzS0MDc3NjeyNDDSj9CPykssy0xPLMnMz0vMAfGjzOKNjSxMDA1NjDwsjM3MDTxN3dyNDUNMjQ1MjPWDU_P0c6McFQGRbYf3/">searching for the property on the Land Registry ’Find a Property’ service</a> instead.</li>
+                  <li>The property isn’t registered yet. Registration has only been compulsory across England and Wales since the 1990s. If the property hasn’t changed hands since then it may not be registered.</li>
+                </ul>
                 </details>
                 </div>
               {% endif %}
