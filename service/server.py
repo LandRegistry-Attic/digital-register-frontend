@@ -1,4 +1,5 @@
 import json
+import demjson
 import logging
 import logging.config                                                                                  # type: ignore
 import re
@@ -140,17 +141,20 @@ def get_title(title_number):
             title_number,
             username)
         )
+        transId = request.args.get('transid')
+        receiptData = demjson.decode(api_client.get_invoice_data(transId)[0])
 
         receipt = {
-            "date": "25 Jan 2016",
-            "address": "Land Registry, PO Box 6344, Coventry CV3 9LL",
-            "invoice_number": "ABC1234578",
-            "description": "Summary of title FAKE177634",
-            "net": "£2.50",
-            "vat": "£0.50",
-            "total": "£3.00",
-            "reg_number": "GB 8888 181 53"
+            "trans_id": transId,
+            "date": receiptData['date'],
+            "address": receiptData['address'],
+            "title_number": title_number,
+            "net": str(receiptData['net_amt']),
+            "vat": str(receiptData['vat_amt']),
+            "total": str(receiptData['fee_amt']),
+            "reg_number": receiptData['vat_num']
         }
+        print(receipt['net'], receipt['vat'], receipt['total'])
 
         return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt)
     else:

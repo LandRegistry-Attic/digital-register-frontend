@@ -1,4 +1,6 @@
 import requests  # type: ignore
+import pg8000
+import config
 from datetime import datetime                                                                          # type: ignore
 from service import app
 
@@ -92,3 +94,24 @@ def _get_time():
     # Postgres datetime format is YYYY-MM-DD MM:HH:SS.mm
     _now = datetime.now()
     return _now.strftime("%Y-%m-%d %H:%M:%S.%f")
+
+
+def get_invoice_data(transaction_id):
+    connection = pg8000.connect(user=config.user, host=config.host, port=int(config.port), database=config.trans_db, password=config.password)
+    cursor = connection.cursor()
+
+    returned_invoice = {}
+
+    try:
+        select_stmnt = \
+        """
+        SELECT "vat_json" FROM invoices WHERE "trans_id" = '{}'
+        """
+
+        cursor.execute(select_stmnt.format(transaction_id))
+        returned_invoice = cursor.fetchone()
+
+        return returned_invoice
+
+    except Exception as e:
+        raise Exception('An error occurred when trying to select an invoice from the DB.', e)

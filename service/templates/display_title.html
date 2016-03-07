@@ -148,45 +148,45 @@
               <dd class="font-xsmall">{{ receipt.date }}</dd>
             {% endif %}
 
-            {% if receipt.invoice_number %}
-              <dt class="bold-xsmall">Invoice number</dt>
-              <dd class="font-xsmall expand-bottom-half">{{ receipt.invoice_number }}</dd>
+            {% if receipt.address %}
+              <dt class="bold-xsmall">Address</dt>
+              <dd class="font-xsmall expand-bottom-half">{{ receipt.address }}</dd>
             {% endif %}
 
-            {% if receipt.description %}
-              <dt class="bold-xsmall">Items</dt>
-              <dd class="font-xsmall expand-bottom-half">{{ receipt.description }}</dd>
+            {% if receipt.trans_id %}
+              <dt class="bold-xsmall">Transaction ID</dt>
+              <dd class="font-xsmall expand-bottom-half">{{ receipt.trans_id }}</dd>
+            {% endif %}
+
+            {% if receipt.title_number %}
+              <dt class="bold-xsmall">Title Number</dt>
+              <dd class="font-xsmall expand-bottom-half">{{ receipt.title_number }}</dd>
+            {% endif %}
+
+            {% if receipt.reg_number %}
+              <dt class="bold-xsmall">Vat Registration Number</dt>
+              <dd class="font-xsmall expand-bottom-half">{{ receipt.reg_number }}</dd>
             {% endif %}
 
             {% if receipt.net %}
               <dt class="bold-xsmall">Net value</dt>
-              <dd class="font-xsmall">{{ receipt.net }}</dd>
+              <dd class="font-xsmall">&pound{{ receipt.net }}</dd>
             {% endif %}
 
             {% if receipt.vat %}
               <dt class="bold-xsmall">VAT @ 20%</dt>
-              <dd class="font-xsmall">{{ receipt.vat }}</dd>
+              <dd class="font-xsmall">&pound{{ receipt.vat }}</dd>
             {% endif %}
 
             {% if receipt.total %}
               <dt class="bold-xsmall">Total inc. VAT</dt>
-              <dd class="font-xsmall">{{ receipt.total }}</dd>
+              <dd class="font-xsmall">&pound{{ receipt.total }}</dd>
             {% endif %}
 
             </dl>
           </div>
-          <div class="column-one-thirds">
-          {% if receipt.address %}
-          {# TODO - remove hard-coding #}
-            <p class="font-xsmall">Land Registry<br>Trafalgar house<br>1 Bedford Park<br>Croydon<br>CR0 2AQ</p>
-          {% endif %}
-
-          {% if receipt.reg_number %}
-            <p class="font-xsmall">VAT registration number:<br>{{ receipt.reg_number }}</p>
-          {% endif %}
-
-          </div>
         </div>
+    <hr>
       {% endif %}
 
       {% if show_pdf %}
