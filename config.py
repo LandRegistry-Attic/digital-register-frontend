@@ -1,6 +1,7 @@
-from datetime import timedelta
 import os
+from datetime import timedelta
 from typing import Dict, Union
+from service.api_client import get_pound_price
 
 DEBUG = False
 
@@ -14,7 +15,7 @@ session_cookie_secure = os.environ['SESSION_COOKIE_SECURE'].lower() != 'false'
 more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
-title_register_summary_price = 3.00          # Numeric value required for DB2 etc.
+title_register_summary_price = get_pound_price()
 title_register_summary_price_text = "&pound{} inc VAT".format(title_register_summary_price)
 
 CONFIG_DICT = {  # type: ignore

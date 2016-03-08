@@ -65,7 +65,6 @@ def get_official_copy_data(title_number):
         raise Exception(error_msg_format.format(response.status_code))
 
 
-# TODO: Invoke from server.py!
 def send_to_payment_service_provider(payment_parameters):
 
     response = requests.post('{}/wp'.format(LAND_REGISTRY_PAYMENT_INTERFACE_URI), data=payment_parameters)
@@ -82,6 +81,20 @@ def save_search_request(search_parameters):
     response = requests.post('{}/save_search_request'.format(REGISTER_TITLE_API_URL), data=search_parameters)
     response.raise_for_status()
     return response
+
+
+def get_pound_price(product='drvSummary'):
+    """
+    Get price value (nominally in pence) and convert to Pound format if necessary.
+
+    :param product: str (product type)
+    :return: decimail (price in pounds)
+    """
+    price = requests.get('{}/get_price/{}'.format(REGISTER_TITLE_API_URL, product))
+    if price % 1 == 0:
+        price /= 100
+
+    return price
 
 
 def _to_json(response):

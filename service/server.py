@@ -56,7 +56,6 @@ def confirm_selection(title_number, search_term):
     params['MC_unitCount'] = '1'
     params['desc'] = request.args.get('search_term', search_term)
     params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-    params['price_text'] = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
 
     # TODO: get price from a data store so that it can be reliably verified after payment has been processed.
