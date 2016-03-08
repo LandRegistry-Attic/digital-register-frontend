@@ -3,20 +3,21 @@
 {% extends "govuk_template.html" %}
 
 {% block head %}
-  <!-- Land Registry styleguide css -->
-  {% assets "styleguide" %}<!--[if gt IE 8]><!--><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->{% endassets %}
-  {% assets "styleguide_ie8" %}<!--[if IE 8]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
-  {% assets "styleguide_ie7" %}<!--[if IE 7]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
-  {% assets "styleguide_ie6" %}<!--[if IE 6]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
-  {% assets "print" %}<link href="{{ ASSET_URL }}" media="print" rel="stylesheet" type="text/css" />{% endassets %}
-  {% assets "beta" %}<link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" />{% endassets %}
+  {% assets "css" %}<!--[if gt IE 8]><!--><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->{% endassets %}
+  {% assets "css_ie8" %}<!--[if IE 8]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "css_ie7" %}<!--[if IE 7]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "css_ie6" %}<!--[if IE 6]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "css_print" %}<link href="{{ ASSET_URL }}" media="print" rel="stylesheet" type="text/css" />{% endassets %}
+
   <!-- Google Analytics -->
   <script type="text/javascript">
     var googleAnalyticsApiKey = '{{ google_api_key }}';
   </script>
   <script src="/static/javascripts/googleanalytics.js"></script>
-  <!-- Consumable assets -->
-  {% assets "styleguide_js" %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
+
+  <!--[if lt IE 9]>{% assets "js_ie" %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
+  {% assets "js" %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
+
   {% block head_additionals %}{% endblock %}
   {% block js_additionals %}{% endblock %}
 {% endblock %}

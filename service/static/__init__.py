@@ -3,13 +3,15 @@ from flask.ext.assets import Environment  # type: ignore
 from . import pipeline
 
 assets = Environment()
-assets.register('styleguide_js', pipeline.js)
-assets.register('styleguide', pipeline.sass)
-assets.register('styleguide_ie8', pipeline.sass_ie8)
-assets.register('styleguide_ie7', pipeline.sass_ie7)
-assets.register('styleguide_ie6', pipeline.sass_ie6)
-assets.register('print', pipeline.print)
-assets.register('beta', pipeline.beta)
+
+assets.register('js', pipeline.js)
+assets.register('js_ie', pipeline.js_ie)
+
+assets.register('css', pipeline.css)
+assets.register('css_print', pipeline.css_print)
+assets.register('css_ie8', pipeline.css_ie8)
+assets.register('css_ie7', pipeline.css_ie7)
+assets.register('css_ie6', pipeline.css_ie6)
 
 
 def register_assets(app):
