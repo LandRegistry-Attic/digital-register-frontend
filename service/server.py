@@ -144,7 +144,6 @@ def get_title(title_number):
         transId = request.args.get('transid')
         if transId:
             receiptData = demjson.decode(api_client.get_invoice_data(transId)[0])
-            import pdb; pdb.set_trace()
         else:
             receiptData = {"date": 'N/A',
                            "address1": 'N/A',
