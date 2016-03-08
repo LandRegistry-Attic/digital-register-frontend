@@ -65,8 +65,7 @@ service/static/gen/
 service/static/.webassets-cache/
 
 # Generated files
-service/static/lr-styleguide/js/styleguide-components.js
-service/static/assets
+service/static/land-registry-elements
 
 # Node.js
 node_modules
