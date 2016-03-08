@@ -6,7 +6,7 @@ require('land-registry-elements').then(function(assetPath) {
 
   copy(assetPath, destPath, function(err, files) {
     if(err) {
-      reject(err);
+      throw err;
       return;
     }
 
