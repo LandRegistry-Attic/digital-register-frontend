@@ -22,9 +22,14 @@ LOGGER = logging.getLogger(__name__)
 
 
 @app.route('/', methods=['GET'])
-@app.route('/search', methods=['GET'])
+@app.route('/landing-page', methods=['GET'])
 def app_start():
-    # App entry point
+    # landing page for DRV - this is whitelisted by webseal.
+    return render_template('landing_page.html')
+
+
+@app.route('/search', methods=['GET'])
+def search():
     username = _username_from_header(request)
     _validates_user_group(request)
     return render_template(

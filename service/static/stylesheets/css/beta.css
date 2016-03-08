@@ -1,3 +1,7 @@
+.clear {
+    clear: both;
+}
+
 @font-face {
   font-family: GDS-Logo;
   src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
