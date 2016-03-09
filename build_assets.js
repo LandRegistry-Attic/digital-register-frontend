@@ -1,19 +1,13 @@
-var copy = require('ncp').ncp;
+var path = require('path');
+var buildAssets = require('/vagrant/apps/land-registry-elements');
 
-require('/vagrant/apps/land-registry-elements').then(function(assetPath) {
-
-  var destPath = 'service/static/land-registry-elements';
-
-  copy(assetPath, destPath, function(err, files) {
-    if(err) {
-      throw err;
-      return;
-    }
-
-    console.log('Assets copied to', destPath);
-  });
+buildAssets({
+  'destination': path.resolve('service/static/land-registry-elements'),
+  'mode': 'production'
 })
-.catch(function(e) {
-  console.error(e);
-});
-
+  .then(function(dest) {
+    console.log('Done');
+  })
+  .catch(function(e) {
+    console.error(e);
+  });
