@@ -19,8 +19,7 @@
     "url": "https://github.com/landregistry/digital-register-frontend/issues"
   },
   "homepage": "https://github.com/landregistry/digital-register-frontend#readme",
-  "devDependencies": {
-    "land-registry-elements": "landregistry/land-registry-elements#863a0a52bd3e3a0df34b3ca00af6c4bdc2062356",
+  "dependencies": {
     "ncp": "^2.0.0"
   }
 }

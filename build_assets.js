@@ -1,6 +1,6 @@
 var copy = require('ncp').ncp;
 
-require('land-registry-elements').then(function(assetPath) {
+require('/vagrant/apps/land-registry-elements').then(function(assetPath) {
 
   var destPath = 'service/static/land-registry-elements';
 
