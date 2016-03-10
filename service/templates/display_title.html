@@ -1,4 +1,4 @@
-{% extends "imports.html" %}
+{% extends "layout.html" %}
 {% block head_additionals %}
 <style>
   #map{
@@ -18,6 +18,8 @@
     font-size: 0.9em;
   }
 </style>
+
+  {% assets "js_leaflet" %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
 {% block welsh_language_toggle %}
@@ -268,10 +270,5 @@
 </script>
 
 <script src="/static/javascripts/map.js"></script>
-<link rel="stylesheet" href="/static/vendor/leaflet-0.7.3/leaflet.css" />
-<link rel="stylesheet" href="/static/stylesheets/application.css" />
-<script src="/static/vendor/leaflet-0.7.3/leaflet.js"></script><!-- Leaflet -->
-<script src="/static/javascripts/proj4.js"></script><!-- proj4js -->
-<script src="/static/javascripts/proj4leaflet.js"></script><!-- proj4leaflet -->
 
 {% endblock %}
