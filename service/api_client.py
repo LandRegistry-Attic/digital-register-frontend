@@ -6,6 +6,7 @@ from service import app
 
 REGISTER_TITLE_API_URL = app.config['REGISTER_TITLE_API'].rstrip('/')
 LAND_REGISTRY_PAYMENT_INTERFACE_URI = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
+LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI']
 
 
 def get_title(title_number):
@@ -97,21 +98,7 @@ def _get_time():
 
 
 def get_invoice_data(transaction_id):
-    connection = pg8000.connect(user=config.user, host=config.host, port=int(config.port), database=config.trans_db, password=config.password)
-    cursor = connection.cursor()
+    response = requests.get('{}/get-invoice-data?transId={}'.format(LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI, transaction_id))
+    response.raise_for_status()
 
-    returned_invoice = {}
-
-    try:
-        select_stmnt = \
-        """
-        SELECT "vat_json" FROM invoices WHERE "trans_id" = '{}'
-        """
-
-        cursor.execute(select_stmnt.format(transaction_id))
-        returned_invoice = cursor.fetchone()
-
-        return returned_invoice
-
-    except Exception as e:
-        raise Exception('An error occurred when trying to select an invoice from the DB.', e)
+    return response

@@ -141,11 +141,7 @@ def get_title(title_number):
             title_number,
             username)
         )
-        transId = request.args.get('transid')
-        if transId:
-            receiptData = demjson.decode(api_client.get_invoice_data(transId)[0])
-        else:
-            receiptData = {"date": 'N/A',
+        receiptData = {"date": 'N/A',
                            "address1": 'N/A',
                            "title_number": 'N/A',
                            "net_amt": 0,
@@ -153,19 +149,26 @@ def get_title(title_number):
                            "fee_amt": 0,
                            "vat_num": 'N/A'}
 
+        transId = request.args.get('transid')
+        if transId:
+            receiptData = api_client.get_invoice_data(transId)
+            receiptText = demjson.decode(receiptData.text)
+            vat_json = demjson.decode(receiptText['vat_json'])
+
+
         receipt = {
             "trans_id": transId,
-            "date": receiptData['date'],
-            "address1": receiptData['address1'],
-            "address2": receiptData['address2'],
-            "address3": receiptData['address3'],
-            "address4": receiptData['address4'],
-            "postcode": receiptData['postcode'],
+            "date": vat_json['date'],
+            "address1": vat_json['address1'],
+            "address2": vat_json['address2'],
+            "address3": vat_json['address3'],
+            "address4": vat_json['address4'],
+            "postcode": vat_json['postcode'],
             "title_number": title_number,
-            "net": str(receiptData['net_amt']),
-            "vat": str(receiptData['vat_amt']),
-            "total": str(receiptData['fee_amt']),
-            "reg_number": receiptData['vat_num']
+            "net": str(vat_json['net_amt']),
+            "vat": str(vat_json['vat_amt']),
+            "total": str(vat_json['fee_amt']),
+            "reg_number": vat_json['vat_num']
         }
         print(receipt['net'], receipt['vat'], receipt['total'])
 
