@@ -18,9 +18,3 @@ export SESSION_COOKIE_SECURE='False'
 # Ensure the following 2 FULL_TITLE env vars are false in pre-prod and prod (until we get the green light)
 export SHOW_FULL_TITLE_DATA='true'
 export SHOW_FULL_TITLE_PDF='true'
-
-export POSTGRES_USER='postgres'
-export POSTGRES_PASSWORD='password'
-export POSTGRES_HOST='172.16.42.43'
-export POSTGRES_PORT=5432
-export POSTGRES_TRANS_DB='transaction_data'

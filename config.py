@@ -16,11 +16,6 @@ show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
 title_register_summary_price = 3.00          # Numeric value required for DB2 etc.
 title_register_summary_price_text = "&pound{} inc VAT".format(title_register_summary_price)
-user = os.environ['POSTGRES_USER']
-password = os.environ['POSTGRES_PASSWORD']
-host = os.environ['POSTGRES_HOST']
-port = os.environ['POSTGRES_PORT']
-trans_db = os.environ['POSTGRES_TRANS_DB']
 
 CONFIG_DICT = {  # type: ignore
     'DEBUG': DEBUG,
