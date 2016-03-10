@@ -141,8 +141,12 @@ def get_title(title_number):
             title_number,
             username)
         )
-        receiptData = {"date": 'N/A',
+        vat_json = {"date": 'N/A',
                        "address1": 'N/A',
+                       "address2": 'N/A',
+                       "address3": 'N/A',
+                       "address4": 'N/A',
+                       "postcode": 'N/A',
                        "title_number": 'N/A',
                        "net_amt": 0,
                        "vat_amt": 0,
