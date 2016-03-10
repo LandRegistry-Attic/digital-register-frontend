@@ -1,9 +1,12 @@
 import requests  # type: ignore
+import pg8000
+import config
 from datetime import datetime                                                                          # type: ignore
 from service import app
 
 REGISTER_TITLE_API_URL = app.config['REGISTER_TITLE_API'].rstrip('/')
 LAND_REGISTRY_PAYMENT_INTERFACE_URI = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
+LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI']
 
 
 def get_title(title_number):
@@ -92,3 +95,10 @@ def _get_time():
     # Postgres datetime format is YYYY-MM-DD MM:HH:SS.mm
     _now = datetime.now()
     return _now.strftime("%Y-%m-%d %H:%M:%S.%f")
+
+
+def get_invoice_data(transaction_id):
+    response = requests.get('{}/get-invoice-data?transId={}'.format(LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI, transaction_id))
+    response.raise_for_status()
+
+    return response

@@ -137,6 +137,65 @@
 
       </div>
 
+      <hr>
+      {% if receipt %}
+        <h2 class="heading-medium">VAT receipt</h2>
+        <div class="grid-row">
+          <div class="column-two-thirds">
+            <dl class="definition-tabular-1-3">
+            {% if receipt.date %}
+              <dt class="bold-xsmall">Date</dt>
+              <dd class="font-xsmall">{{ receipt.date }}</dd>
+            {% endif %}
+
+            {% if receipt.trans_id %}
+              <dt class="bold-xsmall">Transaction ID / Invoice number</dt>
+              <dd class="font-xsmall expand-bottom-half">{{ receipt.trans_id }}</dd>
+            {% endif %}
+
+            {% if receipt.title_number %}
+              <dt class="bold-xsmall">Description of the goods or services</dt>
+              <dd class="font-xsmall expand-bottom-half">Summary of title: {{ receipt.title_number }}</dd>
+            {% endif %}
+
+            {% if receipt.net %}
+              <dt class="bold-xsmall">Net value</dt>
+              <dd class="font-xsmall">&pound{{ receipt.net }}</dd>
+            {% endif %}
+
+            {% if receipt.vat %}
+              <dt class="bold-xsmall">VAT charged (20%)</dt>
+              <dd class="font-xsmall">&pound{{ receipt.vat }}</dd>
+            {% endif %}
+
+            {% if receipt.total %}
+              <dt class="bold-xsmall">Total inc. VAT</dt>
+              <dd class="font-xsmall">&pound{{ receipt.total }}</dd>
+            {% endif %}
+            </dl>
+          </div>
+          <div class="column-one-third">
+            {% if receipt.address1 %}
+            <p>
+                <strong>{{ receipt.address1 }}</strong><br>
+                {{ receipt.address2 }}<br>
+                {{ receipt.address3 }}<br>
+                {{ receipt.address4 }}<br>
+                {{ receipt.postcode }}<br>
+            </p>
+            {% endif %}
+
+            {% if receipt.reg_number %}
+            <p>
+              <strong>VAT registration number</strong><br>
+              {{ receipt.reg_number }}
+            </p>
+            {% endif %}
+          </div>
+        </div>
+    <hr>
+      {% endif %}
+
       {% if show_pdf %}
         <div class="download-documents js-stick-at-top-when-scrolling">
           <div class="document-item">
