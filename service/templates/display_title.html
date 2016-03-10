@@ -1,65 +1,28 @@
-{% extends "layout.html" %}
-{% block head_additionals %}
-<style>
-  #map{
-    height:320px !important;
-    width:320px !important;
-  }
-  .btn-href {
-    background: none;
-    border: 0;
-    font-size: 0.9em;
-    cursor: pointer;
-    text-decoration: underline;
-    padding-left:0;
-  }
+{% extends "layouts/layout.html" %}
 
-  .lang-form label {
-    font-size: 0.9em;
-  }
-</style>
-
-  {% assets "js_leaflet" %}<script type="text/javascript" src="{{ ASSET_URL }}"></script>{% endassets %}
-{% endblock %}
-
-{% block welsh_language_toggle %}
-<div class="language">
-          {# The following form resubmits the page if an alternate (english or welsh) #}
-          {# language is selected. The language code goes in g.locale. The form has #}
-          {# no action specified in order to resubmit the current page while maintaining #}
-          {# the query string. The route is a GET so the method is get, with 'language=' #}
-          {# added to the query string (ie, not POST + http header variables) #}
-
-          <form method="GET" class='lang-form'>
-            {% if g.locale == 'en' %}
-              <input type='hidden' name='language' value='cy'/>
-              <label for='submit-btn'>English</label>|<input id='submit-btn' type='submit' class='btn-href' value='Cymraeg' />
-            {% else %}
-              <input type='hidden' name='language' value='en'/>
-              <input id='submit-btn' type='submit' class='btn-href' value='English' />|<label for='submit-btn'>Cymraeg</label>
-            {% endif %}
-          </form>
-        </div>
+{% block header_secondary %}
+  {% include 'includes/language_switcher.html' %}
 {% endblock %}
 
 {% block body %}
 
-{# Slightly convoluted heading to cater for variations in Welsh #}
-<h1 class="heading-large">
-{% if is_caution_title %}
-{{ _('Summary of caution title') }}
-{% else %}
-{{ _('Summary of title') }}
-{% endif %}
- {{ title.number }}
-</h1>
+  {# Slightly convoluted heading to cater for variations in Welsh #}
+  <h1 class="heading-large">
+  {% if is_caution_title %}
+  {{ _('Summary of caution title') }}
+  {% else %}
+  {{ _('Summary of title') }}
+  {% endif %}
+   {{ title.number }}
+  </h1>
 
-<p class="font-xsmall">{{ _('This title was last changed on') }} {{ title.last_changed | date }} {{ _('at') }} {{ title.last_changed | time }}</p>
+  <p class="font-xsmall">{{ _('This title was last changed on') }} {{ title.last_changed | date }} {{ _('at') }} {{ title.last_changed | time }}</p>
 
-<div class="grid-row">
-  <div class="column-two-thirds">
-    <hr class="collapse-top">
-    <dl class="definition-tabular expand-top-half">
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <hr class="collapse-top">
+      <dl class="definition-tabular expand-top-half">
+
         {% if is_caution_title %}
           <dt class="bold-small">Caution</dt>
           <dd>
@@ -74,15 +37,18 @@
           </dd>
           </dt>
         {% endif %}
-    <dt>Address</dt>
-    <dd><span class="heading-medium">
-            {% if title.address_lines %}
-              {{ '<br>'.join(title.address_lines)|safe }}
-            {% else %}
-              {{ _('Not Available') }}
-            {% endif %}
-        </span>
-    </dd>
+
+        <dt>Address</dt>
+        <dd>
+          <span class="heading-medium">
+              {% if title.address_lines %}
+                {{ '<br>'.join(title.address_lines)|safe }}
+              {% else %}
+                {{ _('Not Available') }}
+              {% endif %}
+          </span>
+      </dd>
+
       <dt>{% if is_caution_title %}{{ _('Cautioner') }}{% else %}{{ _('Owner') }}{% endif %}{{ title.proprietors|length|pluralize }}</dt>
       <dd>
         {% for proprietor in title.proprietors %}
@@ -241,34 +207,32 @@
 
   {% if full_title_data %}
     <div class="service-notice expand-bottom">
-      {% include 'display_full_title_details.html' %}
+      {% include 'includes/full_title_data.html' %}
     </div>
   {% endif %}
 
-<div class="grid-row">
-  <div class="text legal-division--top font-xsmall">
-    <div class="panel-indent">
-      <p>{{ _('If you have any problems with your purchase, you can call Land Registry on') }} <b>0300 006 0411</b>.</p>
-      <p>{{ _('For more contact methods, visit ') }}<a href="https://www.gov.uk/government/organisations/land-registry">www.gov.uk/government/organisations/land-registry</a></p>
+  <div class="grid-row">
+    <div class="text legal-division--top font-xsmall">
+      <div class="panel-indent">
+        <p>{{ _('If you have any problems with your purchase, you can call Land Registry on') }} <b>0300 006 0411</b>.</p>
+        <p>{{ _('For more contact methods, visit ') }}<a href="https://www.gov.uk/government/organisations/land-registry">www.gov.uk/government/organisations/land-registry</a></p>
+      </div>
+    </div>
+    <div class="text printhidden">
+      <h6 class="heading-medium">{{ _('What next') }}</h6>
+      <ul>
+        <li><a href="{{ url_for('find_titles') }}">{{ _('Search for another title using this service') }}</a></li>
+        <li><a href="https://gov.uk">{{ _('Return to') }} GOV.UK</a></li>
+      </ul>
     </div>
   </div>
-  <div class="text printhidden">
-    <h6 class="heading-medium">{{ _('What next') }}</h6>
-    <ul>
-      <li><a href="{{ url_for('find_titles') }}">{{ _('Search for another title using this service') }}</a></li>
-      <li><a href="https://gov.uk">{{ _('Return to') }} GOV.UK</a></li>
-    </ul>
-  </div>
-</div>
 
 {% endblock %}
 
 {% block js_bottom %}
-<script type='text/javascript'>
-  //var indexData = {"crs": {"properties": {"name": "urn:ogc:def:crs:EPSG::27700"}, "type": "name"}, "geometry": {"coordinates": [[[441187.5, 112344.0], [441186.0, 112354.0], [441193.0, 112356.5], [441194.5, 112346.5]]], "type": "Polygon"}, "properties": {"colour": 25, "feature_id": 4019, "graphic_type": "Bordered Polygon", "render_attributes": {"border_colour": 25, "border_width": 0, "exterior_edge_colour": 1, "exterior_edge_thickness": 2, "exterior_edge_thickness_units": "Pixels", "fill_colour": 25, "fill_style": 9, "render_level": "0"}, "width": 0}, "type": "Feature"}
-  var indexData = {{ title.indexPolygon | tojson }};
-</script>
+  <script>
+    var indexData = {{ title.indexPolygon | tojson }};
+  </script>
 
-<script src="/static/javascripts/map.js"></script>
-
+  {% assets "js_map" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}

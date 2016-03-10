@@ -31,5 +31,15 @@ js = Bundle('land-registry-elements/assets/javascripts/govuk-template.js',
             'land-registry-elements/assets/javascripts/landregistry.js',
             filters='rjsmin', output='dist/javascript/main.js')
 
-js_leaflet = Bundle('land-registry-elements/assets/javascripts/leaflet.js',
-            filters='rjsmin', output='dist/javascript/leaflet.js')
+js_map = Bundle('land-registry-elements/assets/javascripts/leaflet.js',
+                'javascripts/map.js',
+                filters='rjsmin', output='dist/javascript/leaflet.js')
+
+js_googleanalytics = Bundle('javascripts/googleanalytics.js',
+                      filters='rjsmin', output='dist/javascript/googleanalytics.js')
+
+js_ga_search = Bundle('javascripts/ga_search.js',
+                      filters='rjsmin', output='dist/javascript/ga_search.js')
+
+js_ga_search_results = Bundle('javascripts/ga_search_results.js',
+                      filters='rjsmin', output='dist/javascript/ga_search_results.js')

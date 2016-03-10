@@ -318,7 +318,7 @@ class TestDisplayTitlePdf:
         actual_args = actual_call[1]
         actual_kwargs = actual_call[2]
 
-        assert actual_args[0] == 'full_title.html'
+        assert actual_args[0] == 'pdf/full_title.html'
         assert actual_kwargs['title_number'] == 'titleref'
         assert actual_kwargs['last_entry_date'] == '3 February 3001 at 04:05:06'
         assert actual_kwargs['issued_date'] == datetime.now().strftime('%-d %B %Y')

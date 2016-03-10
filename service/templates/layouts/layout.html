@@ -1,0 +1,68 @@
+{% set asset_path = '/static/land-registry-elements/assets/' %}
+
+{% extends "layouts/govuk_template.html" %}
+
+{% block head %}
+  {% assets "css" %}<!--[if gt IE 8]><!--><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->{% endassets %}
+  {% assets "css_ie8" %}<!--[if IE 8]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "css_ie7" %}<!--[if IE 7]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "css_ie6" %}<!--[if IE 6]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "css_print" %}<link href="{{ ASSET_URL }}" media="print" rel="stylesheet" type="text/css" />{% endassets %}
+
+  <!-- Google Analytics -->
+  <script>
+    var googleAnalyticsApiKey = '{{ google_api_key }}';
+  </script>
+  {% assets "js_googleanalytics" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+
+
+  {% block head_additionals %}{% endblock %}
+{% endblock %}
+
+{% block header_class %}with-proposition{% endblock %}
+
+{% block proposition_header %}
+  <div class="header-proposition">
+    <div class="content">
+      <nav id="proposition-menu">
+        <span id="proposition-name">Search for property information</span>
+      </nav>
+    </div>
+  </div>
+{% endblock %}
+
+{% block cookie_message %}
+  <p>Land Registry uses cookies to make the site simpler. <a href="/cookies">Find out more about cookies</a></p>
+{% endblock %}
+
+{% block content %}
+  <main id="content" role="main">
+    {% include 'includes/phase_banner.html' %}
+
+    <div class="grid-row">
+      <div class="column-two-thirds">
+        {% block header_primary %}{% endblock %}
+      </div>
+      <div class="column-third">
+        {% block header_secondary %}{% endblock %}
+      </div>
+    </div>
+
+    {% block body %}{% endblock %}
+    {% block js_bottom %}{% endblock %}
+  </main>
+{% endblock %}
+
+{% block footer_support_links %}
+  <ul>
+    <li><a href="/cookies">Cookies</a></li>
+    <li> <a href="/terms-and-conditions">Terms &amp; Conditions</a>  </li>
+    <li>Built by the <a href="https://www.gov.uk/government/organisations/land-registry">Land Registry</a></li>
+  </ul>
+{% endblock %}
+
+{% block body_end %}
+  <!--[if lt IE 9]>{% assets "js_ie" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
+  {% assets "js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+  {% block js_additionals %}{% endblock %}
+{% endblock %}

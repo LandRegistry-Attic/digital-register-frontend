@@ -457,8 +457,10 @@ def _create_pdf_template(sub_registers, title, title_number):
     class_of_title = title.get('class_of_title')
     # need to check for caution title as we don't display Class of title for them
     is_caution = title.get('is_caution_title') is True
+
     LOGGER.debug("ENDED: _create_pdf_template")
-    return render_template('full_title.html', title_number=title_number, title=title,
+
+    return render_template('pdf/full_title.html', title_number=title_number, title=title,
                            last_entry_date=last_entry_date,
                            issued_date=issued_date,
                            edition_date=edition_date,
