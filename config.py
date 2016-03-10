@@ -1,9 +1,9 @@
 import os
 from datetime import timedelta
 from typing import Dict, Union
-from service.api_client import get_pound_price
 
 DEBUG = False
+
 
 fault_log_file_path = os.environ['FAULT_LOG_FILE_PATH']
 google_analytics_api_key = os.environ['GOOGLE_ANALYTICS_API_KEY']
@@ -15,8 +15,7 @@ session_cookie_secure = os.environ['SESSION_COOKIE_SECURE'].lower() != 'false'
 more_proprietor_details = os.environ['MORE_PROPRIETOR_DETAILS']
 show_full_title_data = os.environ['SHOW_FULL_TITLE_DATA'].lower() == 'true'
 show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
-title_register_summary_price = get_pound_price()
-title_register_summary_price_text = "&pound{} inc VAT".format(title_register_summary_price)
+title_register_summary_price_text = "&pound{} inc VAT"
 
 CONFIG_DICT = {  # type: ignore
     'DEBUG': DEBUG,
@@ -34,8 +33,10 @@ CONFIG_DICT = {  # type: ignore
     'MORE_PROPRIETOR_DETAILS': more_proprietor_details,
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
-    'TITLE_REGISTER_SUMMARY_PRICE': title_register_summary_price,   # type: ignore
     'TITLE_REGISTER_SUMMARY_PRICE_TEXT': title_register_summary_price_text,
+
+    # This value is set at run-time.
+    'TITLE_REGISTER_SUMMARY_PRICE': None,
 }  # type: Dict[str, Union[bool, str, timedelta]]
 
 settings = os.environ.get('SETTINGS')
@@ -50,3 +51,4 @@ elif settings == 'test':
     CONFIG_DICT['DISABLE_CSRF_PREVENTION'] = True
     CONFIG_DICT['FAULT_LOG_FILE_PATH'] = '/dev/null'
     CONFIG_DICT['LOGGING'] = False
+

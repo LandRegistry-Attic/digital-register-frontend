@@ -3,7 +3,7 @@ from flask import Flask, request, g     # type: ignore
 from flask.ext.babel import Babel       # type: ignore
 
 from config import CONFIG_DICT          # type: ignore
-from service import logging_config, error_handler, static, title_utils, template_filters   # type: ignore
+from service import logging_config, error_handler, static, title_utils, template_filters, api_client   # type: ignore
 
 # This causes the traceback to be written to the fault log file in case of serious faults
 fault_log_file = open(str(CONFIG_DICT['FAULT_LOG_FILE_PATH']), 'a')
@@ -30,6 +30,19 @@ def get_locale():
 def before_request():
     g.locale = request.args.get('language', 'en')
     g.current_lang = g.locale
+
+
+@app.before_first_request
+def before_first_request():
+    """
+    Set price only after all services are running - digital-register-api in particular.
+    """
+
+    price = api_client.get_pound_price()
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT'].format(price)
+
+    app.config.update({'TITLE_REGISTER_SUMMARY_PRICE': price})
+    app.config.update({'TITLE_REGISTER_SUMMARY_PRICE_TEXT': price_text})
 
 
 static.register_assets(app)  # type: ignore
