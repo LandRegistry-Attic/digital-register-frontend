@@ -142,19 +142,18 @@ def get_title(title_number):
             username)
         )
         receiptData = {"date": 'N/A',
-                           "address1": 'N/A',
-                           "title_number": 'N/A',
-                           "net_amt": 0,
-                           "vat_amt": 0,
-                           "fee_amt": 0,
-                           "vat_num": 'N/A'}
+                       "address1": 'N/A',
+                       "title_number": 'N/A',
+                       "net_amt": 0,
+                       "vat_amt": 0,
+                       "fee_amt": 0,
+                       "vat_num": 'N/A'}
 
         transId = request.args.get('transid')
         if transId:
             receiptData = api_client.get_invoice_data(transId)
             receiptText = demjson.decode(receiptData.text)
             vat_json = demjson.decode(receiptText['vat_json'])
-
 
         receipt = {
             "trans_id": transId,
