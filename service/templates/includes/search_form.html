@@ -15,7 +15,7 @@
 
     {% if h1 %}</h1>{% endif %}
 
-    <input class="form-control" id="search_term" name="search_term" type="text" autofocus="autofocus" value="{{search_term}}">
+    <input class="form-control" id="search_term" name="search_term" type="text"{% if autofocus %} autofocus="autofocus"{% endif %} value="{{search_term}}">
 
     <input class="button" type="submit" name="search-button" value="Search" id="search_button">
   </div>
