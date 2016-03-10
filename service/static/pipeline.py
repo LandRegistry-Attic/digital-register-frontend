@@ -27,8 +27,9 @@ js_ie = Bundle('land-registry-elements/assets/javascripts/ie.js',
                'land-registry-elements/assets/javascripts/polyfills.js',
                filters='rjsmin', output='dist/javascript/ie.js')
 
-
 js = Bundle('land-registry-elements/assets/javascripts/govuk-template.js',
-            'land-registry-elements/assets/javascripts/leaflet.js',
             'land-registry-elements/assets/javascripts/landregistry.js',
             filters='rjsmin', output='dist/javascript/main.js')
+
+js_leaflet = Bundle('land-registry-elements/assets/javascripts/leaflet.js',
+            filters='rjsmin', output='dist/javascript/leaflet.js')

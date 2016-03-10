@@ -5,6 +5,7 @@ from . import pipeline
 assets = Environment()
 
 assets.register('js', pipeline.js)
+assets.register('js_leaflet', pipeline.js_leaflet)
 assets.register('js_ie', pipeline.js_ie)
 
 assets.register('css', pipeline.css)
