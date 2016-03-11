@@ -20,9 +20,6 @@ TITLE_NUMBER_REGEX = re.compile('^([A-Z]{0,3}[1-9][0-9]{0,5}|[0-9]{1,6}[ZT])$')
 POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 LOGGER = logging.getLogger(__name__)
 
-PRICE = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-PRICE_TEXT = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
-
 
 @app.route('/', methods=['GET'])
 @app.route('/search', methods=['GET'])
@@ -34,8 +31,8 @@ def app_start():
         'search.html',
         form=TitleSearchForm(),
         username=username,
-        price=PRICE,
-        price_text=PRICE_TEXT,
+        price=app.config['TITLE_REGISTER_SUMMARY_PRICE'],
+        price_text=app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT'],
     )
 
 
@@ -56,9 +53,9 @@ def confirm_selection(title_number, search_term):
     params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
     params['MC_unitCount'] = '1'
     params['desc'] = request.args.get('search_term', search_term)
-    params['amount'] = PRICE
+    params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
 
-    price_text = PRICE_TEXT
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     username = _username_from_header(request)
     params['MC_userId'] = username
 
@@ -200,8 +197,8 @@ def display_title_pdf(title_number):
 def find_titles():
     _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
-    price = PRICE
-    price_text = PRICE_TEXT
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     search_term = request.form['search_term'].strip()
     if search_term:
         return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, price=price, price_text=price_text,))
@@ -325,8 +322,8 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
 
 def _initial_search_page(request):
     username = _username_from_header(request)
-    price = PRICE
-    price_text = PRICE_TEXT
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     return render_template(
         'search.html',
         form=TitleSearchForm(),

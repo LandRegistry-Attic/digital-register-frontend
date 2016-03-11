@@ -83,7 +83,6 @@ def get_pound_price(product='drvSummary'):
 
     response = requests.get('{}/get_price/{}'.format(REGISTER_TITLE_API_URL, product))
     response.raise_for_status()
-
     try:
         price = int(response.text)
     except ValueError as e:
