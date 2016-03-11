@@ -1,6 +1,7 @@
 from flask.ext.assets import Environment  # type: ignore
-
+import os
 from . import pipeline
+from shutil import copytree, rmtree
 
 assets = Environment()
 
@@ -20,4 +21,18 @@ assets.register('css_ie6', pipeline.css_ie6)
 
 def register_assets(app):
     assets.init_app(app)
+
+    # Copy various images from the original stylesheet directory into the built output
+    # Reason being, we are using flash assets to compress the css to a new folder
+    # but the images don't automatically come along with it so we have to copy them manually
+    dir = os.path.dirname(__file__)
+    folders = ['external-links', 'fonts', 'images']
+
+    for folder in folders:
+      src = os.path.join(dir, 'land-registry-elements/assets/stylesheets', folder)
+      dest = os.path.join(dir, 'dist/css', folder)
+      rmtree(dest, True)
+      copytree(src, dest)
+
+
     return assets

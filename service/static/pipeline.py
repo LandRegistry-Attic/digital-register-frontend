@@ -5,23 +5,23 @@ from os import path                  # type: ignore
 css = Bundle('land-registry-elements/assets/stylesheets/govuk-template.css',
              'land-registry-elements/assets/stylesheets/fonts.css',
              'land-registry-elements/assets/stylesheets/elements.css',
-              output='dist/css/main.css')
+              filters='cssmin', output='dist/css/main.css')
 
 css_print = Bundle('land-registry-elements/assets/stylesheets/govuk-template-print.css',
-                    output='dist/css/print.css')
+                    filters='cssmin', output='dist/css/print.css')
 
 css_ie8 = Bundle('land-registry-elements/assets/stylesheets/govuk-template-ie8.css',
                  'land-registry-elements/assets/stylesheets/fonts-ie8.css',
                  'land-registry-elements/assets/stylesheets/elements-ie8.css',
-                  output='dist/css/main-ie8.css')
+                  filters='cssmin', output='dist/css/main-ie8.css')
 
 css_ie7 = Bundle('land-registry-elements/assets/stylesheets/govuk-template-ie7.css',
                  'land-registry-elements/assets/stylesheets/elements-ie7.css',
-                  output='dist/css/main-ie7.css')
+                  filters='cssmin', output='dist/css/main-ie7.css')
 
 css_ie6 = Bundle('land-registry-elements/assets/stylesheets/govuk-template-ie6.css',
                  'land-registry-elements/assets/stylesheets/elements-ie6.css',
-                  output='dist/css/main-ie6.css')
+                  filters='cssmin', output='dist/css/main-ie6.css')
 
 js_ie = Bundle('land-registry-elements/assets/javascripts/ie.js',
                'land-registry-elements/assets/javascripts/polyfills.js',
