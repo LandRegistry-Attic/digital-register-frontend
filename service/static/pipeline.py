@@ -5,6 +5,7 @@ from os import path                  # type: ignore
 css = Bundle('land-registry-elements/assets/stylesheets/govuk-template.css',
              'land-registry-elements/assets/stylesheets/fonts.css',
              'land-registry-elements/assets/stylesheets/elements.css',
+             'stylesheets/application.css',
               filters='cssmin', output='dist/css/main.css')
 
 css_print = Bundle('land-registry-elements/assets/stylesheets/govuk-template-print.css',
