@@ -68,41 +68,50 @@
           {{- title.proprietors|length|pluralize -}}
         </dt>
 
-        <dd>
-          {% for proprietor in title.proprietors %}
-            <h5 class="{% if loop.index != 1 %} expand-top-half {% endif %}">
-              <span class="heading-small">{{ proprietor.name }}</span>{{ proprietor.name_extra_info }}
-            </h5>
-            {% if proprietor.co_reg_no %}
-              <div>{{ proprietor.co_reg_no }}</div>
+        {% for proprietor in title.proprietors %}
+          <dd>
+            <div class="address">
+              <span class="bold">{{ proprietor.name }} {{ proprietor.name_extra_info }}</span>
+              {% if proprietor.co_reg_no %}
+                <span>{{ proprietor.co_reg_no }}</span>
+
                 {% if proprietor.company_location %}
-                  <div>{{ proprietor.company_location }}</div>
+                  <span>{{ proprietor.company_location }}</span>
                 {% endif %}
-            {% endif %}
-            {% for address in proprietor.addresses %}
-              <div>{{ '<br>'.join(address.lines)|safe }}</div>
-            {% endfor %}
-          {% endfor %}
-        </dd>
+              {% endif %}
+
+              {% for address in proprietor.addresses %}
+                {% for line in address.lines %}
+                  <span>{{ line|safe }}</span>
+                {% endfor %}
+              {% endfor %}
+            </div>
+          </dd>
+        {% endfor %}
 
         {% if title.lenders %}
           <dt>{{ _('Lender') }}{{ title.lenders|length|pluralize }}</dt>
-          <dd>
-            {% for lender in title.lenders %}
-              <h5 class="{% if loop.index != 1 %} expand-top-half {% endif %}">
-                <span class="heading-small">{{ lender.name }}</span>{{ lender.name_extra_info }}
-              </h5>
-              {% if lender.co_reg_no %}
-                <div>{{ lender.co_reg_no }}</div>
-              {% endif %}
-              {% if lender.company_location %}
-                <div>{{ lender.company_location }}</div>
-              {% endif %}
-              {% for address in lender.addresses %}
-                <div>{{ '<br>'.join(address.lines)|safe }}</div>
-              {% endfor %}
-            {% endfor %}
-          </dd>
+          {% for lender in title.lenders %}
+            <dd>
+              <div class="address">
+                <span class="bold">{{ lender.name }} {{ lender.name_extra_info }}</span>
+
+                {% if lender.co_reg_no %}
+                  <span>{{ lender.co_reg_no }}</span>
+                {% endif %}
+
+                {% if lender.company_location %}
+                  <span>{{ lender.company_location }}</span>
+                {% endif %}
+
+                {% for address in lender.addresses %}
+                  {% for line in address.lines %}
+                    <span>{{ line|safe }}</span>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </dd>
+          {% endfor %}
         {% endif %}
 
         <dt>{{ _('Tenure type') }}</dt>
