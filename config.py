@@ -51,4 +51,3 @@ elif settings == 'test':
     CONFIG_DICT['DISABLE_CSRF_PREVENTION'] = True
     CONFIG_DICT['FAULT_LOG_FILE_PATH'] = '/dev/null'
     CONFIG_DICT['LOGGING'] = False
-
