@@ -15,7 +15,11 @@
 
   <div class="grid-row column-flip spacing-top-single">
     <div class="column-one-third tablet-column-one-third spacing-bottom-single">
-      <div class="map" id="map"></div>
+      {% if params['title']['indexPolygon'] %}
+        <div class="map" id="map">
+          <p>The map relies on JavaScript being enabled in your browser.</p>
+        </div>
+      {% endif %}
     </div>
 
     <div class="column-two-thirds tablet-column-two-thirds">
@@ -164,8 +168,10 @@
 {% endblock %}
 
 {% block js_additionals %}
-  <script>
-    var indexData = {{ params['title']['indexPolygon'] | tojson }};
-  </script>
-  {% assets "js_map" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+  {% if params['title']['indexPolygon'] %}
+    <script>
+      var indexData = {{ params['title']['indexPolygon'] | tojson }};
+    </script>
+    {% assets "js_map" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+  {% endif %}
 {% endblock %}

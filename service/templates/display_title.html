@@ -19,11 +19,13 @@
   <div class="grid-row column-flip spacing-top-single">
     <div class="column-one-third tablet-column-one-third spacing-bottom-single">
 
-     <div class="map polygon" id="map">
-        <p>{{ _('The map relies on JavaScript being enabled in your browser.') }}</p>
-      </div>
+      {% if title.indexPolygon %}
+        <div class="map polygon" id="map">
+          <p>{{ _('The map relies on JavaScript being enabled in your browser.') }}</p>
+        </div>
 
-      <p class="font-xsmall">{{ _('This map shows the property\'s rough extent and location, <strong class="bold">not legal boundaries.</strong>') }}</p>
+        <p class="font-xsmall">{{ _('This map shows the property\'s rough extent and location, <strong class="bold">not legal boundaries.</strong>') }}</p>
+      {% endif %}
     </div>
 
     <div class="column-two-thirds tablet-column-two-thirds">
@@ -249,9 +251,11 @@
 {% endblock %}
 
 {% block js_additionals %}
-  <script>
-    var indexData = {{ title.indexPolygon | tojson }};
-  </script>
+  {% if title.indexPolygon %}
+    <script>
+      var indexData = {{ title.indexPolygon | tojson }};
+    </script>
 
-  {% assets "js_map" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% assets "js_map" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+  {% endif %}
 {% endblock %}
