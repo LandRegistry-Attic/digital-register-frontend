@@ -431,7 +431,7 @@ class TestHealthcheck:
     def test_health_calls_health_endpoints_of_apis(self, mock_api_get):
         self.app.get('/health')
 
-        mock_api_get.assert_called_once_with('{}health'.format(app.config['REGISTER_TITLE_API']))
+        mock_api_get.assert_called_once_with('{}/health'.format(app.config['REGISTER_TITLE_API']))
 
     @mock.patch('service.health_checker.perform_healthchecks', return_value=[])
     def test_health_returns_ok_when_health_checker_returns_no_errors(
