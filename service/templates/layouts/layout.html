@@ -25,7 +25,7 @@
   <div class="header-proposition">
     <div class="content">
       <nav id="proposition-menu">
-        <span id="proposition-name">Search for property information</span>
+        <a href="/" id="proposition-name">Search for property information</a>
       </nav>
     </div>
   </div>
@@ -40,10 +40,10 @@
     {% include 'includes/phase_banner.html' %}
 
     <div class="grid-row">
-      <div class="column-two-thirds">
+      <div class="column-two-thirds mobile-column-one-half">
         {% block header_primary %}{% endblock %}
       </div>
-      <div class="column-third">
+      <div class="column-third mobile-column-one-half">
         {% block header_secondary %}{% endblock %}
       </div>
     </div>
