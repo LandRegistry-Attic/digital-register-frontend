@@ -1,16 +1,17 @@
 window.onload = function() {
 
-  // Remove default 'no javascript' message
-  document.getElementById('map').innerHTML = '';
+  var mapElement = document.getElementById('map');
 
-  // Check that cooridinate data is present
+  // Remove default 'no javascript' message
+  mapElement.innerHTML = '';
+
+  // Check that coordinate data is present
   if (indexData &&
       (
         (indexData.geometry && indexData.geometry.coordinates && indexData.geometry.coordinates.length > 0) ||
         (indexData.features && indexData.features[0].geometry && indexData.features[0].geometry.coordinates && indexData.features[0].geometry.coordinates.length > 0)
       )
   ) {
-    document.getElementById('map').style.height = '420px';
 
     // Define coordinate system using PROJ4 standards
     projection_name = 'EPSG:27700'
@@ -56,7 +57,7 @@ window.onload = function() {
     //Index stlye
     var indexStyle = {
       fillcolor: 'blue',
-      fillOpacity: document.getElementById('map').classList.contains('polygon') ? 0.5 : 0,
+      fillOpacity: mapElement.classList.contains('polygon') ? 0.5 : 0,
       opacity: 0
     };
 
@@ -70,12 +71,12 @@ window.onload = function() {
     //Center map view on geojson polygon
     var bounds = indexGeoJson.getBounds();
 
-    if(!document.getElementById('map').classList.contains('polygon')) {
-          L.marker(bounds.getCenter()).addTo(map);
-        }
+    if(!mapElement.classList.contains('polygon')) {
+      L.marker(bounds.getCenter()).addTo(map);
+    }
 
     map.fitBounds(bounds, {maxZoom: 18, animate: false});
   } else {
-    document.getElementById('map').innerHTML = '<div class="panel-simple">No map information available</div>';
+    mapElement.parentNode.removeChild(mapElement);
   }
 };

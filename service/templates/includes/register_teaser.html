@@ -1,7 +1,7 @@
 <div class="teaser teaser-register spacing-bottom-single">
   <h2 class="heading-small">
     {% if title['data'] %}
-      <a href="{{ url_for('confirm_selection', title_number=title['title_number'], search_term=search_term, display_page_number=display_page_number) }}">{% if addressbase %}{{ title['address'] }}{% else %}{{ title['data']['address']['address_string'] }}{% endif %}</a>
+      <a href="{{ url_for('confirm_selection', title_number=title['title_number'], search_term=search_term, page=display_page_number) }}">{% if addressbase %}{{ title['address'] }}{% else %}{{ title['data']['address']['address_string'] }}{% endif %}</a>
     {% else %}
       {{ title['address'] }}
     {% endif %}
