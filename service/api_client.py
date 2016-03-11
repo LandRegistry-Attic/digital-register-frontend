@@ -1,12 +1,10 @@
 import requests  # type: ignore
-import pg8000
 import config
 from datetime import datetime                                                                          # type: ignore
-from service import app
 
-REGISTER_TITLE_API_URL = app.config['REGISTER_TITLE_API'].rstrip('/')
-LAND_REGISTRY_PAYMENT_INTERFACE_URI = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
-LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI']
+LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI = config.CONFIG_DICT['LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI']
+REGISTER_TITLE_API_URL = config.CONFIG_DICT['REGISTER_TITLE_API'].rstrip('/')
+LAND_REGISTRY_PAYMENT_INTERFACE_URI = config.CONFIG_DICT['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
 
 
 def get_title(title_number):
@@ -65,15 +63,6 @@ def get_official_copy_data(title_number):
         raise Exception(error_msg_format.format(response.status_code))
 
 
-# TODO: Invoke from server.py!
-def send_to_payment_service_provider(payment_parameters):
-
-    response = requests.post('{}/wp'.format(LAND_REGISTRY_PAYMENT_INTERFACE_URI), data=payment_parameters)
-    response.raise_for_status()
-
-    return response
-
-
 def save_search_request(search_parameters):
     """
     Saves user's Search Request and returns the 'cart id.'
@@ -82,6 +71,28 @@ def save_search_request(search_parameters):
     response = requests.post('{}/save_search_request'.format(REGISTER_TITLE_API_URL), data=search_parameters)
     response.raise_for_status()
     return response
+
+
+def get_pound_price(product='drvSummary'):
+    """
+    Get price value (nominally in pence) and convert to Pound format if necessary.
+
+    :param product: str (product type)
+    :return: decimail (price in pounds)
+    """
+
+    response = requests.get('{}/get_price/{}'.format(REGISTER_TITLE_API_URL, product))
+    response.raise_for_status()
+
+    try:
+        price = int(response.text)
+    except ValueError as e:
+        raise Exception('Nominal price is not an integer (pence value)', e)
+
+    if price % 1 == 0:
+        price /= 100
+
+    return price
 
 
 def _to_json(response):
