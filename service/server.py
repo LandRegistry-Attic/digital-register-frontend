@@ -1,14 +1,15 @@
+from datetime import datetime                                                                          # type: ignore
+from flask import abort, make_response, Markup, redirect, render_template, request, Response, url_for, session  # type: ignore
+from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 import json
-import demjson
 import logging
 import logging.config                                                                                  # type: ignore
 import re
-import os
-from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
-from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
-from service import (address_utils, api_client, app, auditing, health_checker, title_formatter, title_utils)
-from service.forms import TitleSearchForm
-from datetime import datetime
+import time
+
+from service import (address_utils, api_client, app, auditing, health_checker,
+                     title_formatter, title_utils)
+from service.forms import TitleSearchForm, SigninForm
 
 # TODO: move this to the template
 UNAUTHORISED_WORDING = Markup('If this problem persists please contact us at '
@@ -27,12 +28,15 @@ def app_start():
     # App entry point
     username = _username_from_header(request)
     _validates_user_group(request)
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    print('xxxxxxxxx')
+    print(price)
+    print('xxxxxxxxx')
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
-        price=app.config['TITLE_REGISTER_SUMMARY_PRICE'],
-        price_text=app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT'],
+        price=price,
     )
 
 
@@ -40,47 +44,34 @@ def app_start():
 def confirm_selection(title_number, search_term):
     _validates_user_group(request)
 
-    breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, 1)
-
     params = dict()
     params['title'] = _get_register_title(request.args.get('title', title_number))
     params['title_number'] = title_number
-    params['display_page_number'] = 1
-    params['MC_titleNumber'] = title_number
-    # should one of: A, D, M, T, I
-    params['MC_searchType'] = 'D'
-    params['MC_timestamp'] = api_client._get_time()
-    params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
-    params['MC_unitCount'] = '1'
-    params['desc'] = request.args.get('search_term', search_term)
-    params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    params['search_term'] = request.args.get('search_term', search_term)
+    params['display_page_number'] = int(request.args.get('page') or 1)
+    params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    breadcrumbs = _breadcumbs_for_title_details(params['title_number'], params['search_term'], params['display_page_number'])
 
-    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
-    username = _username_from_header(request)
-    params['MC_userId'] = username
+    return render_template(
+        'confirm_selection.html',
+        params=params,
+        breadcrumbs=breadcrumbs
+    )
 
-    # Last changed date - modified to remove colon in UTC offset, which python
-    # datetime.strptime() doesn't like >>>
-    datestring = params['title']['last_changed']
-    if len(datestring) == 25:
-        if datestring[22] == ':':
-            l = list(datestring)
-            del(l[22])
-            datestring = "".join(l)
 
-    dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
-    params['last_changed_datestring'] = \
-        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
-    params['last_changed_timestring'] = \
-        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
-                      '{:02d}'.format(dt_obj.minute),
-                      '{:02d}'.format(dt_obj.second))
+@app.route('/spinner-page/', methods=['POST'])
+def spinner_page():
+    _validates_user_group(request)
+    worldpay_params = dict()
+    worldpay_params['title_number'] = request.form['title_number'].strip()
+    worldpay_params['username'] = _username_from_header
 
-    # Save user's search details.
-    response = api_client.save_search_request(params)
-    params['cartId'] = response.text
-    action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
-    return render_template('confirm_selection.html', params=params, action_url=action_url, breadcrumbs=breadcrumbs, price_text=price_text,)
+    # more params to be confirmed by Richard (29/10/15)
+
+    return render_template(
+        'spinner-page.html',
+        params=worldpay_params,
+    )
 
 
 @app.route('/health', methods=['GET'])
@@ -108,15 +99,7 @@ def cookies():
 
 @app.route('/titles/<title_number>', methods=['GET'])
 def get_title(title_number):
-    """
-    Show title (result) if user is logged in, has paid and hasn't viewed before.
-    """
-
-    # TODO potentially remove this code
-    # store username in session once logged in?
-    # Check for log-in
-    # _validates_user_group(request)
-
+    _validates_user_group(request)
     title = _get_register_title(title_number)
     username = _username_from_header(request)
 
@@ -135,41 +118,8 @@ def get_title(title_number):
             title_number,
             username)
         )
-        vat_json = {"date": 'N/A',
-                    "address1": 'N/A',
-                    "address2": 'N/A',
-                    "address3": 'N/A',
-                    "address4": 'N/A',
-                    "postcode": 'N/A',
-                    "title_number": 'N/A',
-                    "net_amt": 0,
-                    "vat_amt": 0,
-                    "fee_amt": 0,
-                    "vat_num": 'N/A'}
 
-        transId = request.args.get('transid')
-        if transId:
-            receiptData = api_client.get_invoice_data(transId)
-            receiptText = demjson.decode(receiptData.text)
-            vat_json = demjson.decode(receiptText['vat_json'])
-
-        receipt = {
-            "trans_id": transId,
-            "date": vat_json['date'],
-            "address1": vat_json['address1'],
-            "address2": vat_json['address2'],
-            "address3": vat_json['address3'],
-            "address4": vat_json['address4'],
-            "postcode": vat_json['postcode'],
-            "title_number": title_number,
-            "net": str(vat_json['net_amt']),
-            "vat": str(vat_json['vat_amt']),
-            "total": str(vat_json['fee_amt']),
-            "reg_number": vat_json['vat_num']
-        }
-        print(receipt['net'], receipt['vat'], receipt['total'])
-
-        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt)
+        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request)
     else:
         abort(404)
 
@@ -198,10 +148,9 @@ def find_titles():
     _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     search_term = request.form['search_term'].strip()
     if search_term:
-        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, price=price, price_text=price_text,))
+        return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, price=price))
     else:
         # TODO: we should redirect to that page
         return _initial_search_page(request)
@@ -305,7 +254,7 @@ def _normalise_postcode(postcode_in):
     return postcode
 
 
-def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt):
+def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request):
     username = _username_from_header(request)
     return render_template(
         'display_title.html',
@@ -316,20 +265,17 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
         show_pdf=show_pdf,
         full_title_data=full_title_data,
         is_caution_title=title_utils.is_caution_title(title),
-        receipt=receipt,
     )
 
 
 def _initial_search_page(request):
     username = _username_from_header(request)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
         price=price,
-        price_text=price_text,
     )
 
 
