@@ -11,7 +11,7 @@
 
   <p>You'll get a summary of the information Land Registry holds for this property title.</p>
 
-  <div class="grid-row column-flip spacing-top-half">
+  <div class="grid-row column-flip spacing-top-single">
     <div class="column-one-third tablet-column-one-third spacing-bottom-single">
       {% if params['title']['indexPolygon'] %}
         <div class="map" id="map">
@@ -88,21 +88,21 @@
 
         <h3 class="heading-small collapse-top">Because this property or land is unregistered, the summary will not tell you:</h3>
 
-        <ul class="list-bullet">
+        <ul class="list list-bullet">
           <li>Who the owner is</li>
           <li>What they paid for it</li>
           <li>Whether there is a mortgage on it</li>
         </ul>
 
       {% else %}
-        <ul class="list-bullet">
+        <ul class="list list-bullet">
           {% if params['title']['tenure'].upper() == 'FREEHOLD' %}
             <li>current owner's name and address</li>
           {% elif params['title']['tenure'].upper() == 'LEASEHOLD' %}
             <li>current leaseholder's name and address</li>
           {% endif %}
 
-          <li>what was paid for the property – you won't get this if it was bought before April 2000, if they paid less than £100, or if Land Registry have agreed not to record the price</li>
+          <li>what was paid for the property – you won't get this if it was bought before April 2000, if they paid less than &pound;100, or if Land Registry have agreed not to record the price</li>
           <li>if there is a mortgage on the property, the lender's name and address</li>
         </ul>
       {% endif %}
@@ -122,11 +122,11 @@
         </div>
       </div>
 
-      <h2 class="heading-medium">The summary costs {{ price_text | safe }} <span class="font-small">(£2.50+VAT)</span></h2>
+      <h2 class="heading-medium">The summary costs {{ price_text | safe }} <span class="font-small">(&pound;2.50+VAT)</span></h2>
       <p>You can pay by credit or debit card.</p>
 
 
-      <form method="GET" action="{{ action_url }}" id="cra_form" data-clientside-validation="cra_form_validation" data-clientside-validation-no-summary>
+      <form method="POST" action="{{ action_url }}" id="cra_form" data-clientside-validation="cra_form_validation" data-clientside-validation-no-summary>
         <p>You need to accept the following terms to continue.</p>
 
         <input type='hidden' name='MC_titleNumber' id='MC_titleNumber' value="{{params.MC_titleNumber}}"/>
@@ -148,7 +148,7 @@
 
         <input type="submit" class="button" value="Buy title summary">
 
-        <p class="font-xsmall spacing-top-third">for {{ price_text | safe }} inc VAT</p>
+        <p class="font-xsmall spacing-top-third">for {{ price_text | safe }}</p>
       </form>
 
       <script type="application/json" id="cra_form_validation">
