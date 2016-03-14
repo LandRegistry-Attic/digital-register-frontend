@@ -7,20 +7,6 @@
     <h1 class="heading-large collapse-top">Confirm your order</h1>
     <p class="">You’ll get a summary of the information Land Registry holds for this property title:</p>
     <dl class="definition-tabular expand-top-half">
-      {% if params['title'] and params['title'].get('is_caution_title') %}
-        <dt class="bold-small">Caution</dt>
-        <dd>
-          <details class="font-xsmall">
-            <summary class="bold-small">Caution against first registration</summary>
-            <div class="panel" style="margin-bottom:2em;">
-              <p>This property hasn’t been registered yet. You can’t find out who owns it from this service.</p>
-              <p>Someone other than the owner (known as the ‘cautioner’) has registered a right or interest in the property. They will be told if anyone tries to register it, and can object to the registration going ahead until their claim has been looked at. You can get their name and address from this service.</p>
-              <p>Registration has only been compulsory since the 1990s. Property that hasn’t changed hands since then may not be registered.</p>
-            </div>
-          </details>
-        </dd>
-        </dt>
-      {% endif %}
       <dt>Address</dt>
       <dd><span class="heading-small">
         {% if params['title']['address_lines'] %}
@@ -31,6 +17,21 @@
       </span></dd>
       <dt>Title number</dt>
       <dd class="bold-small">{{ params['title_number'] }}</dd>
+         {% if params['title'] and params['title'].get('is_caution_title') %}
+        <dt class="bold-small">Caution</dt>
+        <dd>
+          <details class="font-xsmall">
+            <summary class="bold-small">Caution against first registration</summary>
+            <div class="panel" style="margin-bottom:2em;">
+                <p>This property hasn’t been registered yet. You can’t find out who owns it from this service. </p>
+                <p>Someone other than the owner (known as the ‘cautioner’) has registered a right or interest in the property. They will be told if anyone tries to register it, and can object to the registration going ahead until their claim has been looked at. You can get the cautioner’s name and address from this service.</p>
+                <p>Registration has only been compulsory throughout England and Wales since the 1990s. Property that hasn’t changed hands since then may not be registered.</p>
+            </div>
+
+          </details>
+        </dd>
+        </dt>
+      {% endif %}
       <dt>Tenure type</dt>
       <dd>
         <details class="font-xsmall">
@@ -58,13 +59,29 @@
 
     <h2 class="heading-medium collapse-top">The summary will tell you</h2>
     <ul class="list-bullet">
-      {% if params['title']['tenure'].upper() == 'FREEHOLD' %}
-        <li>current owner’s name and address</li>
-      {% elif params['title']['tenure'].upper() == 'LEASEHOLD' %}
-        <li>current leaseholder’s name and address</li>
-      {% endif %}
-      <li>what they paid for the property – you won’t get this if it was bought before April 2000, if no money changed hands, or if the owner didn’t buy it outright</li>
-      <li>if there is a mortgage on the property, the lender’s name and  address</li>
+      {% if params['title'].get('is_caution_title') %}
+
+          <li>The name and address of the person who has registered a right or interest in the property (the ‘cautioner’)</li>
+          <li>A description of the land it applies to</li>
+      </ul>
+    <h3 class="heading-small collapse-top">Because this property or land is unregistered, the summary will not tell you:</h3>
+      <ul class="list-bullet">
+          <li>Who the owner is</li>
+          <li>What they paid for it</li>
+          <li>Whether there is a mortgage on it</li>
+
+        {% else %}
+
+          {% if params['title']['tenure'].upper() == 'FREEHOLD' %}
+            <li>current owner’s name and address</li>
+          {% elif params['title']['tenure'].upper() == 'LEASEHOLD' %}
+            <li>current leaseholder’s name and address</li>
+          {% endif %}
+
+          <li>what was paid for the property – you won't get this if it was bought before April 2000, if they paid less than £100, or if Land Registry have agreed not to record the price</li>
+          <li>if there is a mortgage on the property, the lender's name and address</li>
+
+        {% endif %}
     </ul>
     <!-- <p>You'll need to <a target="_blank" href="https://www.gov.uk/get-information-about-property-and-land">use a different Land Registry service</a> if you need more detailed information or to prove ownership in court.</p> -->
     <div class="notice" style="background-color:#fff2d3;padding: 25px">
