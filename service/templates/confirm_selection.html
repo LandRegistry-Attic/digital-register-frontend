@@ -33,9 +33,10 @@
         </dt>
       {% endif %}
       <dt>Tenure type</dt>
-      <dd>
+      <dd class="bold-small">
+        {{ params['title']['tenure'] }}
         <details class="font-xsmall">
-          <summary class="bold-small">{{ params['title']['tenure'] }}</summary>
+          <summary>What does this mean?</summary>
           <div class="panel" style="margin-bottom:2em;">
 
           {% if params['title']['tenure'].upper() == 'LEASEHOLD' %}
