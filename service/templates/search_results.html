@@ -31,7 +31,7 @@
             </h2>
             <div class="font-xsmall">
               {% if title['data'] %}
-                Title number: {{ title['title_number'] }}<br>
+                {% if title['data'].get('is_caution_title') %}Caution title {% else %}Title {% endif %} number {{ title['title_number'] }}<br>
               {% else %}
               <div class="font-xsmall">
                 <p class="collapse-bottom">No title information found</p>
@@ -46,14 +46,12 @@
                 </details>
                 </div>
               {% endif %}
-              <b>{{ title['data']['tenure'] }}</b>
+              <b>{{ title | tenure_info }}</b>
               {% if title['data'] and title['data'].get('is_caution_title') %}
-                <details>
-                  <summary>Caution against first registration</summary>
-                  <div class="panel-indent">
-                      <p>A caution against first registration protects an interest in land which hasn’t yet been registered with the Land Registry. It entitles the person who registered the caution to be told if someone tries to register the land, and object to completion of the registration until their claim has been considered.</p>
-                      <a rel="external" href="https://www.gov.uk/government/publications/caution-against-first-registration/practice-guide-3-cautions-against-first-registration">More about cautions against first registration</a>
-                  </div>
+                <details class="font-xsmall">
+                  <summary>What's this?</summary>
+                  <p>A caution against first registration protects an interest in land which hasn’t yet been registered with the Land Registry. It entitles the person who registered the caution to be told if someone tries to register the land, and object to completion of the registration until their claim has been considered.</p>
+                  <a rel="external" href="https://www.gov.uk/government/publications/caution-against-first-registration/practice-guide-3-cautions-against-first-registration">More about cautions against first registration</a>
                 </details>
               {% endif %}
             </div>

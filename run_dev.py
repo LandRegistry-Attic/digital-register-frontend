@@ -1,8 +1,8 @@
-import atexit  # type: ignore
+import atexit
 from flask_wtf.csrf import CsrfProtect  # type: ignore
-import logging  # type: ignore
+import logging
 
-from service.server import app  # type: ignore
+from service.server import app
 
 LOGGER = logging.getLogger(__name__)
 

@@ -6,21 +6,8 @@
     <!-- 1. Start Title information (number, address and tenure information) -->
     <h1 class="heading-large collapse-top">Confirm your order</h1>
     <p class="">You’ll get a summary of the information Land Registry holds for this property title:</p>
+
     <dl class="definition-tabular expand-top-half">
-      {% if params['title'] and params['title'].get('is_caution_title') %}
-        <dt class="bold-small">Caution</dt>
-        <dd>
-          <details class="font-xsmall">
-            <summary class="bold-small">Caution against first registration</summary>
-            <div class="panel" style="margin-bottom:2em;">
-              <p>This property hasn’t been registered yet. You can’t find out who owns it from this service.</p>
-              <p>Someone other than the owner (known as the ‘cautioner’) has registered a right or interest in the property. They will be told if anyone tries to register it, and can object to the registration going ahead until their claim has been looked at. You can get their name and address from this service.</p>
-              <p>Registration has only been compulsory since the 1990s. Property that hasn’t changed hands since then may not be registered.</p>
-            </div>
-          </details>
-        </dd>
-        </dt>
-      {% endif %}
       <dt>Address</dt>
       <dd><span class="heading-small">
         {% if params['title']['address_lines'] %}
@@ -36,6 +23,10 @@
         <details class="font-xsmall">
           <summary class="bold-small">{{ params['title']['tenure'] }}</summary>
           <div class="panel" style="margin-bottom:2em;">
+          {% if is_caution_title %}
+            <p>A caution against first registration protects an interest in land which hasn’t yet been registered with the Land Registry. It entitles the person who registered the caution to be told if someone tries to register the land, and object to completion of the registration until their claim has been considered.</p>
+            <a rel="external" href="https://www.gov.uk/government/publications/caution-against-first-registration/practice-guide-3-cautions-against-first-registration">More about cautions against first registration</a>
+          {% endif %}
 
           {% if params['title']['tenure'].upper() == 'LEASEHOLD' %}
             <p>You only own a leasehold property for a fixed period of time. You'll have a legal agreement the landlord (sometimes known as the ‘freeholder’) called a ‘lease’. This tells you how many years you’ll own the property.</p>
@@ -73,7 +64,7 @@
         If you want to keep a copy you can print it out</p>
     </div>
 
-      <h2 class="heading-medium">The summary costs {{ price_text | safe }}</h2>
+      <h2 class="heading-medium">The summary costs {{ params['price'] | safe }}</h2>
       <p>You can pay by credit or debit card.</p>
       <p>You need to accept the following terms to continue.</p>
       <div class="form-group expand-bottom-half" id="right_to_cancel_group">
@@ -84,21 +75,36 @@
         </label>
       </div>
 
-    <form class="form" action="{{ action_url }}" method="post">
-      <input type='hidden' name='MC_titleNumber' id='MC_titleNumber' value="{{params.MC_titleNumber}}"/>
-      <input type='hidden' name='MC_searchType' id='MC_searchType' value="{{params.MC_searchType}}"/>
-      <input type='hidden' name='MC_timestamp' id='MC_timestamp' value="{{params.MC_timestamp}}"/>
-      <input type='hidden' name='MC_purchaseType' id='MC_purchaseType' value="{{params.MC_purchaseType}}"/>
-      <input type='hidden' name='MC_unitCount' id='MC_unitCount' value="{{params.MC_unitCount}}"/>
-      <input type='hidden' name='MC_userId' id='MC_userId' value="{{params.MC_userId}}"/>
-      <input type='hidden' name='cartId' id='cartId' value="{{params.cartId}}"/>
-      <input type='hidden' name='amount' id='amount' value="{{params.amount}}"/>
-      <button type="submit" class="button" onclick="return checkRightToCancel()">Buy title summary</button>
-    </form>
+    <!--  <form action="../worldpay_1" method="POST" onsubmit="return checkRightToCancel()"> -->
+    <!--    <input name="id" value="{{id}}" type="hidden" /> -->
+    <!--    <input type="submit" style="margin:10px 0" class="button" value="Buy title summary"> -->
+    <!-- </form> -->
+      <p class="collapse-bottom"><a href="{{ url_for('get_title', title_number=params['title_number'], page=params['display_page_number'], search_term=params['search_term']) }}" class="button" onclick="return checkRightToCancel()">Buy title summary</a></p>
+      <span class="collapse-bottom font-xsmall"><small>for {{ params['price'] | safe }}</small></small></p>
+    <!-- </div> -->
+
+    <script>
+      var msg = document.createElement('span');
+      msg.classList.add('error-message');
+      msg.textContent = 'You need to agree to receive the summary straight away and that you’ll lose your right to cancel';
+      var rightToCancelGroup = document.getElementById('right_to_cancel_group');
+      function checkRightToCancel() {
+        if(msg.parentNode) {
+          msg.parentNode.removeChild(msg);
+          rightToCancelGroup.classList.remove('error');
+        }
+        if(!document.getElementById('right_to_cancel').checked) {
+          rightToCancelGroup.classList.add('error');
+          rightToCancelGroup.appendChild(msg);
+          return false;
+        }
+      }
+    </script>
 </div>
 
+
 <div style="width:30%;float:right;">
-  <div id="map" style="height: 0 !important; padding-bottom: 100% !important; width: 100% !important;">
+  <div id="map" style="height: 0 !important; padding-bottom: 100% !important;width: 100% !important;">
     <div class="panel-simple">
       <p>The map relies on JavaScript being enabled in your browser.</p>
     </div>
@@ -114,24 +120,8 @@
 </div>
 
 <script type='text/javascript'>
-
+//var indexData = {"crs": {"properties": {"name": "urn:ogc:def:crs:EPSG::27700"}, "type": "name"}, "geometry": {"coordinates": [[[441187.5, 112344.0], [441186.0, 112354.0], [441193.0, 112356.5], [441194.5, 112346.5]]], "type": "Polygon"}, "properties": {"colour": 25, "feature_id": 4019, "graphic_type": "Bordered Polygon", "render_attributes": {"border_colour": 25, "border_width": 0, "exterior_edge_colour": 1, "exterior_edge_thickness": 2, "exterior_edge_thickness_units": "Pixels", "fill_colour": 25, "fill_style": 9, "render_level": "0"}, "width": 0}, "type": "Feature"}
 var indexData = {{ params['title']['indexPolygon'] | tojson }};
-
-var msg = document.createElement('span');
-msg.classList.add('error-message');
-msg.textContent = 'You need to agree to receive the summary straight away and that you’ll lose your right to cancel';
-var rightToCancelGroup = document.getElementById('right_to_cancel_group');
-function checkRightToCancel() {
-  if(msg.parentNode) {
-    msg.parentNode.removeChild(msg);
-    rightToCancelGroup.classList.remove('error');
-  }
-  if(!document.getElementById('right_to_cancel').checked) {
-    rightToCancelGroup.classList.add('error');
-    rightToCancelGroup.appendChild(msg);
-    return false;
-  }
-}
 </script>
 
 <script src="/static/javascripts/map.js"></script>

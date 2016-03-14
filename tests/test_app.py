@@ -58,8 +58,6 @@ with open('tests/data/official_copy_response.json', 'r') as official_copy_respon
 
 unavailable_title = FakeResponse('', 404)
 
-api_saved_to_results_db_response = FakeResponse(b'"cartId": "123"', 200)
-
 
 class TestViewTitle:
 
@@ -67,9 +65,8 @@ class TestViewTitle:
         self.app = app.test_client()
         self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
 
-    @mock.patch('service.api_client.get_pound_price', return_value=FakeResponse('300', 200))
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
-    def test_get_title_page_no_title(self, mock_get, mock_price):
+    def test_get_title_page_no_title(self, mock_get):
         response = self.app.get('/titles/titleref', headers=self.headers)
         assert response.status_code == 404
         assert 'Page not found' in response.data.decode()
@@ -181,14 +178,12 @@ class TestViewTitle:
     @mock.patch('service.title_utils.is_caution_title', return_value=True)
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_tenure_on_caution_title_page(
+    def test_no_tenure_on_caution_title_page(
             self, mock_get_official_copy_data, mock_get, mock_is_caution_title):
+
         response = self.app.get('/titles/titleref', headers=self.headers)
         assert response.status_code == 200
-        response_data = response.data.decode()
-
-        assert 'Tenure type' in response_data
-        assert 'Freehold' in response_data
+        assert 'Tenure' not in response.data.decode()
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
@@ -366,7 +361,7 @@ class TestTitleSearch:
 
     @mock.patch('requests.get', return_value=fake_title)
     def test_title_search_redirects(self, mock_get):
-        response = self.app.post('/title-search', data=dict(search_term='DN1000'), headers=self.headers, follow_redirects=False)  # type: ignore
+        response = self.app.post('/title-search', data=dict(search_term='DN1000'), headers=self.headers, follow_redirects=False)
         assert response.status_code == 302
 
     @mock.patch('requests.get', return_value=fake_no_titles)
@@ -431,7 +426,7 @@ class TestHealthcheck:
     def test_health_calls_health_endpoints_of_apis(self, mock_api_get):
         self.app.get('/health')
 
-        mock_api_get.assert_called_once_with('{}/health'.format(app.config['REGISTER_TITLE_API']))
+        mock_api_get.assert_called_once_wth('{}health'.format(app.config['REGISTER_TITLE_API']))
 
     @mock.patch('service.health_checker.perform_healthchecks', return_value=[])
     def test_health_returns_ok_when_health_checker_returns_no_errors(
@@ -503,21 +498,6 @@ class TestRightUserGroup:
         self.headers = Headers([('iv-user', TEST_USERNAME)])
         response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         assert response.status_code == 404
-
-
-class TestConfirmSelection:
-
-    base_url = '/confirm-selection'
-
-    def setup_method(self, method):
-        self.app = app.test_client()
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
-
-    @mock.patch('service.api_client.requests.get', return_value=fake_title)
-    @mock.patch('service.api_client.save_search_request', return_value=api_saved_to_results_db_response)
-    def test_get_confirmation_page(self, mock_save, mock_get):
-        response = self.app.get('{}/titleref/searchterm'.format(self.base_url), headers=self.headers)
-        assert response.status_code == 200
 
 
 if __name__ == '__main__':
