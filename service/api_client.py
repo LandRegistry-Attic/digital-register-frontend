@@ -78,7 +78,7 @@ def get_pound_price(product='drvSummary'):
     Get price value (nominally in pence) and convert to Pound format if necessary.
 
     :param product: str (product type)
-    :return: decimail (price in pounds)
+    :return: decimal (price in pounds)
     """
 
     response = requests.get('{}/get_price/{}'.format(REGISTER_TITLE_API_URL, product))
@@ -93,6 +93,14 @@ def get_pound_price(product='drvSummary'):
 
     return price
 
+def user_can_view(username, title_number):
+    """
+    Check whether user has access or not.
+    """
+
+    response = requests.get('{}/user_can_view/{}/{}'.format(REGISTER_TITLE_API_URL, username, title_number))
+
+    return response.status_code == 200
 
 def _to_json(response):
     try:
