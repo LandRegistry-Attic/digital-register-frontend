@@ -45,10 +45,12 @@
                 </details>
                 </div>
               {% endif %}
-              <b>{{ title['data']['tenure'] }}</b>
+
+              <b>
+              {% if title['data'] and title['data'].get('is_caution_title') %}Caution against first registration - {% endif %}{{ title['data']['tenure'] }}</b>
               {% if title['data'] and title['data'].get('is_caution_title') %}
                 <details>
-                  <summary>Caution against first registration</summary>
+                  <summary>What's this?</summary>
                   <div class="panel-indent">
                     <p>This property hasn’t been registered yet. You can’t find out who owns it from this service. </p>
                     <p>Someone other than the owner (known as the ‘cautioner’) has registered a right or interest in the property. They will be told if anyone tries to register it, and can object to the registration going ahead until their claim has been looked at. You can get the cautioner’s name and address from this service.</p>

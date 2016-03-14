@@ -6,8 +6,7 @@
       <div class="grid-row">
         <div class="column-two-thirds">
           <h1 class="heading-large">Search the land and property register</h1>
-          <p>You’ll get a summary showing who owns the property, what they paid for it and whether there’s a mortgage on it. The summary costs {{ price_text | safe }}. </p>
-          <p>If you want a copy of the full register and title plan <a rel="external" href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">use the old Land Registry service</a></p>
+          <p>You can get information about registered property or land in England and Wales, even if you don’t own it. </p>
           <form action="{{ url_for('find_titles') }}" method="post" role="form">
             {{ form.hidden_tag() }}
             <div class="form-group">

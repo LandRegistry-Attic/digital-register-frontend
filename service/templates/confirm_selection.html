@@ -59,13 +59,29 @@
 
     <h2 class="heading-medium collapse-top">The summary will tell you</h2>
     <ul class="list-bullet">
-      {% if params['title']['tenure'].upper() == 'FREEHOLD' %}
-        <li>current owner’s name and address</li>
-      {% elif params['title']['tenure'].upper() == 'LEASEHOLD' %}
-        <li>current leaseholder’s name and address</li>
-      {% endif %}
-      <li>what they paid for the property – you won’t get this if it was bought before April 2000, if no money changed hands, or if the owner didn’t buy it outright</li>
-      <li>if there is a mortgage on the property, the lender’s name and  address</li>
+      {% if params['title'].get('is_caution_title') %}
+
+          <li>The name and address of the person who has registered a right or interest in the property (the ‘cautioner’)</li>
+          <li>A description of the land it applies to</li>
+      </ul>
+    <h3 class="heading-small collapse-top">Because this property or land is unregistered, the summary will not tell you:</h3>
+      <ul class="list-bullet">
+          <li>Who the owner is</li>
+          <li>What they paid for it</li>
+          <li>Whether there is a mortgage on it</li>
+
+        {% else %}
+
+          {% if params['title']['tenure'].upper() == 'FREEHOLD' %}
+            <li>current owner’s name and address</li>
+          {% elif params['title']['tenure'].upper() == 'LEASEHOLD' %}
+            <li>current leaseholder’s name and address</li>
+          {% endif %}
+
+          <li>what was paid for the property – you won't get this if it was bought before April 2000, if they paid less than £100, or if Land Registry have agreed not to record the price</li>
+          <li>if there is a mortgage on the property, the lender's name and address</li>
+
+        {% endif %}
     </ul>
     <!-- <p>You'll need to <a target="_blank" href="https://www.gov.uk/get-information-about-property-and-land">use a different Land Registry service</a> if you need more detailed information or to prove ownership in court.</p> -->
     <div class="notice" style="background-color:#fff2d3;padding: 25px">
