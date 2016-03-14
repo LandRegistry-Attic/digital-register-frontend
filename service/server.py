@@ -7,7 +7,7 @@ import os
 from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 from service import (address_utils, api_client, app, auditing, health_checker, title_formatter, title_utils)
-from service.forms import TitleSearchForm
+from service.forms import TitleSearchForm, LandingPageForm
 from datetime import datetime
 
 # TODO: move this to the template
@@ -21,10 +21,27 @@ POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 LOGGER = logging.getLogger(__name__)
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/landing-page', methods=['GET', 'POST'])
+@app.route('/landing-page/<eligibility>', methods=['GET', 'POST'])
+def landing_page(eligibility=''):
+    # landing page for DRV - this is whitelisted by webseal.
+    form = LandingPageForm()
+    if request.method == "POST" and form.validate():
+        eligibility = request.form.get('eligibility', '')
+        print(eligibility)
+    if not eligibility:
+        return render_template('landing_page.html', form=form)
+    elif eligibility == 'eligible':
+        return _initial_search_page(request)
+    elif eligibility == 'find_a_property':
+        return redirect('https://eservices.landregistry.gov.uk/wps/portal/Property_Search')
+    elif eligibility == 'official_copy':
+        return redirect('https://www.gov.uk/government/publications/official-copies-of-register-or-plan-registration-oc1')
+
+
 @app.route('/search', methods=['GET'])
-def app_start():
-    # App entry point
+def search():
     username = _username_from_header(request)
     _validates_user_group(request)
     return render_template(
