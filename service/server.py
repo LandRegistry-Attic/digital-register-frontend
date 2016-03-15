@@ -72,7 +72,6 @@ def confirm_selection(title_number, search_term):
     params['MC_unitCount'] = '1'
     params['desc'] = request.args.get('search_term', search_term)
     params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-    import pdb; pdb.set_trace()
 
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     username = _username_from_header(request)
@@ -241,14 +240,17 @@ def find_titles_page(search_term=''):
         auditing.audit(message_format.format(search_term, username))
         return _get_address_search_response(search_term, page_number)
 
+
 def _get_register_title(title_number):
     title = api_client.get_title(title_number)
     return title_formatter.format_display_json(title) if title else None
+
 
 def _user_can_view(username, title_number):
     access_granted = api_client.user_can_view(username, title_number)
 
     return access_granted
+
 
 def _get_address_search_response(search_term, page_number):
     search_term = search_term.upper()
