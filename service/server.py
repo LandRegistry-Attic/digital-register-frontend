@@ -138,7 +138,7 @@ def get_title(title_number):
     title = _get_register_title(title_number)
     username = _username_from_header(request)
 
-    if title:
+    if title and _user_can_view(username, title_number):
         display_page_number = int(request.args.get('page') or 1)
         search_term = request.args.get('search_term', title_number)
         breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
@@ -240,11 +240,14 @@ def find_titles_page(search_term=''):
         auditing.audit(message_format.format(search_term, username))
         return _get_address_search_response(search_term, page_number)
 
-
 def _get_register_title(title_number):
     title = api_client.get_title(title_number)
     return title_formatter.format_display_json(title) if title else None
 
+def _user_can_view(username, title_number):
+    access_granted = api_client.user_can_view(username, title_number)
+
+    return access_granted
 
 def _get_address_search_response(search_term, page_number):
     search_term = search_term.upper()
