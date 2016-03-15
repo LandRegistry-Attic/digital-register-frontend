@@ -29,11 +29,10 @@ def landing_page(eligibility=''):
     form = LandingPageForm()
     if request.method == "POST" and form.validate():
         eligibility = request.form.get('eligibility', '')
-        print(eligibility)
     if not eligibility:
         return render_template('landing_page.html', form=form)
     elif eligibility == 'eligible':
-        return _initial_search_page(request)
+        return redirect(url_for('search'))
     elif eligibility == 'find_a_property':
         return redirect('https://eservices.landregistry.gov.uk/wps/portal/Property_Search')
     elif eligibility == 'official_copy':
@@ -44,6 +43,8 @@ def landing_page(eligibility=''):
 def search():
     username = _username_from_header(request)
     _validates_user_group(request)
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     return render_template(
         'search.html',
         form=TitleSearchForm(),
@@ -184,7 +185,6 @@ def get_title(title_number):
             "total": str(vat_json['fee_amt']),
             "reg_number": vat_json['vat_num']
         }
-        print(receipt['net'], receipt['vat'], receipt['total'])
 
         return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt)
     else:
