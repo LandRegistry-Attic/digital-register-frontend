@@ -240,14 +240,17 @@ def find_titles_page(search_term=''):
         auditing.audit(message_format.format(search_term, username))
         return _get_address_search_response(search_term, page_number)
 
+
 def _get_register_title(title_number):
     title = api_client.get_title(title_number)
     return title_formatter.format_display_json(title) if title else None
+
 
 def _user_can_view(username, title_number):
     access_granted = api_client.user_can_view(username, title_number)
 
     return access_granted
+
 
 def _get_address_search_response(search_term, page_number):
     search_term = search_term.upper()

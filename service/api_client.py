@@ -93,6 +93,7 @@ def get_pound_price(product='drvSummary'):
 
     return price
 
+
 def user_can_view(username, title_number):
     """
     Check whether user has access or not.
@@ -101,6 +102,7 @@ def user_can_view(username, title_number):
     response = requests.get('{}/user_can_view/{}/{}'.format(REGISTER_TITLE_API_URL, username, title_number))
 
     return response.status_code == 200
+
 
 def _to_json(response):
     try:
