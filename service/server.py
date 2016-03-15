@@ -120,7 +120,6 @@ def healthcheck():
 
 @app.route('/cookies', methods=['GET'])
 def cookies():
-    _validates_user_group(request)
     return _cookies_page()
 
 
