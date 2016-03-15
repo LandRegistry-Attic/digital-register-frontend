@@ -1,5 +1,4 @@
 import json
-import demjson
 import logging
 import logging.config                                                                                  # type: ignore
 import re
@@ -29,11 +28,10 @@ def landing_page(eligibility=''):
     form = LandingPageForm()
     if request.method == "POST" and form.validate():
         eligibility = request.form.get('eligibility', '')
-        print(eligibility)
     if not eligibility:
         return render_template('landing_page.html', form=form)
     elif eligibility == 'eligible':
-        return _initial_search_page(request)
+        return redirect(url_for('search'))
     elif eligibility == 'find_a_property':
         return redirect('https://eservices.landregistry.gov.uk/wps/portal/Property_Search')
     elif eligibility == 'official_copy':
@@ -44,12 +42,14 @@ def landing_page(eligibility=''):
 def search():
     username = _username_from_header(request)
     _validates_user_group(request)
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     return render_template(
         'search.html',
         form=TitleSearchForm(),
         username=username,
-        price=app.config['TITLE_REGISTER_SUMMARY_PRICE'],
-        price_text=app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT'],
+        price=price,
+        price_text=price_text,
     )
 
 
@@ -70,9 +70,13 @@ def confirm_selection(title_number, search_term):
     params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
     params['MC_unitCount'] = '1'
     params['desc'] = request.args.get('search_term', search_term)
+    params['price'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    params['price_text'] = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
+
+    # TODO: get price from a data store so that it can be reliably verified after payment has been processed.
     params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
 
-    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     username = _username_from_header(request)
     params['MC_userId'] = username
 
@@ -152,41 +156,8 @@ def get_title(title_number):
             title_number,
             username)
         )
-        vat_json = {"date": 'N/A',
-                    "address1": 'N/A',
-                    "address2": 'N/A',
-                    "address3": 'N/A',
-                    "address4": 'N/A',
-                    "postcode": 'N/A',
-                    "title_number": 'N/A',
-                    "net_amt": 0,
-                    "vat_amt": 0,
-                    "fee_amt": 0,
-                    "vat_num": 'N/A'}
 
-        transId = request.args.get('transid')
-        if transId:
-            receiptData = api_client.get_invoice_data(transId)
-            receiptText = demjson.decode(receiptData.text)
-            vat_json = demjson.decode(receiptText['vat_json'])
-
-        receipt = {
-            "trans_id": transId,
-            "date": vat_json['date'],
-            "address1": vat_json['address1'],
-            "address2": vat_json['address2'],
-            "address3": vat_json['address3'],
-            "address4": vat_json['address4'],
-            "postcode": vat_json['postcode'],
-            "title_number": title_number,
-            "net": str(vat_json['net_amt']),
-            "vat": str(vat_json['vat_amt']),
-            "total": str(vat_json['fee_amt']),
-            "reg_number": vat_json['vat_num']
-        }
-        print(receipt['net'], receipt['vat'], receipt['total'])
-
-        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt)
+        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request)
     else:
         abort(404)
 
@@ -322,7 +293,7 @@ def _normalise_postcode(postcode_in):
     return postcode
 
 
-def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt):
+def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request):
     username = _username_from_header(request)
     return render_template(
         'display_title.html',
@@ -333,7 +304,6 @@ def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_da
         show_pdf=show_pdf,
         full_title_data=full_title_data,
         is_caution_title=title_utils.is_caution_title(title),
-        receipt=receipt,
     )
 
 
