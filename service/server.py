@@ -72,6 +72,7 @@ def confirm_selection(title_number, search_term):
     params['MC_unitCount'] = '1'
     params['desc'] = request.args.get('search_term', search_term)
     params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    import pdb; pdb.set_trace()
 
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     username = _username_from_header(request)
@@ -441,7 +442,7 @@ def _strip_delimiters(json_in):
 
 def _username_from_header(request):
     # Gets username, if any, from webseal headers
-    user_id = request.headers.get("iv-user", 'fred')
+    user_id = request.headers.get("iv-user", None)
     if user_id:
         p = re.compile("[%][{0-9}][{0-9}]")
         user_id = p.sub("", user_id)
@@ -451,5 +452,5 @@ def _username_from_header(request):
 def _validates_user_group(request):
     # Get user group from WebSeal headers
     user_group = request.headers.get("iv-groups", "")
-    # if "DRV" not in user_group.upper():
-    #     abort(404)
+    if "DRV" not in user_group.upper():
+        abort(404)
