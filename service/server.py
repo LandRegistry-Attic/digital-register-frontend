@@ -7,7 +7,7 @@ import os
 from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 from service import (address_utils, api_client, app, auditing, health_checker, title_formatter, title_utils)
-from service.forms import TitleSearchForm
+from service.forms import TitleSearchForm, LandingPageForm
 from datetime import datetime
 
 # TODO: move this to the template
@@ -21,12 +21,30 @@ POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 LOGGER = logging.getLogger(__name__)
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/landing-page', methods=['GET', 'POST'])
+@app.route('/landing-page/<eligibility>', methods=['GET', 'POST'])
+def landing_page(eligibility=''):
+    # landing page for DRV - this is whitelisted by webseal.
+    form = LandingPageForm()
+    if request.method == "POST" and form.validate():
+        eligibility = request.form.get('eligibility', '')
+    if not eligibility:
+        return render_template('landing_page.html', form=form)
+    elif eligibility == 'eligible':
+        return redirect(url_for('search'))
+    elif eligibility == 'find_a_property':
+        return redirect('https://eservices.landregistry.gov.uk/wps/portal/Property_Search')
+    elif eligibility == 'official_copy':
+        return redirect('https://www.gov.uk/government/publications/official-copies-of-register-or-plan-registration-oc1')
+
+
 @app.route('/search', methods=['GET'])
-def app_start():
-    # App entry point
+def search():
     username = _username_from_header(request)
     _validates_user_group(request)
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     return render_template(
         'search.html',
         form=TitleSearchForm(),
@@ -102,7 +120,6 @@ def healthcheck():
 
 @app.route('/cookies', methods=['GET'])
 def cookies():
-    _validates_user_group(request)
     return _cookies_page()
 
 
@@ -120,7 +137,7 @@ def get_title(title_number):
     title = _get_register_title(title_number)
     username = _username_from_header(request)
 
-    if title:
+    if title and _user_can_view(username, title_number):
         display_page_number = int(request.args.get('page') or 1)
         search_term = request.args.get('search_term', title_number)
         breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
@@ -167,7 +184,6 @@ def get_title(title_number):
             "total": str(vat_json['fee_amt']),
             "reg_number": vat_json['vat_num']
         }
-        print(receipt['net'], receipt['vat'], receipt['total'])
 
         return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt)
     else:
@@ -227,6 +243,12 @@ def find_titles_page(search_term=''):
 def _get_register_title(title_number):
     title = api_client.get_title(title_number)
     return title_formatter.format_display_json(title) if title else None
+
+
+def _user_can_view(username, title_number):
+    access_granted = api_client.user_can_view(username, title_number)
+
+    return access_granted
 
 
 def _get_address_search_response(search_term, page_number):
