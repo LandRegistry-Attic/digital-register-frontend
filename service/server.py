@@ -179,9 +179,9 @@ def get_title(title_number):
             "address4": vat_json['address4'],
             "postcode": vat_json['postcode'],
             "title_number": title_number,
-            "net": str(vat_json['net_amt']),
-            "vat": str(vat_json['vat_amt']),
-            "total": str(vat_json['fee_amt']),
+            "net": "{0:.2f}".format(vat_json['net_amt']),
+            "vat": "{0:.2f}".format(vat_json['vat_amt']),
+            "total": "{0:.2f}".format(vat_json['fee_amt']),
             "reg_number": vat_json['vat_num']
         }
 
