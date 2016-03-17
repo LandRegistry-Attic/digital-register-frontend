@@ -11,6 +11,7 @@ buildAssets({
     'pages/drv/search-results',
     'pages/drv/order-confirmation',
     'pages/drv/summary',
+    'pages/drv/cookies',
     'pages/land-registry/error-page'
   ]
 })
