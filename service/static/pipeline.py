@@ -1,28 +1,39 @@
 from flask.ext.assets import Bundle  # type: ignore
 from os import path                  # type: ignore
+import sass as libsass               # type: ignore
 
+def compile_sass(_in, out, **kw):
+    out.write(
+        libsass.compile(
+            string=_in.read()
+        )
+    )
 
 css = Bundle('land-registry-elements/assets/stylesheets/govuk-template.css',
              'land-registry-elements/assets/stylesheets/fonts.css',
-             'land-registry-elements/assets/stylesheets/elements.css',
-             'stylesheets/application.css',
-              filters='cssmin', output='dist/css/main.css')
+             'land-registry-elements/assets/sass/elements.scss',
+             'stylesheets/application.scss',
+              filters=(compile_sass, 'cssmin'), output='dist/css/main.css')
 
 css_print = Bundle('land-registry-elements/assets/stylesheets/govuk-template-print.css',
-                    filters='cssmin', output='dist/css/print.css')
+                    filters=('cssmin'), output='dist/css/print.css')
 
 css_ie8 = Bundle('land-registry-elements/assets/stylesheets/govuk-template-ie8.css',
                  'land-registry-elements/assets/stylesheets/fonts-ie8.css',
-                 'land-registry-elements/assets/stylesheets/elements-ie8.css',
-                  filters='cssmin', output='dist/css/main-ie8.css')
+                 'land-registry-elements/assets/sass/elements-ie8.scss',
+                 'stylesheets/application.scss',
+                  filters=(compile_sass, 'cssmin'), output='dist/css/main-ie8.css')
 
 css_ie7 = Bundle('land-registry-elements/assets/stylesheets/govuk-template-ie7.css',
-                 'land-registry-elements/assets/stylesheets/elements-ie7.css',
-                  filters='cssmin', output='dist/css/main-ie7.css')
+                 'land-registry-elements/assets/sass/elements-ie7.scss',
+                 'stylesheets/application.scss',
+                  filters=(compile_sass, 'cssmin'), output='dist/css/main-ie7.css')
 
 css_ie6 = Bundle('land-registry-elements/assets/stylesheets/govuk-template-ie6.css',
-                 'land-registry-elements/assets/stylesheets/elements-ie6.css',
-                  filters='cssmin', output='dist/css/main-ie6.css')
+                 'land-registry-elements/assets/sass/elements-ie6.scss',
+                 'stylesheets/application.scss',
+                  filters=(compile_sass, 'cssmin'), output='dist/css/main-ie6.css')
+
 
 js_ie = Bundle('land-registry-elements/assets/javascripts/ie.js',
                'land-registry-elements/assets/javascripts/polyfills.js',
