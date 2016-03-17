@@ -67,7 +67,7 @@ class TestViewTitle:
         self.app = app.test_client()
         self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
 
-    @mock.patch('service.api_client.get_pound_price', return_value=FakeResponse('300', 200))
+    @mock.patch('service.api_client.get_pound_price', return_value=3.0)
     @mock.patch('service.api_client.requests.get', return_value=unavailable_title)
     def test_get_title_page_no_title(self, mock_get, mock_price):
         response = self.app.get('/titles/titleref', headers=self.headers)
