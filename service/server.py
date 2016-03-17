@@ -64,6 +64,7 @@ def confirm_selection(title_number, search_term):
     username = _username_from_header(request)
 
     params = dict()
+    params['search_term'] = search_term
     params['title'] = _get_register_title(request.args.get('title', title_number))
     params['title_number'] = title_number
     params['display_page_number'] = 1
