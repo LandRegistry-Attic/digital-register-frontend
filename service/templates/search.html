@@ -6,8 +6,7 @@
       <div class="grid-row">
         <div class="column-two-thirds">
           <h1 class="heading-large">Search the land and property register</h1>
-          <p>You’ll get a summary showing who owns the property, what they paid for it and whether there’s a mortgage on it. The summary costs {{ price_text | safe }}. </p>
-          <p>If you want a copy of the full register and title plan <a rel="external" href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">use the old Land Registry service</a></p>
+          <p>You can get information about registered property or land in England and Wales, even if you don’t own it. </p>
           <form action="{{ url_for('find_titles') }}" method="post" role="form">
             {{ form.hidden_tag() }}
             <div class="form-group">
@@ -19,13 +18,11 @@
               <summary>Don't know the postcode?</summary>
               <div>
                 <img style="vertical-align: middle;margin-bottom:10px" src="/static/images/beta.png" alt="This is a trial service" />
-                  <p>This is a trial service. You can try searching by street name but it may not work properly.</p>
+                  <p>This is a new service. You can try searching by street name but it may not work properly.</p>
                   <h3 class="heading-small">Find a property without a postcode</h3>
-                <p>Use the existing Land Registry service to find a property:
-                  <ul>
-                    <li><a rel="external" href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">by street address</a></li>
-                    <li><a rel="external" href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">by title number</a></li>
-                    <li><a rel="external" href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">using a map</a></li>
+                <p>Use the Land Registry 'Find a Property' service to <a rel="external" href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">
+                  find a property by street address, title number or using a map.</a>
+                </p>
               </div>
             </details>
             <br>

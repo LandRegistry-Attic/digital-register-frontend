@@ -33,26 +33,29 @@
               {% if title['data'] %}
                 Title number: {{ title['title_number'] }}<br>
               {% else %}
+                No title information found
               <div class="font-xsmall">
-                <p class="collapse-bottom">No title information found</p>
-
+                <p class="collapse-bottom"></p>
                 <details>
                   <summary>Why not?</summary>
-                  <div class="panel-indent">
-                    <img style="vertical-align: middle;margin-bottom:10px" src="/static/images/beta.png" alt="Beta">
-                    <p>There could be many reasons why we cannot provide you a title number at this time. Try the <a href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">existing Land Registry service</a> instead</p>
-                    <p>If you need additional help, please call Land Registry on 0300 006 0411.</p>
-                  </div>
+                  <p>This may be because:</p>
+                  <ul>
+                  <li>This service is new, so some titles aren’t available here yet. Try <a href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">searching on the Land Registry ’Find a Property’ service</a> instead.</li>
+                  <li>The property isn’t registered yet. Registration has only been compulsory across England and Wales since the 1990s. If the property hasn’t changed hands since then it may not be registered.</li>
+                </ul>
                 </details>
                 </div>
               {% endif %}
-              <b>{{ title['data']['tenure'] }}</b>
+
+              <b>
+              {% if title['data'] and title['data'].get('is_caution_title') %}Caution against first registration - {% endif %}{{ title['data']['tenure'] }}</b>
               {% if title['data'] and title['data'].get('is_caution_title') %}
                 <details>
-                  <summary>Caution against first registration</summary>
+                  <summary>What's this?</summary>
                   <div class="panel-indent">
-                      <p>A caution against first registration protects an interest in land which hasn’t yet been registered with the Land Registry. It entitles the person who registered the caution to be told if someone tries to register the land, and object to completion of the registration until their claim has been considered.</p>
-                      <a rel="external" href="https://www.gov.uk/government/publications/caution-against-first-registration/practice-guide-3-cautions-against-first-registration">More about cautions against first registration</a>
+                    <p>This property hasn’t been registered yet. You can’t find out who owns it from this service. </p>
+                    <p>Someone other than the owner (known as the ‘cautioner’) has registered a right or interest in the property. They will be told if anyone tries to register it, and can object to the registration going ahead until their claim has been looked at. You can get the cautioner’s name and address from this service.</p>
+                    <p>Registration has only been compulsory throughout England and Wales since the 1990s. Property that hasn’t changed hands since then may not be registered.</p>
                   </div>
                 </details>
               {% endif %}
