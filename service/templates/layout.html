@@ -26,7 +26,6 @@
 {% endblock %}
 
 {% block content %}
-
   <main id="content" role="main">
     <div class="phase-banner">
       <p>
@@ -66,7 +65,7 @@
 {% block footer_support_links %}
   <ul>
     <li><a href="/cookies">Cookies</a></li>
-    <li><a href="/terms-and-conditions">Terms and conditions</a></li>
+    <li><a href="/terms-and-conditions?from={{request.url|urlencode}}">Terms and conditions</a></li>
     <li>Built by <a href="https://www.gov.uk/government/organisations/land-registry">Land Registry</a></li>
   </ul>
 {% endblock %}

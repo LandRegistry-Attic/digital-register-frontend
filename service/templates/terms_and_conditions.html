@@ -1,6 +1,12 @@
 {% extends "layout.html" %}
 {% block body %}
+
+  {% if request.args.get('from') %}
+    <a class="back-link" href="{{request.args.get('from')}}">Back</a>
+  {% endif %}
+
   <h1 class="heading-xlarge expand-bottom">Terms and conditions<span class="heading-secondary">Land Registry service</span></h1>
+
   <article class="font-xsmall">
     <h2 class="heading-large">What is the Title Summary service?</h2>
     <p>If you’re buying or selling a house or are just interested in a property the Land Registry Title Summary service is an on-line service that will enable you to see a summary of a title</p>
