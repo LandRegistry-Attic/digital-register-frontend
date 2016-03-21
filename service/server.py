@@ -71,8 +71,6 @@ def confirm_selection(title_number, search_term):
     params['desc'] = request.args.get('search_term', search_term)
     params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     params['MC_userId'] = username
-    response = api_client.save_search_request(params)
-    params['cartId'] = response.text
 
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
 
@@ -95,6 +93,7 @@ def confirm_selection(title_number, search_term):
 
     # Save user's search details.
     response = api_client.save_search_request(params)
+    params['cartId'] = response.text
     action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
 
     return render_template('confirm_selection.html', params=params, action_url=action_url, breadcrumbs=breadcrumbs, price_text=price_text,)
