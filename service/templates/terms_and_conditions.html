@@ -1,9 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 
-  {% if request.args.get('from') %}
-    <a class="back-link" href="{{request.args.get('from')}}">Back</a>
-  {% endif %}
+  <a class="back-link" href="#" onclick="history.go(-1); return false;">Back</a>
 
   <h1 class="heading-xlarge expand-bottom">Terms and conditions<span class="heading-secondary">Land Registry service</span></h1>
 
