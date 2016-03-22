@@ -42,7 +42,6 @@ def landing_page(eligibility=''):
 @app.route('/search', methods=['GET'])
 def search():
     username = _username_from_header(request)
-    _validates_user_group(request)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     return render_template(
@@ -56,9 +55,8 @@ def search():
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
-    _validates_user_group(request)
-
     breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, 1)
+    username = _username_from_header(request)
 
     params = dict()
     params['title'] = _get_register_title(request.args.get('title', title_number))
@@ -72,10 +70,9 @@ def confirm_selection(title_number, search_term):
     params['MC_unitCount'] = '1'
     params['desc'] = request.args.get('search_term', search_term)
     params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    params['MC_userId'] = username
 
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
-    username = _username_from_header(request)
-    params['MC_userId'] = username
 
     # Last changed date - modified to remove colon in UTC offset, which python
     # datetime.strptime() doesn't like >>>
@@ -98,6 +95,7 @@ def confirm_selection(title_number, search_term):
     response = api_client.save_search_request(params)
     params['cartId'] = response.text
     action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
+
     return render_template('confirm_selection.html', params=params, action_url=action_url, breadcrumbs=breadcrumbs, price_text=price_text,)
 
 
@@ -133,11 +131,6 @@ def get_title(title_number):
     """
     Show title (result) if user is logged in, has paid and hasn't viewed before.
     """
-
-    # TODO potentially remove this code
-    # store username in session once logged in?
-    # Check for log-in
-    # _validates_user_group(request)
 
     title = _get_register_title(title_number)
     username = _username_from_header(request)
@@ -197,7 +190,6 @@ def get_title(title_number):
 
 @app.route('/titles/<title_number>.pdf', methods=['GET'])
 def display_title_pdf(title_number):
-    _validates_user_group(request)
     if not _should_show_full_title_pdf():
         abort(404)
 
@@ -216,7 +208,6 @@ def display_title_pdf(title_number):
 @app.route('/title-search', methods=['POST'])
 @app.route('/title-search/<search_term>', methods=['POST'])
 def find_titles():
-    _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
@@ -231,11 +222,9 @@ def find_titles():
 @app.route('/title-search', methods=['GET'])
 @app.route('/title-search/<search_term>', methods=['GET'])
 def find_titles_page(search_term=''):
-    _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
     page_number = display_page_number - 1  # page_number is 0 indexed
     username = _username_from_header(request)
-
     search_term = search_term.strip()
     if not search_term:
         return _initial_search_page(request)
@@ -457,10 +446,3 @@ def _username_from_header(request):
         p = re.compile("[%][{0-9}][{0-9}]")
         user_id = p.sub("", user_id)
     return user_id
-
-
-def _validates_user_group(request):
-    # Get user group from WebSeal headers
-    user_group = request.headers.get("iv-groups", "")
-    if "DRV" not in user_group.upper():
-        abort(404)
