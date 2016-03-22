@@ -62,3 +62,11 @@
     font-family: dingbats, arial unicode ms, sans-serif;
   }
 }
+
+.js-only {
+  display: none;
+
+  .js-enabled & {
+    display: block;
+  }
+}

@@ -123,3 +123,8 @@
     content: '\25C0 ';
     margin-right: 8px;
     font-family: dingbats, arial unicode ms, sans-serif; }
+
+.js-only {
+  display: none; }
+  .js-enabled .js-only {
+    display: block; }
