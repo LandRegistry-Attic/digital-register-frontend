@@ -123,6 +123,11 @@ def cookies():
     return _cookies_page()
 
 
+@app.route('/terms-and-conditions', methods=['GET'])
+def terms_and_conditions():
+    return _terms_and_conditions_page()
+
+
 @app.route('/titles/<title_number>', methods=['GET'])
 def get_title(title_number):
     """
@@ -373,6 +378,10 @@ def _search_results_page(results, search_term, addressbase=False):
 
 def _cookies_page():
     return render_template('cookies.html', username=_username_from_header(request))
+
+
+def _terms_and_conditions_page():
+    return render_template('terms_and_conditions.html')
 
 
 def _create_string_date_only(datetoconvert):

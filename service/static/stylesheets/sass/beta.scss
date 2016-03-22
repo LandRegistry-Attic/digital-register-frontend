@@ -24,3 +24,49 @@
     }
   }
 }
+
+.alert-flag-hi-viz {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 8px 0 0;
+  padding: 2px 5px 0;
+  letter-spacing: 1px;
+  text-decoration: none;
+  color: #fff2d3;
+  background-color: #0b0c0c;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.8em;
+}
+
+.clear {
+  clear: both;
+}
+
+// Back link styling taken temporarily from land-registry-elements
+.back-link {
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 15px;
+  font-size: 16px;
+
+  &,
+  &:visited {
+    color: $link-colour;
+  }
+
+  &:before {
+    content: '\25C0 ';
+    margin-right: 8px;
+    font-family: dingbats, arial unicode ms, sans-serif;
+  }
+}
+
+.js-only {
+  display: none;
+
+  .js-enabled & {
+    display: block;
+  }
+}
