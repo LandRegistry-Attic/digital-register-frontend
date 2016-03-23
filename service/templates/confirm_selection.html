@@ -44,12 +44,23 @@
 
       <dl class="definition-tabular">
 
+        {% if params['title'].address_lines %}
+          <dt>Address</dt>
+          <dd class="bold-medium">
+            <div class="address">
+              {% for line in params['title'].address_lines %}
+                <span>{{line}}</span>
+              {% endfor %}
+            </div>
+          </dd>
+        {% endif %}
+
         <dt>Title number</dt>
         <dd class="bold-small">{{ params['title_number'] }}</dd>
 
         <dt>Tenure type</dt>
         <dd>
-          {{ params['title']['tenure'] }}
+          <strong class="bold">{{ params['title']['tenure'] }}</strong>
           <a class="split-detail-trigger font-xsmall" href="#what-is-tenure">What does this mean?</a>
 
           <div class="split-detail-contents" id="what-is-tenure">
@@ -73,28 +84,29 @@
             </div>
           </div>
 
-          <p class="font-xsmall">A property can have both a freehold and a leasehold title. To get a different tenure for this address, <a href="{{ url_for('find_titles_page', search_term=params['search_term'], page=params['display_page_number']) }}">go back</a> and select the one you need.</p>
+          <p class="font-xsmall">A property can have both a freehold and a leasehold title. To get a different tenure for this address, <a href="{{ url_for('find_titles_page', search_term=params['search_term'], page=params['display_page_number']) }}" data-back-link>go back</a> and select the one you need.</p>
         </dd>
 
       </dl>
 
-      <h2 class="heading-medium collapse-top">The summary will tell you</h2>
-
       {% if params['title'].get('is_caution_title') %}
-        <ul class="list list-bullet">
-          <li>The name and address of the person who has registered a right or interest in the property (the 'cautioner')</li>
-          <li>A description of the land it applies to</li>
+        <h2 class="heading-medium">Land Registry does not know the owner of this property</h2>
+        <ul class="list-bullet">
+          <li>Someone other than the owner (known as the ‘cautioner’) has registered a right or interest in the property.</li>
+          <li><strong class="bold">The summary will give you the cautioner's name and address</strong>.</li>
         </ul>
-
-        <h3 class="heading-small collapse-top">Because this property or land is unregistered, the summary will not tell you:</h3>
-
-        <ul class="list list-bullet">
-          <li>Who the owner is</li>
-          <li>What they paid for it</li>
-          <li>Whether there is a mortgage on it</li>
-        </ul>
-
+        <p class="spacing-bottom-flush spacing-top-single">This is known as a caution against first registration</p>
+        <details class="font-xsmall">
+          <summary>More about cautions against first registration</summary>
+          <div class="panel panel-narrow">
+            <p>This property hasn’t been registered yet. You can’t find out who owns it from this service. </p>
+            <p>Someone other than the owner (known as the ‘cautioner’) has registered a right or interest in the property. They will be told if anyone tries to register it, and can object to the registration going ahead until their claim has been looked at. You can get their name and address from this service.</p>
+            <p>Registration has only been compulsory since the 1990s. Property that hasn’t changed hands since then may not be registered.</p>
+          </div>
+        </details>
       {% else %}
+        <h2 class="heading-medium collapse-top">The summary will tell you</h2>
+
         <ul class="list list-bullet">
           {% if params['title']['tenure'].upper() == 'FREEHOLD' %}
             <li>current owner's name and address</li>
@@ -107,7 +119,7 @@
         </ul>
       {% endif %}
 
-      <p>This information can change if we receive an application. This service is unable to tell you whether or not there is an application pending with the Land Registry.</p>
+      <p class="spacing-top-single">This information can change if we receive an application. This service is unable to tell you whether or not there is an application pending with the Land Registry.</p>
 
       <div class="warning media">
         <div class="media-item">

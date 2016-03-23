@@ -55,7 +55,11 @@
         {% if title.address_lines %}
           <dt>Address</dt>
           <dd class="bold-medium">
-            {{ '<br>'.join(title.address_lines)|safe }}
+            <div class="address">
+              {% for line in title.address_lines %}
+                <span>{{line}}</span>
+              {% endfor %}
+            </div>
           </dd>
         {% endif %}
 
@@ -173,7 +177,7 @@
 
 
                 {% if receipt.title_number %}
-                  <dt class="bold">Item</dt>
+                  <dt class="bold">Description</dt>
                   <dd>Summary of title: {{ receipt.title_number }}</dd>
                 {% endif %}
 
