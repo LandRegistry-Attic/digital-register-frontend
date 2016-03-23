@@ -225,8 +225,11 @@ def find_titles():
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     search_term = request.form['search_term'].strip()
-    if search_term:
+    form=TitleSearchForm()
+
+    if search_term and form.validate():
         LOGGER.debug("ENDED: find_titles search_term: {0}".format(search_term))
+
         return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, price=price, price_text=price_text,))
     else:
         # TODO: we should redirect to that page
@@ -394,12 +397,20 @@ def _initial_search_page(request):
     username = _username_from_header(request)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
+    form=TitleSearchForm()
+    search_term = ''
+
+    if request.method == 'POST':
+        form.validate()
+        search_term = request.form['search_term'].strip()
+
     return render_template(
         'search.html',
-        form=TitleSearchForm(),
+        form=form,
         username=username,
         price=price,
         price_text=price_text,
+        search_term=search_term
     )
 
 

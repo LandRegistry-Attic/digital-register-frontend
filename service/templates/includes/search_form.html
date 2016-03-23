@@ -1,7 +1,19 @@
 <form action="{{ url_for('find_titles') }}" method="post" class="search-form" data-clientside-validation="search_form_validation" data-clientside-validation-no-summary>
   {{ form.hidden_tag() }}
 
-  <div class="form-group spacing-bottom-half">
+  {% if form.search_term.errors %}
+    <div class="error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1">
+      <h2 class="heading-medium error-summary-heading" id="error-summary-heading">The following errors were found:</h2>
+
+      <ul class="error-summary-list">
+        {% for message in form.search_term.errors %}
+          <li><a href="#{{form.search_term.id}}">{{message}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <div class="form-group spacing-bottom-half {% if form.search_term.errors %}error{% endif %}">
 
     {% if h1 %}<h1>{% endif %}
 
@@ -15,7 +27,11 @@
 
     {% if h1 %}</h1>{% endif %}
 
-    <input class="form-control" id="search_term" name="search_term" type="text"{% if autofocus %} autofocus="autofocus"{% endif %} value="{{search_term}}">
+    {%if autofocus %}
+      {{form.search_term(class_='form-control', autofocus='true', value=search_term)}}
+    {% else %}
+      {{form.search_term(class_='form-control', value=search_term)}}
+    {% endif %}
 
     <input class="button" type="submit" name="search-button" value="Search" id="search_button">
   </div>
@@ -26,6 +42,11 @@
     "search_term": {
       "presence": {
         "message": "Please enter a search term"
+      },
+      "length": {
+        "minimum": 3,
+        "maximum": 70,
+        "message": "Search term should be between 3 and 70 characters"
       }
     }
   }
