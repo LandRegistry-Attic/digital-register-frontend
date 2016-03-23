@@ -23,7 +23,7 @@ def register_assets(app):
     assets.init_app(app)
 
     # Copy various images from the original stylesheet directory into the built output
-    # Reason being, we are using flash assets to compress the css to a new folder
+    # Reason being, we are using flask assets to compress the css to a new folder
     # but the images don't automatically come along with it so we have to copy them manually
     dir = os.path.dirname(__file__)
     folders = ['external-links', 'fonts', 'images']
