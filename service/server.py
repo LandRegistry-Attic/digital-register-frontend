@@ -21,22 +21,22 @@ POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 LOGGER = logging.getLogger(__name__)
 
 
+# landing page for DRV - this is whitelisted by webseal.
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/landing-page', methods=['GET', 'POST'])
-@app.route('/landing-page/<eligibility>', methods=['GET', 'POST'])
-def landing_page(eligibility=''):
-    # landing page for DRV - this is whitelisted by webseal.
+def landing_page():
+
     form = LandingPageForm()
-    if request.method == "POST" and form.validate():
-        eligibility = request.form.get('eligibility', '')
-    if not eligibility:
+
+    if request.method == 'POST' and form.validate():
+        if form.information.data == 'title_summary':
+            return redirect(url_for('search'))
+        elif form.information.data == 'full_title_documents':
+            return redirect('https://eservices.landregistry.gov.uk/wps/portal/Property_Search')
+        elif form.information.data == 'official_copy':
+            return redirect('https://www.gov.uk/government/publications/official-copies-of-register-or-plan-registration-oc1')
+
+    else:
         return render_template('landing_page.html', form=form)
-    elif eligibility == 'eligible':
-        return redirect(url_for('search'))
-    elif eligibility == 'find_a_property':
-        return redirect('https://eservices.landregistry.gov.uk/wps/portal/Property_Search')
-    elif eligibility == 'official_copy':
-        return redirect('https://www.gov.uk/government/publications/official-copies-of-register-or-plan-registration-oc1')
 
 
 @app.route('/search', methods=['GET'])
