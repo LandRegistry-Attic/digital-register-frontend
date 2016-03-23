@@ -1,7 +1,7 @@
 {% extends "layouts/layout.html" %}
 
 {% block header_primary %}
-  {% with title='Search results', prefix='Back to', url=url_for('find_titles_page', search_term=params['search_term'], page=params['display_page_number']) %}
+  {% with title='Search results', prefix='Back to', url=url_for('find_titles_page', search_term=params['search_term'], page=params['display_page_number']), historyBased=True %}
     {% include 'includes/back_link.html' %}
   {% endwith %}
 {% endblock %}
