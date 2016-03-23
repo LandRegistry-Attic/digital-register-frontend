@@ -26,6 +26,7 @@ LOGGER = logging.getLogger(__name__)
 def landing_page():
 
     form = LandingPageForm()
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
 
     if request.method == 'POST' and form.validate():
         if form.information.data == 'title_summary':
@@ -36,7 +37,7 @@ def landing_page():
             return redirect('https://www.gov.uk/government/publications/official-copies-of-register-or-plan-registration-oc1')
 
     else:
-        return render_template('landing_page.html', form=form)
+        return render_template('landing_page.html', form=form, price=price)
 
 
 @app.route('/search', methods=['GET'])
