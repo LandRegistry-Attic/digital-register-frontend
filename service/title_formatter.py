@@ -3,6 +3,7 @@ import re
 
 MORE_PROPRIETOR_DETAILS = (app.config['MORE_PROPRIETOR_DETAILS'] == 'true')
 PROPERTY_NOTES_REGEX = re.compile('note\:?\s?.*?\.', re.IGNORECASE)
+REMOVE_NOTES_REGEX = re.compile('note\:?\s?', re.IGNORECASE)
 
 
 # TODO: test now that the formatting can be tested independently
@@ -39,7 +40,10 @@ def _format_a1_notes(title_number):
     official_copy_data = api_client.get_official_copy_data(title_number)
     sub_registers = official_copy_data.get('official_copy_data', {}).get('sub_registers')
     a_register = next((item for item in sub_registers if item["sub_register_name"] == "A"))
-    notes = PROPERTY_NOTES_REGEX.findall(str(a_register))
+    a_register_notes = PROPERTY_NOTES_REGEX.findall(str(a_register))
+    notes = []
+    for note in a_register_notes:
+        notes.append(re.sub(REMOVE_NOTES_REGEX,"",note,count=1))
     return notes
 
 
