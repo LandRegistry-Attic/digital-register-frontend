@@ -128,3 +128,6 @@
   display: none; }
   .js-enabled .js-only {
     display: block; }
+
+#footer .footer-meta .footer-meta-inner ul {
+  margin-bottom: 0; }

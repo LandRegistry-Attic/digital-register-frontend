@@ -70,3 +70,8 @@
     display: block;
   }
 }
+
+// Gov uk footer overrides to tweak alignment without the OGL logo present
+#footer .footer-meta .footer-meta-inner ul {
+  margin-bottom: 0;
+}
