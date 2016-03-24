@@ -58,10 +58,11 @@ def search():
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
+
     LOGGER.debug("STARTED: confirm_selection title_number, search_term: {0}, {1}".format(
         title_number, search_term
     ))
-    breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, 1)
+
     username = _username_from_header(request)
 
     params = dict()
@@ -102,8 +103,10 @@ def confirm_selection(title_number, search_term):
     response = api_client.save_search_request(params)
     params['cartId'] = response.text
     action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
+
     LOGGER.debug("ENDED: confirm_selection")
-    return render_template('confirm_selection.html', params=params, action_url=action_url, breadcrumbs=breadcrumbs, price_text=price_text,)
+
+    return render_template('confirm_selection.html', params=params, action_url=action_url, price_text=price_text,)
 
 
 @app.route('/health', methods=['GET'])
@@ -146,7 +149,6 @@ def get_title(title_number):
     if title and _user_can_view(username, title_number):
         display_page_number = int(request.args.get('page') or 1)
         search_term = request.args.get('search_term', title_number)
-        breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
         show_pdf = _should_show_full_title_pdf()
         full_title_data = (
             api_client.get_official_copy_data(title_number) if _should_show_full_title_data() else None
@@ -191,8 +193,11 @@ def get_title(title_number):
             "total": "{0:.2f}".format(vat_json['fee_amt']),
             "reg_number": vat_json['vat_num']
         }
+
         LOGGER.debug("ENDED: get_title")
-        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt)
+
+        return _title_details_page(title, search_term, show_pdf, full_title_data, request, receipt)
+
     else:
         LOGGER.debug("ENDED: get_title")
         abort(404)
@@ -379,14 +384,13 @@ def _normalise_postcode(postcode_in):
     return postcode
 
 
-def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt):
+def _title_details_page(title, search_term, show_pdf, full_title_data, request, receipt):
     username = _username_from_header(request)
     return render_template(
         'display_title.html',
         title=title,
         username=username,
         search_term=search_term,
-        breadcrumbs=breadcrumbs,
         show_pdf=show_pdf,
         full_title_data=full_title_data,
         is_caution_title=title_utils.is_caution_title(title),
@@ -423,11 +427,7 @@ def _search_results_page(results, search_term, addressbase=False):
         results=results,
         form=TitleSearchForm(),
         addressbase=addressbase,
-        username=username,
-        breadcrumbs=[
-            {'text': 'Search the land and property register', 'url': url_for('find_titles')},
-            {'current': 'Search results'}
-        ]
+        username=username
     )
 
 

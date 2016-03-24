@@ -220,25 +220,6 @@ class TestViewTitle:
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_breadcrumbs_search_results_do_not_appear(self, mock_get_official_copy_data, mock_get):
-        # This tests that when going directly to a title the search results breadcrumb doesn't show
-        response = self.app.get('/titles/DN1000', headers=self.headers)
-        page_content = response.data.decode()
-        assert 'Search the land and property register' in page_content
-        assert 'Search results' not in page_content
-        assert 'Viewing DN1000' in page_content
-
-    @mock.patch('service.api_client.requests.get', return_value=fake_title)
-    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_breadcrumbs_search_results_appear(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/DN1000?search_term="testing"', headers=self.headers)
-        page_content = response.data.decode()
-        assert 'Search the land and property register' in page_content
-        assert 'Search results' in page_content
-        assert 'Viewing DN1000' in page_content
-
-    @mock.patch('service.api_client.requests.get', return_value=fake_title)
-    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_get_more_proprietor_data(self, mock_get_official_copy_data, mock_get):
         response = self.app.get('/titles/AGL1000', headers=self.headers)
         page_content = response.data.decode()
