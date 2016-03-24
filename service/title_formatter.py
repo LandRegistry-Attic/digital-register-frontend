@@ -1,7 +1,8 @@
-from service import address_utils, app, title_utils
+from service import address_utils, app, title_utils, api_client
 import re
 
 MORE_PROPRIETOR_DETAILS = (app.config['MORE_PROPRIETOR_DETAILS'] == 'true')
+PROPERTY_NOTES_REGEX = re.compile('note\:?\s?.*?\.', re.IGNORECASE)
 
 
 # TODO: test now that the formatting can be tested independently
@@ -10,6 +11,7 @@ def format_display_json(title_json):
     title_data = title_json['data']
     address_lines = address_utils.get_address_lines(title_data['address'])
     indexPolygon = _get_property_address_index_polygon(title_json['geometry_data'])
+    property_notes = _format_a1_notes(title_json['title_number'])
     title = {
         'number': title_json['title_number'],
         'last_changed': title_data.get('last_application_timestamp', 'No data'),
@@ -20,7 +22,8 @@ def format_display_json(title_json):
         'is_caution_title': title_utils.is_caution_title(title_data),
         'edition_date': title_data.get('edition_date'),
         'class_of_title': title_data.get('class_of_title'),
-        'districts': title_data.get('districts')
+        'districts': title_data.get('districts'),
+        'property_notes': property_notes
     }
 
     if 'lenders' in title_data:
@@ -29,6 +32,15 @@ def format_display_json(title_json):
         title['ppi_data'] = _format_ppi_data(title_data)
 
     return title
+
+
+def _format_a1_notes(title_number):
+    # grabs official copy data, extracts the a register sub register and then takes the notes
+    official_copy_data = api_client.get_official_copy_data(title_number)
+    sub_registers = official_copy_data.get('official_copy_data', {}).get('sub_registers')
+    a_register = next((item for item in sub_registers if item["sub_register_name"] == "A"))
+    notes = PROPERTY_NOTES_REGEX.findall(str(a_register))
+    return notes
 
 
 def _format_ppi_data(title_data):
