@@ -65,7 +65,7 @@ service/static/gen/
 service/static/.webassets-cache/
 
 # Generated files
-service/static/land-registry-elements
+service/static/.dist
 
 # Node.js
 node_modules

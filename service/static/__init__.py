@@ -18,7 +18,6 @@ assets.register('css_ie8', pipeline.css_ie8)
 assets.register('css_ie7', pipeline.css_ie7)
 assets.register('css_ie6', pipeline.css_ie6)
 
-
 def register_assets(app):
     assets.init_app(app)
 
@@ -29,8 +28,8 @@ def register_assets(app):
     folders = ['external-links', 'fonts', 'images']
 
     for folder in folders:
-      src = os.path.join(dir, 'land-registry-elements/assets/stylesheets', folder)
-      dest = os.path.join(dir, 'dist/css', folder)
+      src = os.path.join(dir, '.land-registry-elements/assets/stylesheets', folder)
+      dest = os.path.join(dir, '.dist/css', folder)
       rmtree(dest, True)
       copytree(src, dest)
 

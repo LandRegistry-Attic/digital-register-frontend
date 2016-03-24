@@ -3,8 +3,8 @@ var buildAssets = require('/vagrant/apps/land-registry-elements');
 
 buildAssets({
   'includePath': '/vagrant/apps/land-registry-elements',
-  'destination': path.resolve(__dirname, 'service/static/land-registry-elements'),
-  'assetPath': '/static/land-registry-elements/assets',
+  'destination': path.resolve(__dirname, 'service/static/.land-registry-elements'),
+  'assetPath': '/static/.land-registry-elements/assets',
   'components': [
     'pages/drv/landing-form',
     'pages/drv/search-form',
