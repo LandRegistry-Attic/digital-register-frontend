@@ -12,7 +12,7 @@ def compile_sass(_in, out, **kw):
 css = Bundle('.land-registry-elements/assets/stylesheets/govuk-template.css',
              '.land-registry-elements/assets/stylesheets/fonts.css',
              '.land-registry-elements/assets/sass/elements.scss',
-             'stylesheets/application.scss',
+             'app/stylesheets/application.scss',
               filters=(compile_sass, 'cssmin'), output='.dist/css/main.css')
 
 css_print = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-print.css',
@@ -21,17 +21,17 @@ css_print = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-pr
 css_ie8 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie8.css',
                  '.land-registry-elements/assets/stylesheets/fonts-ie8.css',
                  '.land-registry-elements/assets/sass/elements-ie8.scss',
-                 'stylesheets/application.scss',
+                 'app/stylesheets/application.scss',
                   filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie8.css')
 
 css_ie7 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie7.css',
                  '.land-registry-elements/assets/sass/elements-ie7.scss',
-                 'stylesheets/application.scss',
+                 'app/stylesheets/application.scss',
                   filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie7.css')
 
 css_ie6 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie6.css',
                  '.land-registry-elements/assets/sass/elements-ie6.scss',
-                 'stylesheets/application.scss',
+                 'app/stylesheets/application.scss',
                   filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie6.css')
 
 
@@ -44,14 +44,14 @@ js = Bundle('.land-registry-elements/assets/javascripts/govuk-template.js',
             filters='rjsmin', output='.dist/javascript/main.js')
 
 js_map = Bundle('.land-registry-elements/assets/javascripts/leaflet.js',
-                'javascripts/map.js',
+                'app/javascripts/map.js',
                 filters='rjsmin', output='.dist/javascript/leaflet.js')
 
-js_googleanalytics = Bundle('javascripts/googleanalytics.js',
+js_googleanalytics = Bundle('app/javascripts/googleanalytics.js',
                       filters='rjsmin', output='.dist/javascript/googleanalytics.js')
 
-js_ga_search = Bundle('javascripts/ga_search.js',
+js_ga_search = Bundle('app/javascripts/ga_search.js',
                       filters='rjsmin', output='.dist/javascript/ga_search.js')
 
-js_ga_search_results = Bundle('javascripts/ga_search_results.js',
+js_ga_search_results = Bundle('app/javascripts/ga_search_results.js',
                       filters='rjsmin', output='.dist/javascript/ga_search_results.js')
