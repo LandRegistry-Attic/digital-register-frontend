@@ -236,11 +236,9 @@
     <div class="column-two-thirds">
       <hr>
 
-      {#
-        {% if full_title_data %}
-          {% include 'includes/full_title_data.html' %}
-        {% endif %}
-      #}
+      {% if full_title_data %}
+        {% include 'includes/full_title_data.html' %}
+      {% endif %}
 
       <div class="panel panel-border-narrow spacing-top-single">
         <p>{{ _('If you have any problems with your purchase, you can contact Land Registry using the <a href="http://landregistry.custhelp.com/app/contactus_general/">general enquiry contact form</a> or call <a class="bold" href="tel:+443000060411">0300 006 0411</a>.') }}</p>
