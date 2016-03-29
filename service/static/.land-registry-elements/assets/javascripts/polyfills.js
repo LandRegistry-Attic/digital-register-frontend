@@ -68,6 +68,26 @@ Array.prototype.filter = function filter(callback, scope) {
 };
 
 }
+if (!Function.prototype.bind) {
+// Function.prototype.bind
+Function.prototype.bind = function bind(scope) {
+	var
+	callback = this,
+	prepend = Array.prototype.slice.call(arguments, 1),
+	Constructor = function () {},
+	bound = function () {
+		return callback.apply(
+			this instanceof Constructor && scope ? this : scope,
+			prepend.concat(Array.prototype.slice.call(arguments, 0))
+		);
+	};
+
+	Constructor.prototype = bound.prototype = callback.prototype;
+
+	return bound;
+};
+
+}
 if (typeof Array !== "undefined" && !Array.isArray) {
 // Array.isArray
 Array.isArray = function isArray(array) {
@@ -98,6 +118,13 @@ Object.defineProperties = function defineProperties(object, descriptors) {
 	}
 
 	return object;
+};
+
+}
+if (typeof Date !== "undefined" && !Date.now) {
+// Date.now
+Date.now = function now() {
+	return new Date().getTime();
 };
 
 }
@@ -449,26 +476,6 @@ if (typeof window.JSON === "undefined") {
 })();
 
 }
-if (!Function.prototype.bind) {
-// Function.prototype.bind
-Function.prototype.bind = function bind(scope) {
-	var
-	callback = this,
-	prepend = Array.prototype.slice.call(arguments, 1),
-	Constructor = function () {},
-	bound = function () {
-		return callback.apply(
-			this instanceof Constructor && scope ? this : scope,
-			prepend.concat(Array.prototype.slice.call(arguments, 0))
-		);
-	};
-
-	Constructor.prototype = bound.prototype = callback.prototype;
-
-	return bound;
-};
-
-}
 if (!Array.prototype.every) {
 // Array.prototype.every
 Array.prototype.every = function every(callback, scope) {
@@ -479,13 +486,6 @@ Array.prototype.every = function every(callback, scope) {
 	}
 
 	return index === length;
-};
-
-}
-if (typeof Date !== "undefined" && !Date.now) {
-// Date.now
-Date.now = function now() {
-	return new Date().getTime();
 };
 
 }
