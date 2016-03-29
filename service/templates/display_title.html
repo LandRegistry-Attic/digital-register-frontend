@@ -197,16 +197,6 @@
           </div>
         </div>
 
-        <hr>
-
-      {% endif %}
-
-      {% if show_pdf %}
-        <span class="title">{% if is_caution_title %}Caution title register{% else %}Title register{% endif %}</span><br>
-        <span class="footnote">{% if is_caution_title %}Caution title {% endif %}PDF document</span>
-        <p>
-          <a class="button" id="download-link" style="vertical-align: baseline;" href="{{ url_for('display_title_pdf', title_number=title.number) }}" target="_blank"><b>Download</b></a>
-        </p>
       {% endif %}
 
     </div>
@@ -214,11 +204,6 @@
 
   <div class="grid-row">
     <div class="column-two-thirds">
-      <hr>
-
-      {% if full_title_data %}
-        {% include 'includes/full_title_data.html' %}
-      {% endif %}
 
       <div class="panel panel-border-narrow spacing-top-single">
         <p>{{ _('If you have any problems with your purchase, you can contact Land Registry using the <a href="http://landregistry.custhelp.com/app/contactus_general/">general enquiry contact form</a> or call <a class="bold" href="tel:+443000060411">0300 006 0411</a>.') }}</p>
@@ -233,6 +218,24 @@
           <li><a href="https://gov.uk">{{ _('Return to') }} GOV.UK</a></li>
         </ul>
       </div>
+
+      <hr class="spacing-top-double">
+
+      {% if show_pdf %}
+        <div style="outline: 2px dashed red;padding:20px;margin-bottom:20px">
+          <span class="title">{% if is_caution_title %}Caution title register{% else %}Title register{% endif %}</span><br>
+          <span class="footnote">{% if is_caution_title %}Caution title {% endif %}PDF document</span>
+          <p>
+            <a class="button" id="download-link" style="vertical-align: baseline;" href="{{ url_for('display_title_pdf', title_number=title.number) }}" target="_blank"><b>Download</b></a>
+          </p>
+        </div>
+      {% endif %}
+
+      {% if full_title_data %}
+        <div style="outline: 2px dashed red;padding:20px">
+          {% include 'includes/full_title_data.html' %}
+        </div>
+      {% endif %}
 
     </div>
 
