@@ -7,6 +7,7 @@ import pytest  # type: ignore
 from unittest.mock import call  # type: ignore
 from werkzeug.datastructures import Headers  # type: ignore
 from lxml.html import document_fromstring  # type: ignore
+import re
 
 from config import CONFIG_DICT  # type: ignore
 import service  # type: ignore
@@ -250,27 +251,37 @@ class TestViewTitle:
     def test_get_title_calls_api_client_for_full_info_when_configured(self, mock_get_copy, mock_get):
 
         with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_DATA': True}):
-            title_number = 'AGL1234'
+            title_number = 'DN1000'
             self.app.get('/titles/{}'.format(title_number), headers=self.headers)
-            mock_get_copy.assert_called_once_with(title_number)
+            mock_get_copy.assert_called_with(title_number)
 
     @mock.patch.object(service.api_client, 'get_official_copy_data')
     def test_get_title_does_not_call_api_client_for_full_info_when_not_configured(self, mock_get_copy):
 
         with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_DATA': False}):
-            title_number = 'AGL1234'
+            title_number = 'DN1000'
             self.app.get('/titles/{}'.format(title_number), headers=self.headers)
             assert mock_get_copy.mock_calls == []
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
+    def test_gets_notes_from_official_copy_data(self, mock_get_copy, mock_get):
+        title_number = 'DN1000'
+        response = self.app.get('/titles/{}'.format(title_number), headers=self.headers)
+        response_data = response.data.decode()
+
+        assert 'Only the airspace stuff' in response_data
+        assert 'Mines and Minerals reference' in response_data
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_get_title_returns_page_containing_official_copy_info_page_when_present(self, mock_get_copy, mock_get):
-        title_number = 'AGL1234'
+        title_number = 'DN1000'
         response = self.app.get('/titles/{}'.format(title_number), headers=self.headers)
         assert response.status_code == 200
         response_body = response.data.decode()
         strings_to_find_on_page = [
-            'AGL1234',
+            'DN1000',
             'Register name : A',
             '1.  Not Dated  - A yearly ... payable yearly on ...',
             '2. 1995-11-06 - The land has the ...',
@@ -341,14 +352,14 @@ class TestDisplayTitlePdf:
     @mock.patch.object(service.api_client, 'get_official_copy_data')
     def test_display_title_pdf_calls_api_client_for_full_info_when_enabled(self, mock_get_copy, mock_get):
         with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_PDF': True}):
-            title_number = 'AGL1234'
+            title_number = 'DN1000'
             self.app.get('/titles/{}.pdf'.format(title_number), headers=self.headers)
-            mock_get_copy.assert_called_once_with(title_number)
+            mock_get_copy.assert_called_with(title_number)
 
     @mock.patch.object(service.api_client, 'get_official_copy_data')
     def test_display_title_pdf_doesnt_call_api_client_for_full_info_when_disabled(self, mock_get_copy):
         with mock.patch.dict(app.config, {'SHOW_FULL_TITLE_PDF': False}):
-            title_number = 'AGL1234'
+            title_number = 'DN1000'
             self.app.get('/titles/{}.pdf'.format(title_number), headers=self.headers)
             assert mock_get_copy.mock_calls == []
 
