@@ -3,11 +3,14 @@
 {% extends "layouts/govuk_template.html" %}
 
 {% block head %}
+
   {% assets "css" %}<!--[if gt IE 8]><!--><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->{% endassets %}
   {% assets "css_ie8" %}<!--[if IE 8]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
   {% assets "css_ie7" %}<!--[if IE 7]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
   {% assets "css_ie6" %}<!--[if IE 6]><link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
   {% assets "css_print" %}<link href="{{ ASSET_URL }}" media="print" rel="stylesheet" type="text/css" />{% endassets %}
+
+  <!--[if lt IE 9]>{% assets "js_ie" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
 
   <!-- Google Analytics -->
   <script>
@@ -62,7 +65,6 @@
 {% endblock %}
 
 {% block body_end %}
-  <!--[if lt IE 9]>{% assets "js_ie" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
   {% assets "js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
   {% block js_additionals %}{% endblock %}
 {% endblock %}
