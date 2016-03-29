@@ -18,9 +18,6 @@ assets.register('css_ie8', pipeline.css_ie8)
 assets.register('css_ie7', pipeline.css_ie7)
 assets.register('css_ie6', pipeline.css_ie6)
 
-assets.register('fonts', pipeline.fonts)
-assets.register('fonts_ie8', pipeline.fonts_ie8)
-
 def register_assets(app):
     assets.init_app(app)
 
