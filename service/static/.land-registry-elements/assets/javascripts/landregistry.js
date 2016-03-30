@@ -114,6 +114,7 @@ function match(e,o){if(vendor)return vendor.call(e,o);for(var t=e.parentNode.que
 
 },{}],39:[function(require,module,exports){
 require("./js/webfontloader");
+
 },{"./js/webfontloader":40}],40:[function(require,module,exports){
 (function (assetPath){
 var WebFont=require("webfontloader");WebFont.load({custom:{families:["nta","ntatabularnumbers"],urls:[assetPath+"/stylesheets/fonts.css"]}});
@@ -147,7 +148,6 @@ var Hogan=require("hogan.js");module.exports=new Hogan.Template({code:function(r
 
 },{"./Validator":45}],49:[function(require,module,exports){
 require("browsernizr/test/css/flexbox"),require("browsernizr");
-
 },{"browsernizr":1,"browsernizr/test/css/flexbox":28}],50:[function(require,module,exports){
 "use strict";for(var Print=require("./print"),printButtons=document.querySelectorAll("[data-print]"),instance,i=0;i<printButtons.length;i++)instance=new Print(printButtons[i]),instance.create();
 

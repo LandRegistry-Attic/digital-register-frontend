@@ -5,8 +5,7 @@ from wtforms.validators import InputRequired, Length                     # type:
 
 class TitleSearchForm(Form):  # type: ignore
     search_term = StringField('search_term',
-                              [InputRequired(message='Search term is required'),
-                               Length(min=3, max=70, message='Search term should be between 3 and 70 characters')])
+                              [ InputRequired(message='Postcode is required') ])
 
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
