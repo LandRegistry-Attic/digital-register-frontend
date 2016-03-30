@@ -114,7 +114,6 @@ function match(e,o){if(vendor)return vendor.call(e,o);for(var t=e.parentNode.que
 
 },{}],39:[function(require,module,exports){
 require("./js/webfontloader");
-
 },{"./js/webfontloader":40}],40:[function(require,module,exports){
 (function (assetPath){
 var WebFont=require("webfontloader");WebFont.load({custom:{families:["nta","ntatabularnumbers"],urls:[assetPath+"/stylesheets/fonts.css"]}});
@@ -122,6 +121,7 @@ var WebFont=require("webfontloader");WebFont.load({custom:{families:["nta","ntat
 }).call(this,"/static/.land-registry-elements/assets")
 },{"webfontloader":38}],41:[function(require,module,exports){
 require("./details.polyfill.js");
+
 },{"./details.polyfill.js":42}],42:[function(require,module,exports){
 !function(){"use strict";function e(e,t,n){e.addEventListener?e.addEventListener(t,function(e){n(e,e.target)},!1):e.attachEvent&&e.attachEvent("on"+t,function(e){n(e,e.srcElement)})}function t(t,n){e(t,"keypress",function(e,t){"SUMMARY"===t.nodeName&&32===e.keyCode&&(e.preventDefault?e.preventDefault():e.returnValue=!1)}),e(t,"keyup",function(e,t){13!==e.keyCode&&32!==e.keyCode||n(e,t)}),e(t,"mouseup",function(e,t){n(e,t)})}function n(e,t){do if(!e||e.nodeName.toLowerCase()===t)break;while(e=e.parentNode);return e}function a(e){function a(e){var t="true"===e.__details.__summary.getAttribute("aria-expanded"),n="true"===e.__details.__content.getAttribute("aria-hidden");if(e.__details.__summary.setAttribute("aria-expanded",t?"false":"true"),e.__details.__content.setAttribute("aria-hidden",n?"false":"true"),!r){e.__details.__content.style.display=t?"none":"";var a=null!==e.__details.getAttribute("open");a?e.__details.removeAttribute("open"):e.__details.setAttribute("open","open")}return e.__twisty&&(e.__twisty.firstChild.nodeValue=t?"►":"▼",e.__twisty.setAttribute("class",t?"arrow arrow-closed":"arrow arrow-open")),!0}if(!i&&(i=!0,0!==(e=document.getElementsByTagName("details")).length)){var o=e.length,s=0;for(s;o>s;s++){var u=e[s];u.__summary=u.getElementsByTagName("summary").item(0),u.__content=u.getElementsByTagName("div").item(0),u.__content.id||(u.__content.id="details-content-"+s),u.setAttribute("role","group"),u.__summary.setAttribute("role","button"),u.__summary.setAttribute("aria-controls",u.__content.id),r||(u.__summary.tabIndex=0);var _=null!==u.getAttribute("open");if(_===!0?(u.__summary.setAttribute("aria-expanded","true"),u.__content.setAttribute("aria-hidden","false")):(u.__summary.setAttribute("aria-expanded","false"),u.__content.setAttribute("aria-hidden","true"),r||(u.__content.style.display="none")),u.__summary.__details=u,!r){var d=document.createElement("i");_===!0?(d.className="arrow arrow-open",d.appendChild(document.createTextNode("▼"))):(d.className="arrow arrow-closed",d.appendChild(document.createTextNode("►"))),u.__summary.__twisty=u.__summary.insertBefore(d,u.__summary.firstChild),u.__summary.__twisty.setAttribute("aria-hidden","true")}}t(document,function(e,t){return(t=n(t,"summary"))?a(t):!0})}}var r="boolean"==typeof document.createElement("details").open,i=!1;e(document,"DOMContentLoaded",a),e(window,"load",a)}();
 

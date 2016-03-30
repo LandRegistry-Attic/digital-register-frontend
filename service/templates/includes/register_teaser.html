@@ -1,5 +1,5 @@
-<div class="teaser teaser-register spacing-bottom-single">
-  <h2 class="heading-small">
+<div class="teaser teaser-register">
+  <h2 class="heading-small spacing-top-half">
     {% if title['data'] %}
       <a href="{{ url_for('confirm_selection', title_number=title['title_number'], search_term=search_term, page=display_page_number) }}">{% if addressbase %}{{ title['address'] }}{% else %}{{ title['data']['address']['address_string'] }}{% endif %}</a>
     {% else %}
