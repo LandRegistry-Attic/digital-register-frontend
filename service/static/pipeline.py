@@ -9,28 +9,36 @@ def compile_sass(_in, out, **kw):
         )
     )
 
-css = Bundle('.land-registry-elements/assets/stylesheets/govuk-template.css',
-             '.land-registry-elements/assets/sass/elements.scss',
+govuk = Bundle('.land-registry-elements/assets/stylesheets/govuk-template.css',
+              filters=(compile_sass, 'cssmin'), output='.dist/css/main.css')
+
+govuk_ie8 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie8.css',
+                  filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie8.css')
+
+govuk_ie7 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie7.css',
+                  filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie7.css')
+
+govuk_ie6 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie6.css',
+                  filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie6.css')
+
+govuk_print = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-print.css',
+                    filters=('cssmin'), output='.dist/css/print.css')
+
+elements = Bundle('.land-registry-elements/assets/sass/elements.scss',
              'app/stylesheets/application.scss',
               filters=(compile_sass, 'cssmin'), output='.dist/css/main.css')
 
-css_print = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-print.css',
-                    filters=('cssmin'), output='.dist/css/print.css')
-
-css_ie8 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie8.css',
-                 '.land-registry-elements/assets/sass/elements-ie8.scss',
+elements_ie8 = Bundle('.land-registry-elements/assets/sass/elements-ie8.scss',
                  '.land-registry-elements/assets/stylesheets/fonts-ie8.css',
                  'app/stylesheets/application.scss',
                   filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie8.css')
 
-css_ie7 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie7.css',
-                 '.land-registry-elements/assets/sass/elements-ie7.scss',
+elements_ie7 = Bundle('.land-registry-elements/assets/sass/elements-ie7.scss',
                  '.land-registry-elements/assets/stylesheets/fonts-ie8.css',
                  'app/stylesheets/application.scss',
                   filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie7.css')
 
-css_ie6 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie6.css',
-                 '.land-registry-elements/assets/sass/elements-ie6.scss',
+elements_ie6 = Bundle('.land-registry-elements/assets/sass/elements-ie6.scss',
                  '.land-registry-elements/assets/stylesheets/fonts-ie8.css',
                  'app/stylesheets/application.scss',
                   filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie6.css')

@@ -12,11 +12,16 @@ assets.register('js_ga_search', pipeline.js_ga_search)
 assets.register('js_ga_search_results', pipeline.js_ga_search_results)
 assets.register('js_googleanalytics', pipeline.js_googleanalytics)
 
-assets.register('css', pipeline.css)
-assets.register('css_print', pipeline.css_print)
-assets.register('css_ie8', pipeline.css_ie8)
-assets.register('css_ie7', pipeline.css_ie7)
-assets.register('css_ie6', pipeline.css_ie6)
+assets.register('govuk', pipeline.govuk)
+assets.register('govuk_print', pipeline.govuk_print)
+assets.register('govuk_ie8', pipeline.govuk_ie8)
+assets.register('govuk_ie7', pipeline.govuk_ie7)
+assets.register('govuk_ie6', pipeline.govuk_ie6)
+
+assets.register('elements', pipeline.elements)
+assets.register('elements_ie8', pipeline.elements_ie8)
+assets.register('elements_ie7', pipeline.elements_ie7)
+assets.register('elements_ie6', pipeline.elements_ie6)
 
 def register_assets(app):
     assets.init_app(app)
