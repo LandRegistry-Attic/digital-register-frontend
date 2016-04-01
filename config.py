@@ -47,5 +47,6 @@ elif settings == 'test':
     # as it does in production.
     CONFIG_DICT['DEBUG'] = True
     CONFIG_DICT['DISABLE_CSRF_PREVENTION'] = True
+    CONFIG_DICT['WTF_CSRF_ENABLED'] = False
     CONFIG_DICT['FAULT_LOG_FILE_PATH'] = '/dev/null'
     CONFIG_DICT['LOGGING'] = False

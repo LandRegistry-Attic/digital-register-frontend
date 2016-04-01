@@ -36,9 +36,9 @@
           <dt>{{ _('Address') }}</dt>
           <dd class="bold-medium">
             <div class="address">
-              {% for line in title.address_lines %}
+              {%- for line in title.address_lines -%}
                 <span>{{line}}</span>
-              {% endfor %}
+              {%- endfor -%}
             </div>
           </dd>
         {% endif %}
