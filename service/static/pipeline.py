@@ -10,16 +10,16 @@ def compile_sass(_in, out, **kw):
     )
 
 govuk = Bundle('.land-registry-elements/assets/stylesheets/govuk-template.css',
-              filters=(compile_sass, 'cssmin'), output='.dist/css/main.css')
+              filters=(compile_sass, 'cssmin'), output='.dist/css/govuk-template.css')
 
 govuk_ie8 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie8.css',
-                  filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie8.css')
+                  filters=(compile_sass, 'cssmin'), output='.dist/css/govuk-template-ie8.css')
 
 govuk_ie7 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie7.css',
-                  filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie7.css')
+                  filters=(compile_sass, 'cssmin'), output='.dist/css/govuk-template-ie7.css')
 
 govuk_ie6 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie6.css',
-                  filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie6.css')
+                  filters=(compile_sass, 'cssmin'), output='.dist/css/govuk-template-ie6.css')
 
 govuk_print = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-print.css',
                     filters=('cssmin'), output='.dist/css/print.css')
