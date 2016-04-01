@@ -28,6 +28,8 @@
   {% block head_additionals %}{% endblock %}
 {% endblock %}
 
+{% block page_title %}{% block title %}{% endblock %}{%if self.title() %} - {% endif %}Find Property Information{% endblock %}
+
 {% block header_class %}with-proposition{% endblock %}
 
 {% block proposition_header %}

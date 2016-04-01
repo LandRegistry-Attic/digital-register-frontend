@@ -1,5 +1,7 @@
 {% extends "layouts/layout.html" %}
 
+{% block title %}Search results{% endblock %}
+
 {% block body %}
 
   {% set display_page_number = results.get('page_number', 0) + 1 %}
