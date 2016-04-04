@@ -8,7 +8,7 @@ $is-ie: true; $ie-version: 6; $mobile-ie6: false;$assetPath: "/static/.land-regi
 @import "/vagrant/apps/land-registry-elements/src/elements/land-registry/vertical-spacing/style.scss";
 @import "/vagrant/apps/land-registry-elements/src/elements/govuk/details/style.scss";
 @import "/vagrant/apps/land-registry-elements/src/elements/govuk/phase-banner/style.scss";
-@import "/vagrant/apps/land-registry-elements/src/elements/land-registry/polyfills/style.scss";
+@import "/vagrant/apps/land-registry-elements/src/elements/land-registry/polyfills/ie8/style.scss";
 @import "/vagrant/apps/land-registry-elements/src/elements/land-registry/core/style.scss";
 @import "/vagrant/apps/land-registry-elements/src/elements/land-registry/address/style.scss";
 @import "/vagrant/apps/land-registry-elements/src/elements/land-registry/definition-tabular/style.scss";

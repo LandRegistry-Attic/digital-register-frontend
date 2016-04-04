@@ -44,8 +44,14 @@ elements_ie6 = Bundle('.land-registry-elements/assets/sass/elements-ie6.scss',
                   filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie6.css')
 
 
-js_ie = Bundle('.land-registry-elements/assets/javascripts/polyfills.js',
-               filters='rjsmin', output='.dist/javascript/ie.js')
+js_polyfills_ie9 = Bundle('.land-registry-elements/assets/javascripts/polyfills-ie9.js',
+               filters='rjsmin', output='.dist/javascript/polyfills-ie9.js')
+
+js_polyfills_ie8 = Bundle('.land-registry-elements/assets/javascripts/polyfills-ie8.js',
+               filters='rjsmin', output='.dist/javascript/polyfills-ie8.js')
+
+js_promise = Bundle('.land-registry-elements/assets/javascripts/polyfills-promise.js',
+               filters='rjsmin', output='.dist/javascript/polyfills-promise.js')
 
 js = Bundle('.land-registry-elements/assets/javascripts/govuk-template.js',
             '.land-registry-elements/assets/javascripts/landregistry.js',

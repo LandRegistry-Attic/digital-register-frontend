@@ -16,7 +16,9 @@
   {% assets "elements_ie7" %}<!--[if IE 7]><link href="{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
   {% assets "elements_ie6" %}<!--[if IE 6]><link href="{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
 
-  <!--[if lt IE 9]>{% assets "js_ie" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
+  <!--[if lte IE 11]>{% assets "js_promise" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
+  <!--[if lte IE 9]>{% assets "js_polyfills_ie9" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
+  <!--[if lte IE 8]>{% assets "js_polyfills_ie8" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
 
   <!-- Google Analytics -->
   <script>
