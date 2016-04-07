@@ -1,10 +1,9 @@
 from flask.ext.assets import Bundle  # type: ignore
-from os import path                  # type: ignore
-import sass as libsass               # type: ignore
+import sass                          # type: ignore
 
 def compile_sass(_in, out, **kw):
     out.write(
-        libsass.compile(
+        sass.compile(
             string=_in.read()
         )
     )
