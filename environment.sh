@@ -3,7 +3,7 @@ export SETTINGS='dev'
 
 export APPLICATION_SECRET_KEY='secretkeyshouldberandom'
 export FAULT_LOG_FILE_PATH='/var/log/applications/digital-register-frontend-fault.log'
-export GOOGLE_ANALYTICS_API_KEY='UA-59849906-2'
+export GOOGLE_ANALYTICS_API_KEY='UA-59849906-5'
 export LOGGING_CONFIG_FILE_PATH='logging_config.json'
 export PYTHONPATH=.
 export MORE_PROPRIETOR_DETAILS='true'
