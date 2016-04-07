@@ -56,21 +56,18 @@ We use three separate builds:
 - [master](http://52.16.47.1/job/digital-register-frontend-unit-tests%20(Master)/)
 - [acceptance](http://52.16.47.1/job/digital-register-frontend-acceptance-tests/)
 
-## SASS libraries
+## Frontend assets
+The frontend assets are supplied by [LandRegistry/land-registry-elements](https://github.com/LandRegistry/land-registry-elements).
+To rebuild these, this repository contains a script called `build_assets.js`. This can be run as follows:
+* `npm run build` from the `digital-register-frontend` application directory.
+* or most easily: `lr-rebuild-assets` which can be run from anywhere within the vagrant box
 
-### GOV.UK template
+Due to time constraints, the resulting build artefacts have been committed into the `digital-register-frontend` repository in the `service/static/.land-registry-elements` folder (Which on many OSs should be hidden). Therefore once you have rebuilt the assets based on changes upstream in the `land-registry-elements` repository, you need to then commit the changes to `digital-register-frontend`. Ideally this constraint will be removed in future by improvements to the build pipeline.
 
-[govuk_template](http://alphagov.github.io/govuk_template/)
+Note: *DO NOT EDIT THE BUILD ARTEFACTS MANUALLY!*. Changes to these should only come via the pattern library build scripts.
 
-In order to update:
-* download the 'plain HTML' version and replace the `static/govuk_template` folder with its assets
-* replace the `govuk_template.html` file in the `static/templates` folder with its HTML file
-
-### GOV.UK frontend toolkit
-
-[govuk_frontend_toolkit](https://github.com/alphagov/govuk_frontend_toolkit)
-
-It is included in our `static` folder as a gitsubmodule. It can be updated by bumping up its commit hash.
+### Application specific CSS
+Sometimes, if you just need to do something quickly or work on a component that is not appropriate to push up to the pattern library it may be necessary to add local CSS. This can be done in `service/static/app/stylesheets/application.scss`. This can be used to override small things from the pattern library or as a scratch pad for things that should be pushed to the pattern library when they are more fully formed.
 
 ## Dependencies
 
