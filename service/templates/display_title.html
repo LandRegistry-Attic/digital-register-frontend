@@ -79,6 +79,14 @@
             {% else %}
               {{ _('Not Available') }}
             {% endif %}
+            {% if title['property_notes'] %}
+            <br><br>
+            <p>
+                {% for notes in title['property_notes'] %}
+                  {{ notes|safe }}
+                {% endfor %}
+            </p>
+            {% endif %}
         </span>
     </dd>
       <dt>{% if is_caution_title %}{{ _('Cautioner') }}{% else %}{{ _('Owner') }}{% endif %}{{ title.proprietors|length|pluralize }}</dt>

@@ -14,6 +14,14 @@
         {% else %}
         {{ _('Not Available') }}
         {% endif %}
+        {% if params['title']['property_notes'] %}
+        <br><br>
+        <p>
+            {% for notes in params['title']['property_notes'] %}
+              {{ notes|safe }}
+            {% endfor %}
+        </p>
+        {% endif %}
       </span></dd>
       <dt>Title number</dt>
       <dd class="bold-small">{{ params['title_number'] }}</dd>

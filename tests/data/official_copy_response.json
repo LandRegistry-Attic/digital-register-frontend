@@ -1,5 +1,5 @@
 {
-    "title_number": "AGL1234",
+    "title_number": "DN1000",
     "official_copy_data": {
         "sub_registers": [
             {
@@ -12,7 +12,15 @@
                         "entry_date": "1995-11-06",
                         "full_text": "The land has the ...",
                         "sequence_number": 2
-                    }
+                    },
+                    {
+                        "full_text": "stuff NOTE: Only the airspace stuff .",
+                        "sequence_number": 3,
+                        "entry_date": "2012-02-23"},
+                    {
+                        "full_text": "stuff NOTE: Mines and Minerals reference .",
+                        "sequence_number": 3,
+                        "entry_date": "2012-02-23"}
                 ],
                 "sub_register_name": "A"
             },
