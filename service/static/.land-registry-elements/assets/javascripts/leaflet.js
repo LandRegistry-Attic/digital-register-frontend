@@ -213,7 +213,7 @@ module.exports={
   "_args": [
     [
       "proj4@^2.0.0",
-      "/home/andymantell/Work/landregistry/centos-dev-env/apps/land-registry-elements/node_modules/proj4leaflet"
+      "/vagrant/apps/land-registry-elements/node_modules/proj4leaflet"
     ]
   ],
   "_from": "proj4@>=2.0.0 <3.0.0",
@@ -247,7 +247,7 @@ module.exports={
   "_shasum": "928906144388980c914c5a357fc493aba59a747a",
   "_shrinkwrap": null,
   "_spec": "proj4@^2.0.0",
-  "_where": "/home/andymantell/Work/landregistry/centos-dev-env/apps/land-registry-elements/node_modules/proj4leaflet",
+  "_where": "/vagrant/apps/land-registry-elements/node_modules/proj4leaflet",
   "author": "",
   "bugs": {
     "url": "https://github.com/proj4js/proj4js/issues"
@@ -304,7 +304,7 @@ module.exports={
   },
   "dist": {
     "shasum": "928906144388980c914c5a357fc493aba59a747a",
-    "tarball": "http://registry.npmjs.org/proj4/-/proj4-2.3.14.tgz"
+    "tarball": "https://registry.npmjs.org/proj4/-/proj4-2.3.14.tgz"
   },
   "gitHead": "7619c8a63df1eae5bad0b9ad31ca1d87b0549243",
   "homepage": "https://github.com/proj4js/proj4js#readme",
