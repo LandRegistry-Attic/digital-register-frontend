@@ -6,12 +6,12 @@ buildAssets({
   'destination': path.resolve(__dirname, 'service/static/.land-registry-elements'),
   'assetPath': '/static/.land-registry-elements/assets',
   'components': [
-    'pages/drv/landing-form',
-    'pages/drv/search-form',
-    'pages/drv/search-results',
-    'pages/drv/order-confirmation',
-    'pages/drv/summary',
-    'pages/drv/cookies',
+    'pages/find-property-information/landing-form',
+    'pages/find-property-information/search-form',
+    'pages/find-property-information/search-results',
+    'pages/find-property-information/order-confirmation',
+    'pages/find-property-information/summary',
+    'pages/find-property-information/cookies',
     'pages/land-registry/error-page'
   ]
 })

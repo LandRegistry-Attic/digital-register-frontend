@@ -117,7 +117,6 @@ function match(e,o){if(vendor)return vendor.call(e,o);for(var t=e.parentNode.que
 
 },{}],40:[function(require,module,exports){
 require("./js/webfontloader");
-
 },{"./js/webfontloader":41}],41:[function(require,module,exports){
 (function (assetPath){
 var WebFont=require("webfontloader"),PubSub=require("pubsub-js");WebFont.load({custom:{families:["nta","ntatabularnumbers"],urls:[assetPath+"/stylesheets/fonts.css"]},active:function(){PubSub.publish("webfonts.active")}});
@@ -175,4 +174,5 @@ require("browsernizr/test/css/flexbox"),require("browsernizr");
 
 },{"extend":32}],58:[function(require,module,exports){
 "use strict";for(var SplitDetail=require("./SplitDetail"),instance,splitDetailTriggers=document.querySelectorAll(".split-detail-trigger"),i=0;i<splitDetailTriggers.length;i++)instance=new SplitDetail(splitDetailTriggers[i]),instance.create();
+
 },{"./SplitDetail":57}]},{},[40,45,47,42,54,53,55,49,58]);
