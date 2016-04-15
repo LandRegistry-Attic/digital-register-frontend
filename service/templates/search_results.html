@@ -39,8 +39,8 @@
 
 {% block js_bottom %}
   <script>
-    number_results = {{ results['titles']|length }};
-    page_number = {{ display_page_number or 0 }};
+    var number_results = {{ results['titles']|length }};
+    var page_number = {{ display_page_number or 0 }};
   </script>
   {% assets "js_ga_search_results" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
