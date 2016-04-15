@@ -117,6 +117,7 @@ function match(e,o){if(vendor)return vendor.call(e,o);for(var t=e.parentNode.que
 
 },{}],40:[function(require,module,exports){
 require("./js/webfontloader");
+
 },{"./js/webfontloader":41}],41:[function(require,module,exports){
 (function (assetPath){
 var WebFont=require("webfontloader"),PubSub=require("pubsub-js");WebFont.load({custom:{families:["nta","ntatabularnumbers"],urls:[assetPath+"/stylesheets/fonts.css"]},active:function(){PubSub.publish("webfonts.active")}});
@@ -159,7 +160,6 @@ var Hogan=require("hogan.js");module.exports=new Hogan.Template({code:function(r
 
 },{"hogan.js":34}],53:[function(require,module,exports){
 "use strict";var Validator=require("./Validator"),forms=document.querySelectorAll("[data-clientside-validation]"),rules,instance,element;if(!document.documentElement.classList.contains("lte-ie8"))for(var i=0;i<forms.length;i++){element=forms[i];var configID=element.getAttribute("data-clientside-validation"),configElement=document.getElementById(configID);if(!configElement)break;rules=JSON.parse(configElement.textContent),instance=new Validator(element,{rules:rules,showSummary:!element.hasAttribute("data-clientside-validation-no-summary")}),instance.create()}
-
 },{"./Validator":50}],54:[function(require,module,exports){
 require("browsernizr/test/css/flexbox"),require("browsernizr");
 

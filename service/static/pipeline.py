@@ -4,7 +4,8 @@ import sass                          # type: ignore
 def compile_sass(_in, out, **kw):
     out.write(
         sass.compile(
-            string=_in.read()
+            string=_in.read(),
+            include_paths=['/vagrant/apps/land-registry-elements']
         )
     )
 
