@@ -236,22 +236,26 @@ def find_titles_page(search_term=''):
 
 def _get_register_title(title_number):
     title = api_client.get_title(title_number)
+    LOGGER.debug(title)
     return title_formatter.format_display_json(title) if title else None
 
 
 def _user_can_view(username, title_number):
     access_granted = api_client.user_can_view(username, title_number)
-
+    LOGGER.debug(access_granted)
     return access_granted
 
 
 def _get_address_search_response(search_term, page_number):
     search_term = search_term.upper()
     if _is_title_number(search_term):
+        LOGGER.info('title number search used')
         return _get_search_by_title_number_response(search_term, page_number)
     elif _is_postcode(search_term):
+        LOGGER.info('postcode search used')
         return _get_search_by_postcode_response(search_term, page_number)
     else:
+        LOGGER.info('address search used')
         return _get_search_by_address_response(search_term, page_number)
 
 
@@ -272,11 +276,13 @@ def _get_search_by_title_number_response(search_term, page_number):
 def _get_search_by_postcode_response(search_term, page_number):
     postcode = _normalise_postcode(search_term)
     postcode_search_results = api_client.get_titles_by_postcode(postcode, page_number)
+    LOGGER.debug(postcode_search_results)
     return _search_results_page(postcode_search_results, postcode, True)
 
 
 def _get_search_by_address_response(search_term, page_number):
     address_search_results = api_client.get_titles_by_address(search_term, page_number)
+    LOGGER.debug(address_search_results)
     return _search_results_page(address_search_results, search_term)
 
 
@@ -376,12 +382,14 @@ def _terms_and_conditions_page():
 def _create_string_date_only(datetoconvert):
     # converts to example : 12 August 2014
     date = datetoconvert.strftime('%-d %B %Y')
+    LOGGER.debug(date)
     return date
 
 
 def _create_string_date_and_time(datetoconvert):
     # converts to example : 12 August 2014 12:34:06
     date = datetoconvert.strftime('%-d %B %Y at %H:%M:%S')
+    LOGGER.debug(date)
     return date
 
 
@@ -445,4 +453,5 @@ def _username_from_header(request):
     if user_id:
         p = re.compile("[%][{0-9}][{0-9}]")
         user_id = p.sub("", user_id)
+    LOGGER.debug(user_id)
     return user_id
