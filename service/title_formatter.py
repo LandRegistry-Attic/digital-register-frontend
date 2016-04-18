@@ -28,6 +28,7 @@ def format_display_json(title_json):
     if 'ppi_data' in title_data:
         title['ppi_data'] = _format_ppi_data(title_data)
 
+    LOGGER.debug(title)
     return title
 
 
@@ -83,6 +84,7 @@ def _get_proprietor_name_extra_info(proprietor):
 
 def _get_proprietor_addresses(proprietor):
     addresses = proprietor.get('addresses') or []
+    LOGGER.debug(addresses)
     return [{"lines": address_utils.get_address_lines(address)} for address in addresses]
 
 
@@ -91,6 +93,7 @@ def _get_property_address_index_polygon(geometry_data):
     index_polygon = None
     if geometry_data and ('index' in geometry_data):
         index_polygon = geometry_data['index']
+    LOGGER.debug(index_polygon)
     return index_polygon
 
 
