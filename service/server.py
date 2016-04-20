@@ -341,17 +341,13 @@ def _breadcumbs_for_title_details(title_number, search_term, display_page_number
 
 def _normalise_postcode(postcode_in):
     # We strip out the spaces - and reintroduce one four characters from end
-    LOGGER.debug("STARTED: _normalise_postcode")
     no_spaces = postcode_in.replace(' ', '')
     postcode = no_spaces[:len(no_spaces) - 3] + ' ' + no_spaces[-3:]
-    LOGGER.debug("ENDED: _normalise_postcode")
     return postcode
 
 
 def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt):
-    LOGGER.debug("STARTED: _title_details_page")
     username = _username_from_header(request)
-    LOGGER.debug("ENDED: _title_details_page")
     return render_template(
         'display_title.html',
         title=title,
@@ -405,19 +401,19 @@ def _terms_and_conditions_page():
 def _create_string_date_only(datetoconvert):
     # converts to example : 12 August 2014
     date = datetoconvert.strftime('%-d %B %Y')
-    LOGGER.debug(date)
+    LOGGER.debug("_create_string_date_only: {0}".format(date))
     return date
 
 
 def _create_string_date_and_time(datetoconvert):
     # converts to example : 12 August 2014 12:34:06
     date = datetoconvert.strftime('%-d %B %Y at %H:%M:%S')
-    LOGGER.debug(date)
+    LOGGER.debug("_create_string_date_and_time: {0}".format(date))
     return date
 
 
 def _create_pdf_template(sub_registers, title, title_number):
-
+    LOGGER.debug("STARTED: _create_pdf_template")
     # TODO use real date - this is reliant on new functionality to check the daylist
     last_entry_date = _create_string_date_and_time(datetime(3001, 2, 3, 4, 5, 6))
     issued_date = _create_string_date_only(datetime.now())
@@ -431,7 +427,7 @@ def _create_pdf_template(sub_registers, title, title_number):
     class_of_title = title.get('class_of_title')
     # need to check for caution title as we don't display Class of title for them
     is_caution = title.get('is_caution_title') is True
-
+    LOGGER.debug("ENDED: _create_pdf_template")
     return render_template('full_title.html', title_number=title_number, title=title,
                            last_entry_date=last_entry_date,
                            issued_date=issued_date,
@@ -444,6 +440,7 @@ def _create_pdf_template(sub_registers, title, title_number):
 
 def _strip_delimiters(json_in):
     # Remove all delimiters and not notes from json
+    LOGGER.debug("STARTED: _strip_delimiters")
     json_out = json_in
     try:
         for i, sub_register in enumerate(json_in['official_copy_data']['sub_registers']):
@@ -466,7 +463,7 @@ def _strip_delimiters(json_in):
     except Exception as e:
         # For when SHOW_FULL_TITLE_DATA = False
         pass
-
+    LOGGER.debug("ENDED: _strip_delimiters")
     return json_out
 
 

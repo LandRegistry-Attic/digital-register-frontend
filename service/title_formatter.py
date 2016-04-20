@@ -9,6 +9,7 @@ MORE_PROPRIETOR_DETAILS = (app.config['MORE_PROPRIETOR_DETAILS'] == 'true')
 
 # TODO: test now that the formatting can be tested independently
 def format_display_json(title_json):
+    LOGGER.debug("STARTED: format_display_json")
     proprietors = _format_proprietors(title_json['data']['proprietors'])
     title_data = title_json['data']
     address_lines = address_utils.get_address_lines(title_data['address'])
@@ -32,6 +33,7 @@ def format_display_json(title_json):
         title['ppi_data'] = _format_ppi_data(title_data)
 
     LOGGER.debug("formatted title{0}".format(title))
+    LOGGER.debug("ENDED: format_display_json")
     return title
 
 
@@ -67,6 +69,7 @@ def _get_proprietor_name(proprietor):
 
 
 def _get_proprietor_name_extra_info(proprietor):
+    LOGGER.debug("STARTED: _get_proprietor_name_extra_info")
     if MORE_PROPRIETOR_DETAILS:
         name = proprietor.get('name') or {}
         extra_info = ''
@@ -79,7 +82,7 @@ def _get_proprietor_name_extra_info(proprietor):
             extra_info += ' trading as ' + name['trading_name']
         if 'non_private_individual_name' in name and 'country_incorporation' in name:
             extra_info += ' incorporated in ' + name['country_incorporation']
-
+        LOGGER.debug("ENDED: _get_proprietor_name_extra_info")
         return extra_info
     else:
         return ''

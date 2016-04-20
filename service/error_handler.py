@@ -12,6 +12,7 @@ error_template = "error.html"
 
 
 def error_handler(error):
+    LOGGER.debug("STARTED: error_handler")
     LOGGER.error('An error occurred when processing a request', exc_info=error)
     if isinstance(error, HTTPException) and error.code == 404:
         code = error.code
@@ -22,6 +23,7 @@ def error_handler(error):
         error_title = GENERIC_ERROR_WORDING
         description = GENERIC_ERROR_DESCRIPTION
     breadcrumbs = [{'text': 'Search the land and property register', 'url': '/title-search'}]
+    LOGGER.debug("ENDED: error_handler")
     return render_template(error_template, error=error_title, code=code, description=Markup(description),
                            breadcrumbs=breadcrumbs), code
 
