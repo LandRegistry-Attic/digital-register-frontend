@@ -41,9 +41,11 @@ def landing_page(eligibility=''):
 
 @app.route('/search', methods=['GET'])
 def search():
+    LOGGER.debug("STARTED: Search")
     username = _username_from_header(request)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
+    LOGGER.debug("ENDED: Search")
     return render_template(
         'search.html',
         form=TitleSearchForm(),
@@ -55,6 +57,9 @@ def search():
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
+    LOGGER.debug("STARTED: confirm_selection title_number, search_term: {0}, {1}".format(
+        title_number, search_term
+    ))
     breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, 1)
     username = _username_from_header(request)
 
@@ -95,12 +100,13 @@ def confirm_selection(title_number, search_term):
     response = api_client.save_search_request(params)
     params['cartId'] = response.text
     action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
-
+    LOGGER.debug("ENDED: confirm_selection")
     return render_template('confirm_selection.html', params=params, action_url=action_url, breadcrumbs=breadcrumbs, price_text=price_text,)
 
 
 @app.route('/health', methods=['GET'])
 def healthcheck():
+    LOGGER.debug("STARTED: healthcheck")
     errors = health_checker.perform_healthchecks()
     status, http_status = ('error', 500) if errors else ('ok', 200)
 
@@ -108,7 +114,7 @@ def healthcheck():
 
     if errors:
         response_body['errors'] = errors
-
+    LOGGER.debug("ENDED: healthcheck")
     return Response(
         json.dumps(response_body),
         status=http_status,
@@ -131,7 +137,7 @@ def get_title(title_number):
     """
     Show title (result) if user is logged in, has paid and hasn't viewed before.
     """
-
+    LOGGER.debug("STARTED: get_title title_number: {0}".format(title_number))
     title = _get_register_title(title_number)
     username = _username_from_header(request)
 
@@ -183,14 +189,16 @@ def get_title(title_number):
             "total": "{0:.2f}".format(vat_json['fee_amt']),
             "reg_number": vat_json['vat_num']
         }
-
+        LOGGER.debug("ENDED: get_title")
         return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt)
     else:
+        LOGGER.debug("ENDED: get_title")
         abort(404)
 
 
 @app.route('/titles/<title_number>.pdf', methods=['GET'])
 def display_title_pdf(title_number):
+    LOGGER.debug("STARTED: display_title_pdf title_number: {}".format(title_number))
     if not _should_show_full_title_pdf():
         abort(404)
 
@@ -202,41 +210,49 @@ def display_title_pdf(title_number):
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
             if sub_registers:
                 html = _create_pdf_template(sub_registers, title, title_number)
+                LOGGER.debug("ENDED: display_title_pdf")
                 return render_pdf(HTML(string=html))
+    LOGGER.debug("ENDED: display_title_pdf")
     abort(404)
 
 
 @app.route('/title-search', methods=['POST'])
 @app.route('/title-search/<search_term>', methods=['POST'])
 def find_titles():
+    LOGGER.debug("STARTED: find_titles")
     display_page_number = int(request.args.get('page') or 1)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     search_term = request.form['search_term'].strip()
     if search_term:
+        LOGGER.debug("ENDED: find_titles search_term: {0}".format(search_term))
         return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, price=price, price_text=price_text,))
     else:
         # TODO: we should redirect to that page
+        LOGGER.debug("ENDED: find_titles")
         return _initial_search_page(request)
 
 
 @app.route('/title-search', methods=['GET'])
 @app.route('/title-search/<search_term>', methods=['GET'])
 def find_titles_page(search_term=''):
+    LOGGER.debug("STARTED: find_titles_page search_term: {}".format(search_term))
     display_page_number = int(request.args.get('page') or 1)
     page_number = display_page_number - 1  # page_number is 0 indexed
     username = _username_from_header(request)
     search_term = search_term.strip()
     if not search_term:
+        LOGGER.debug("ENDED: find_titles_page")
         return _initial_search_page(request)
     else:
         message_format = "SEARCH REGISTER: '{0}' was searched by {1}"
         auditing.audit(message_format.format(search_term, username))
+        LOGGER.debug("ENDED: find_titles_page search_term: {0}".format(search_term))
         return _get_address_search_response(search_term, page_number)
 
 
 def _get_register_title(title_number):
-    LOGGER.debug("STARTED: _get_register_title")
+    LOGGER.debug("STARTED: _get_register_title title_number{}".format(title_number))
     title = api_client.get_title(title_number)
     LOGGER.debug("_get_register_title: {0}".format(title))
     LOGGER.debug("ENDED: _get_register_title")
@@ -244,7 +260,9 @@ def _get_register_title(title_number):
 
 
 def _user_can_view(username, title_number):
-    LOGGER.debug("STARTED: _user_can_view")
+    LOGGER.debug("STARTED: _user_can_view username, title_number: {0}, {1}".format(
+        username, title_number
+    ))
     access_granted = api_client.user_can_view(username, title_number)
     LOGGER.debug("_user_can_view: {0}".format(access_granted))
     LOGGER.debug("ENDED: _user_can_view")
@@ -252,7 +270,9 @@ def _user_can_view(username, title_number):
 
 
 def _get_address_search_response(search_term, page_number):
-    LOGGER.debug("STARTED: _get_address_search_response")
+    LOGGER.debug("STARTED: _get_address_search_response search_term, page_number: {0}, {1}".format(
+        search_term, page_number
+    ))
     search_term = search_term.upper()
     if _is_title_number(search_term):
         LOGGER.info('title number search used')
@@ -269,7 +289,9 @@ def _get_address_search_response(search_term, page_number):
 
 
 def _get_search_by_title_number_response(search_term, page_number):
-    LOGGER.debug("STARTED: _get_search_by_title_number_response")
+    LOGGER.debug("STARTED: _get_search_by_title_number_response search_term, page_number: {0}, {1}".format(
+        search_term, page_number
+    ))
     display_page_number = page_number + 1
     title_number = search_term
     title = _get_register_title(title_number)
@@ -286,7 +308,9 @@ def _get_search_by_title_number_response(search_term, page_number):
 
 
 def _get_search_by_postcode_response(search_term, page_number):
-    LOGGER.debug("STARTED: _get_search_by_postcode_response")
+    LOGGER.debug("STARTED: _get_search_by_postcode_response search_term, page_number: {0}, {1}".format(
+        search_term, page_number
+    ))
     postcode = _normalise_postcode(search_term)
     postcode_search_results = api_client.get_titles_by_postcode(postcode, page_number)
     LOGGER.debug("_get_search_by_postcode_response: {0}".format(postcode_search_results))
@@ -295,7 +319,9 @@ def _get_search_by_postcode_response(search_term, page_number):
 
 
 def _get_search_by_address_response(search_term, page_number):
-    LOGGER.debug("STARTED: _get_search_by_address_response")
+    LOGGER.debug("STARTED: _get_search_by_address_response search_term, page_number: {0}, {1}".format(
+        search_term, page_number
+    ))
     address_search_results = api_client.get_titles_by_address(search_term, page_number)
     LOGGER.debug("_get_search_by_address_response: {0}".format(address_search_results))
     LOGGER.debug("ENDED: _get_search_by_address_response")
@@ -323,7 +349,9 @@ def _should_show_full_title_pdf():
 
 
 def _breadcumbs_for_title_details(title_number, search_term, display_page_number):
-    LOGGER.debug("STARTED: _breadcumbs_for_title_details")
+    LOGGER.debug("STARTED: _breadcumbs_for_title_details title_number, search_term, display_page_number {0}, {1}, {2}".format(
+        title_number, search_term, display_page_number
+    ))
     search_breadcrumb = {'text': 'Search the land and property register', 'url': url_for('find_titles')}
     results_breadcrumb = {'text': 'Search results', 'url': url_for('find_titles_page', search_term=search_term,
                                                                    page=display_page_number)}
@@ -413,7 +441,9 @@ def _create_string_date_and_time(datetoconvert):
 
 
 def _create_pdf_template(sub_registers, title, title_number):
-    LOGGER.debug("STARTED: _create_pdf_template")
+    LOGGER.debug("STARTED: _create_pdf_template sub_registers, title, title_number {0}, {1}, {2}".format(
+        sub_registers, title, title_number
+    ))
     # TODO use real date - this is reliant on new functionality to check the daylist
     last_entry_date = _create_string_date_and_time(datetime(3001, 2, 3, 4, 5, 6))
     issued_date = _create_string_date_only(datetime.now())

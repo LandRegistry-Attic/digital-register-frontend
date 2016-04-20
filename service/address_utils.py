@@ -1,4 +1,8 @@
 import re
+import logging
+import logging.config
+
+LOGGER = logging.getLogger(__name__)
 
 BASIC_POSTCODE_REGEX = '^[A-Z]{1,2}[0-9R][0-9A-Z]? ?[0-9][A-Z]{2}$'
 BASIC_POSTCODE_WITH_SURROUNDING_GROUPS_REGEX = (
@@ -9,7 +13,7 @@ BASIC_POSTCODE_WITH_SURROUNDING_GROUPS_REGEX = (
 
 
 def get_building_description_lines(address_data):
-    LOGGER.debug("STARTED: get_building_description_lines")
+    LOGGER.debug("STARTED: get_building_description_lines address_data: {}".format(address_data))
     lines = []
     if ('sub_building_description' in address_data and
             'sub_building_no' in address_data):
@@ -27,7 +31,7 @@ def get_building_description_lines(address_data):
 
 
 def get_street_name_lines(address_data):
-    LOGGER.debug("STARTED: get_street_name_lines")
+    LOGGER.debug("STARTED: get_street_name_lines address_data: {}".format(address_data))
     lines = []
     street_name_string = ""
     if 'house_no' in address_data or 'house_alpha' in address_data:
@@ -59,7 +63,7 @@ def get_street_name_lines(address_data):
 
 
 def get_address_lines(address_data):
-    LOGGER.debug("STARTED: get_address_lines")
+    LOGGER.debug("STARTED: get_address_lines address_data: {}".format(address_data))
     lines = []
     if address_data:
         address_type = address_data.get('address_type', None)
@@ -116,7 +120,7 @@ def get_address_lines(address_data):
 
 
 def format_address_string(address_string):
-    LOGGER.debug("STARTED: format_address_string")
+    LOGGER.debug("STARTED: format_address_string address_string: {}".format(address_string))
     # remove brackets and split the address string on commas
     address_lines = re.sub('[\(\)]', '', address_string).split(', ')
     result = address_lines[:]

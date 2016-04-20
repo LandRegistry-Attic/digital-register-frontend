@@ -12,7 +12,7 @@ LAND_REGISTRY_PAYMENT_INTERFACE_URI = config.CONFIG_DICT['LAND_REGISTRY_PAYMENT_
 
 
 def get_title(title_number):
-    LOGGER.debug("STARTED: get_title")
+    LOGGER.debug("STARTED: get_title title_number: {}".format(title_number))
     response = requests.get('{}/titles/{}'.format(REGISTER_TITLE_API_URL, title_number))
     LOGGER.debug('get_title response: %s', response)
     if response.status_code == 200:
@@ -31,7 +31,9 @@ def get_title(title_number):
 
 # TODO: check response status
 def get_titles_by_postcode(postcode, page_number):
-    LOGGER.debug("STARTED: get_titles_by_postcode")
+    LOGGER.debug("STARTED: get_titles_by_postcode postcode, pagenumber: {0}, {1}".format(
+        postcode, pagenumber
+    ))
     response = requests.get(
         '{}/title_search_postcode/{}'.format(REGISTER_TITLE_API_URL, postcode),
         params={'page': page_number}
@@ -43,7 +45,9 @@ def get_titles_by_postcode(postcode, page_number):
 
 # TODO: check response status
 def get_titles_by_address(address, page_number):
-    LOGGER.debug("STARTED: get_titles_by_address")
+    LOGGER.debug("STARTED: get_titles_by_address address, page_number: {0}, {1}".format(
+        address, page_number
+    ))
     response = requests.get(
         '{}/title_search_address/{}'.format(REGISTER_TITLE_API_URL, address),
         params={'page': page_number}
@@ -58,7 +62,7 @@ def check_health():
 
 
 def get_official_copy_data(title_number):
-    LOGGER.debug("STARTED: get_official_copy_data")
+    LOGGER.debug("STARTED: get_official_copy_data title_number: {}".format(title_number))
     response = requests.get(
         '{}/titles/{}/official-copy'.format(REGISTER_TITLE_API_URL, title_number)
     )
@@ -81,7 +85,7 @@ def save_search_request(search_parameters):
     """
     Saves user's Search Request and returns the 'cart id.'
     """
-    LOGGER.debug("STARTED: save_search_request")
+    LOGGER.debug("STARTED: save_search_request search_parameters: {}".format(search_parameters))
     response = requests.post('{}/save_search_request'.format(REGISTER_TITLE_API_URL), data=search_parameters)
     response.raise_for_status()
     LOGGER.debug("save_search_request: {0}".format(response))
@@ -96,7 +100,7 @@ def get_pound_price(product='drvSummary'):
     :param product: str (product type)
     :return: decimal (price in pounds)
     """
-    LOGGER.debug("STARTED: get_pound_price")
+    LOGGER.debug("STARTED: get_pound_price product: {}".format(product))
     response = requests.get('{}/get_price/{}'.format(REGISTER_TITLE_API_URL, product))
     response.raise_for_status()
     try:
@@ -116,7 +120,9 @@ def user_can_view(username, title_number):
     """
     Check whether user has access or not.
     """
-    LOGGER.debug("STARTED: user_can_view")
+    LOGGER.debug("STARTED: user_can_view username, title_number: {0}, {1}".format(
+        username, title_number
+    ))
     response = requests.get('{}/user_can_view/{}/{}'.format(REGISTER_TITLE_API_URL, username, title_number))
     LOGGER.debug("get_pound_price: {0}".format(response))
     LOGGER.debug("ENDED: user_can_view")
@@ -137,7 +143,7 @@ def _get_time():
 
 
 def get_invoice_data(transaction_id):
-    LOGGER.debug("STARTED: get_invoice_data")
+    LOGGER.debug("STARTED: get_invoice_data transaction_id: {}".format(transaction_id))
     response = requests.get('{}/get-invoice-data?transId={}'.format(LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI, transaction_id))
     response.raise_for_status()
     LOGGER.debug("get_invoice_data: {}".format(response))

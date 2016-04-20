@@ -17,7 +17,7 @@ def perform_healthchecks():
 
 
 def _check_application_health(application_name):
-    LOGGER.debug("STARTED: _check_application_health")
+    LOGGER.debug("STARTED: _check_application_health application_name: {}".format(application_name))
     try:
         healthcheck_response = healthchecks[application_name]()
         response_json = _get_json_from_response(healthcheck_response)
