@@ -1,6 +1,9 @@
 from service import address_utils, app, title_utils
 import re
+import logging
+import logging.config
 
+LOGGER = logging.getLogger(__name__)
 MORE_PROPRIETOR_DETAILS = (app.config['MORE_PROPRIETOR_DETAILS'] == 'true')
 
 
@@ -28,7 +31,7 @@ def format_display_json(title_json):
     if 'ppi_data' in title_data:
         title['ppi_data'] = _format_ppi_data(title_data)
 
-    LOGGER.debug(title)
+    LOGGER.debug("formatted title{0}".format(title))
     return title
 
 
@@ -84,7 +87,6 @@ def _get_proprietor_name_extra_info(proprietor):
 
 def _get_proprietor_addresses(proprietor):
     addresses = proprietor.get('addresses') or []
-    LOGGER.debug(addresses)
     return [{"lines": address_utils.get_address_lines(address)} for address in addresses]
 
 
@@ -93,7 +95,6 @@ def _get_property_address_index_polygon(geometry_data):
     index_polygon = None
     if geometry_data and ('index' in geometry_data):
         index_polygon = geometry_data['index']
-    LOGGER.debug(index_polygon)
     return index_polygon
 
 

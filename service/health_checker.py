@@ -9,6 +9,7 @@ healthchecks = OrderedDict([
 # TODO: tested through test_app - should have its own tests now
 def perform_healthchecks():
     results = [_check_application_health(app_name) for app_name in healthchecks.keys()]
+    LOGGER.debug(results)
     error_messages = [error_msg for result in results for error_msg in result]
     return error_messages
 

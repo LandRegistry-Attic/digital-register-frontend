@@ -146,6 +146,7 @@ def get_title(title_number):
 
         full_title_data = _strip_delimiters(full_title_data)
 
+        LOGGER.debug("Title number{0}".format(title_number))
         auditing.audit("VIEW REGISTER: Title number {0} was viewed by {1}".format(
             title_number,
             username)
@@ -235,54 +236,69 @@ def find_titles_page(search_term=''):
 
 
 def _get_register_title(title_number):
+    LOGGER.debug("STARTED: _get_register_title")
     title = api_client.get_title(title_number)
-    LOGGER.debug(title)
+    LOGGER.debug("_get_register_title: {0}".format(title))
+    LOGGER.debug("ENDED: _get_register_title")
     return title_formatter.format_display_json(title) if title else None
 
 
 def _user_can_view(username, title_number):
+    LOGGER.debug("STARTED: _user_can_view")
     access_granted = api_client.user_can_view(username, title_number)
-    LOGGER.debug(access_granted)
+    LOGGER.debug("_user_can_view: {0}".format(access_granted))
+    LOGGER.debug("ENDED: _user_can_view")
     return access_granted
 
 
 def _get_address_search_response(search_term, page_number):
+    LOGGER.debug("STARTED: _get_address_search_response")
     search_term = search_term.upper()
     if _is_title_number(search_term):
         LOGGER.info('title number search used')
+        LOGGER.debug("ENDED: _get_address_search_response")
         return _get_search_by_title_number_response(search_term, page_number)
     elif _is_postcode(search_term):
         LOGGER.info('postcode search used')
+        LOGGER.debug("ENDED: _get_address_search_response")
         return _get_search_by_postcode_response(search_term, page_number)
     else:
         LOGGER.info('address search used')
+        LOGGER.debug("ENDED: _get_address_search_response")
         return _get_search_by_address_response(search_term, page_number)
 
 
 def _get_search_by_title_number_response(search_term, page_number):
+    LOGGER.debug("STARTED: _get_search_by_title_number_response")
     display_page_number = page_number + 1
     title_number = search_term
     title = _get_register_title(title_number)
     if title:
         # Redirect to the display_title method to display the digital register
+        LOGGER.debug("ENDED: _get_search_by_title_number_response")
         return redirect(url_for('get_title', title_number=title_number,
                                 page_number=display_page_number, search_term=search_term))
     else:
         # If title not found display 'no title found' screen
         results = {'number_results': 0}
+        LOGGER.debug("ENDED: _get_search_by_title_number_response")
         return _search_results_page(results, search_term)
 
 
 def _get_search_by_postcode_response(search_term, page_number):
+    LOGGER.debug("STARTED: _get_search_by_postcode_response")
     postcode = _normalise_postcode(search_term)
     postcode_search_results = api_client.get_titles_by_postcode(postcode, page_number)
-    LOGGER.debug(postcode_search_results)
+    LOGGER.debug("_get_search_by_postcode_response: {0}".format(postcode_search_results))
+    LOGGER.debug("ENDED: _get_search_by_postcode_response")
     return _search_results_page(postcode_search_results, postcode, True)
 
 
 def _get_search_by_address_response(search_term, page_number):
+    LOGGER.debug("STARTED: _get_search_by_address_response")
     address_search_results = api_client.get_titles_by_address(search_term, page_number)
-    LOGGER.debug(address_search_results)
+    LOGGER.debug("_get_search_by_address_response: {0}".format(address_search_results))
+    LOGGER.debug("ENDED: _get_search_by_address_response")
     return _search_results_page(address_search_results, search_term)
 
 
@@ -307,6 +323,7 @@ def _should_show_full_title_pdf():
 
 
 def _breadcumbs_for_title_details(title_number, search_term, display_page_number):
+    LOGGER.debug("STARTED: _breadcumbs_for_title_details")
     search_breadcrumb = {'text': 'Search the land and property register', 'url': url_for('find_titles')}
     results_breadcrumb = {'text': 'Search results', 'url': url_for('find_titles_page', search_term=search_term,
                                                                    page=display_page_number)}
@@ -315,20 +332,26 @@ def _breadcumbs_for_title_details(title_number, search_term, display_page_number
     found_title_by_number = title_number.lower() == search_term.lower()
 
     if found_title_by_number:
+        LOGGER.debug("ENDED: _breadcumbs_for_title_details")
         return [search_breadcrumb, current_breadcrumb]
     else:
+        LOGGER.debug("ENDED: _breadcumbs_for_title_details")
         return [search_breadcrumb, results_breadcrumb, current_breadcrumb]
 
 
 def _normalise_postcode(postcode_in):
     # We strip out the spaces - and reintroduce one four characters from end
+    LOGGER.debug("STARTED: _normalise_postcode")
     no_spaces = postcode_in.replace(' ', '')
     postcode = no_spaces[:len(no_spaces) - 3] + ' ' + no_spaces[-3:]
+    LOGGER.debug("ENDED: _normalise_postcode")
     return postcode
 
 
 def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt):
+    LOGGER.debug("STARTED: _title_details_page")
     username = _username_from_header(request)
+    LOGGER.debug("ENDED: _title_details_page")
     return render_template(
         'display_title.html',
         title=title,
@@ -453,5 +476,5 @@ def _username_from_header(request):
     if user_id:
         p = re.compile("[%][{0-9}][{0-9}]")
         user_id = p.sub("", user_id)
-    LOGGER.debug(user_id)
+    LOGGER.debug("_username_from_header: {0}".format(user_id))
     return user_id

@@ -1,6 +1,7 @@
 import atexit  # type: ignore
 from flask_wtf.csrf import CsrfProtect  # type: ignore
 import logging  # type: ignore
+from config import CONFIG_DICT
 
 from service.server import app  # type: ignore
 

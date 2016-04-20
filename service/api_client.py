@@ -1,6 +1,10 @@
 import requests  # type: ignore
 import config
+import logging
+import logging.config
 from datetime import datetime                                                                          # type: ignore
+
+LOGGER = logging.getLogger(__name__)
 
 LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI = config.CONFIG_DICT['LAND_REGISTRY_PAYMENT_INTERFACE_BASE_URI']
 REGISTER_TITLE_API_URL = config.CONFIG_DICT['REGISTER_TITLE_API'].rstrip('/')
@@ -9,7 +13,7 @@ LAND_REGISTRY_PAYMENT_INTERFACE_URI = config.CONFIG_DICT['LAND_REGISTRY_PAYMENT_
 
 def get_title(title_number):
     response = requests.get('{}/titles/{}'.format(REGISTER_TITLE_API_URL, title_number))
-
+    LOGGER.debug('get_title response: %s', response)
     if response.status_code == 200:
         return _to_json(response)
     elif response.status_code == 404:
@@ -28,7 +32,7 @@ def get_titles_by_postcode(postcode, page_number):
         '{}/title_search_postcode/{}'.format(REGISTER_TITLE_API_URL, postcode),
         params={'page': page_number}
     )
-
+    LOGGER.debug(response)
     return _to_json(response)
 
 
@@ -38,7 +42,7 @@ def get_titles_by_address(address, page_number):
         '{}/title_search_address/{}'.format(REGISTER_TITLE_API_URL, address),
         params={'page': page_number}
     )
-
+    LOGGER.debug(response)
     return _to_json(response)
 
 
