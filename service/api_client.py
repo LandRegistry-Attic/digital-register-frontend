@@ -32,7 +32,7 @@ def get_title(title_number):
 # TODO: check response status
 def get_titles_by_postcode(postcode, page_number):
     LOGGER.debug("STARTED: get_titles_by_postcode postcode, pagenumber: {0}, {1}".format(
-        postcode, pagenumber
+        postcode, page_number
     ))
     response = requests.get(
         '{}/title_search_postcode/{}'.format(REGISTER_TITLE_API_URL, postcode),
