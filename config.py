@@ -39,9 +39,13 @@ CONFIG_DICT = {  # type: ignore
 
 settings = os.environ.get('SETTINGS')
 
-if settings == 'test':
+if settings == 'dev':
+    CONFIG_DICT['DEBUG'] = True
+elif settings == 'test':
     # We do NOT set TESTING to True here as it turns off authentication, and we
     # want to make sure the app behaves the same when running tests locally
     # as it does in production.
+    CONFIG_DICT['DEBUG'] = True
     CONFIG_DICT['DISABLE_CSRF_PREVENTION'] = True
     CONFIG_DICT['FAULT_LOG_FILE_PATH'] = '/dev/null'
+    CONFIG_DICT['LOGGING'] = False
