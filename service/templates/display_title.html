@@ -71,8 +71,8 @@
         </dt>
 
         {% for proprietor in title.proprietors %}
-          <dd{% if not loop.last%} class="spacing-bottom-single"{% endif %}>
-            <div class="address">
+          <dd>
+            <div class="address spacing-bottom-half">
               <span class="bold">{{ proprietor.name }} {{ proprietor.name_extra_info }}</span>
               {% if proprietor.co_reg_no %}
                 <span>{{ proprietor.co_reg_no }}</span>
@@ -94,8 +94,8 @@
         {% if title.lenders %}
           <dt>{{ _('Lender') }}{{ title.lenders|length|pluralize }}</dt>
           {% for lender in title.lenders %}
-            <dd{% if not loop.last%} class="spacing-bottom-single"{% endif %}>
-              <div class="address">
+            <dd>
+              <div class="address spacing-bottom-half">
                 <span class="bold">{{ lender.name }} {{ lender.name_extra_info }}</span>
 
                 {% if lender.co_reg_no %}
