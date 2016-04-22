@@ -1,5 +1,8 @@
 from collections import OrderedDict
 from service import api_client
+import logging
+
+LOGGER = logging.getLogger(__name__)
 
 healthchecks = OrderedDict([
     ('digital-register-api', api_client.check_health),

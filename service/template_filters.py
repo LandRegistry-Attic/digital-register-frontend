@@ -1,6 +1,8 @@
 import dateutil                       # type: ignore
 import dateutil.parser                # type: ignore
 import re
+import logging
+LOGGER = logging.getLogger(__name__)
 
 from service import title_utils
 
