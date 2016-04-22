@@ -1,4 +1,8 @@
 import re
+import logging
+import logging.config
+
+LOGGER = logging.getLogger(__name__)
 
 BASIC_POSTCODE_REGEX = '^[A-Z]{1,2}[0-9R][0-9A-Z]? ?[0-9][A-Z]{2}$'
 BASIC_POSTCODE_WITH_SURROUNDING_GROUPS_REGEX = (
@@ -9,6 +13,7 @@ BASIC_POSTCODE_WITH_SURROUNDING_GROUPS_REGEX = (
 
 
 def get_building_description_lines(address_data):
+    LOGGER.debug("STARTED: get_building_description_lines address_data: {}".format(address_data))
     lines = []
     if ('sub_building_description' in address_data and
             'sub_building_no' in address_data):
@@ -20,10 +25,13 @@ def get_building_description_lines(address_data):
         lines.append(address_data['sub_building_description'])
     elif 'sub_building_no' in address_data:
         lines.append(address_data['sub_building_no'])
+    LOGGER.debug("get_building_description_lines: {0}".format(lines))
+    LOGGER.debug("ENDED: get_building_description_lines")
     return lines
 
 
 def get_street_name_lines(address_data):
+    LOGGER.debug("STARTED: get_street_name_lines address_data: {}".format(address_data))
     lines = []
     street_name_string = ""
     if 'house_no' in address_data or 'house_alpha' in address_data:
@@ -49,10 +57,13 @@ def get_street_name_lines(address_data):
             street_name_string += street_name
     if street_name_string:
         lines.append(street_name_string)
+    LOGGER.debug("get_street_name_lines: {}".format(lines))
+    LOGGER.debug("ENDED: get_street_name_lines")
     return lines
 
 
 def get_address_lines(address_data):
+    LOGGER.debug("STARTED: get_address_lines address_data: {}".format(address_data))
     lines = []
     if address_data:
         address_type = address_data.get('address_type', None)
@@ -103,10 +114,13 @@ def get_address_lines(address_data):
             'address_string'):
         non_empty_lines = format_address_string(
             address_data.get('address_string'))
+    LOGGER.debug("get_street_name_lines: {0}".format(non_empty_lines))
+    LOGGER.debug("ENDED: get_street_name_lines")
     return non_empty_lines
 
 
 def format_address_string(address_string):
+    LOGGER.debug("STARTED: format_address_string address_string: {}".format(address_string))
     # remove brackets and split the address string on commas
     address_lines = re.sub('[\(\)]', '', address_string).split(', ')
     result = address_lines[:]
@@ -130,4 +144,6 @@ def format_address_string(address_string):
                     matches.group('trailing_text').strip()) > 0:
                 address_lines.append(matches.group('trailing_text').strip())
             result = address_lines
+    LOGGER.debug("format_address_string: {0}".format(result))
+    LOGGER.debug("ENDED: format_address_string")
     return result
