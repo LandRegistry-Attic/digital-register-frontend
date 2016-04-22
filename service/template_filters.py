@@ -2,9 +2,9 @@ import dateutil                       # type: ignore
 import dateutil.parser                # type: ignore
 import re
 import logging
+from service import title_utils
 LOGGER = logging.getLogger(__name__)
 
-from service import title_utils
 
 ALPHANUMERIC_CHARACTER_PATTERN = re.compile(r'[^a-zA-Z0-9_ ;:\-,\.()&£]+', re.UNICODE)
 
