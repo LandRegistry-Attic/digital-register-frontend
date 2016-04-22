@@ -14,7 +14,7 @@ LAND_REGISTRY_PAYMENT_INTERFACE_URI = config.CONFIG_DICT['LAND_REGISTRY_PAYMENT_
 def get_title(title_number):
     LOGGER.debug("STARTED: get_title title_number: {}".format(title_number))
     response = requests.get('{}/titles/{}'.format(REGISTER_TITLE_API_URL, title_number))
-    LOGGER.debug('get_title response: %s', response)
+    LOGGER.debug('get_title response: {}'.format(response))
     if response.status_code == 200:
         LOGGER.debug("ENDED: get_title")
         return _to_json(response)
@@ -106,7 +106,7 @@ def get_pound_price(product='drvSummary'):
     try:
         price = int(response.text)
     except ValueError as e:
-        LOGGER.debug("ENDED: get_pound_price")
+        LOGGER.debug("ENDED: with error: get_pound_price")
         raise Exception('Nominal price is not an integer (pence value)', e)
 
     if price % 1 == 0:

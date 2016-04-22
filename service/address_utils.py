@@ -57,7 +57,7 @@ def get_street_name_lines(address_data):
             street_name_string += street_name
     if street_name_string:
         lines.append(street_name_string)
-    LOGGER.debug("get_street_name_lines: {0}".format(lines))
+    LOGGER.debug("get_street_name_lines: {}".format(lines))
     LOGGER.debug("ENDED: get_street_name_lines")
     return lines
 

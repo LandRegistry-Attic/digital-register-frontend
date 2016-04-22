@@ -26,7 +26,7 @@ def _check_application_health(application_name):
             LOGGER.debug("ENDED: _check_application_health")
             return _extract_errors_from_health_response_json(response_json, application_name)
         else:
-            LOGGER.debug("ENDED: _check_application_health")
+            LOGGER.debug("ENDED: with error: _check_application_health")
             return ['{0} health endpoint returned an invalid response: {1}'.format(
                 application_name, healthcheck_response.text)]
     except Exception as e:

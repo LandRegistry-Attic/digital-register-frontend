@@ -16,7 +16,7 @@ show_full_title_pdf = os.environ['SHOW_FULL_TITLE_PDF'].lower() == 'true'
 title_register_summary_price_text = "&pound{} inc VAT"
 
 CONFIG_DICT = {  # type: ignore
-    'LOGGING_LEVEL': os.environ['LOGGING_LEVEL'],
+    'LOGGING_LEVEL': os.environ.get('LOGGING_LEVEL', "WARN"),
     'FAULT_LOG_FILE_PATH': fault_log_file_path,
     'GOOGLE_ANALYTICS_API_KEY': google_analytics_api_key,
     'LOGGING': True,
