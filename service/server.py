@@ -43,6 +43,7 @@ def landing_page(eligibility=''):
 def search():
     LOGGER.debug("STARTED: Search")
     username = _username_from_header(request)
+    _validates_user_group(request)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     LOGGER.debug("ENDED: Search")
@@ -62,6 +63,7 @@ def confirm_selection(title_number, search_term):
     ))
     breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, 1)
     username = _username_from_header(request)
+    _validates_user_group(request)
 
     params = dict()
     params['title'] = _get_register_title(request.args.get('title', title_number))
@@ -199,6 +201,7 @@ def get_title(title_number):
 @app.route('/titles/<title_number>.pdf', methods=['GET'])
 def display_title_pdf(title_number):
     LOGGER.debug("STARTED: display_title_pdf title_number: {}".format(title_number))
+    _validates_user_group(request)
     if not _should_show_full_title_pdf():
         abort(404)
 
@@ -220,6 +223,7 @@ def display_title_pdf(title_number):
 @app.route('/title-search/<search_term>', methods=['POST'])
 def find_titles():
     LOGGER.debug("STARTED: find_titles")
+    _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
@@ -237,6 +241,7 @@ def find_titles():
 @app.route('/title-search/<search_term>', methods=['GET'])
 def find_titles_page(search_term=''):
     LOGGER.debug("STARTED: find_titles_page search_term: {}".format(search_term))
+    _validates_user_group(request)
     display_page_number = int(request.args.get('page') or 1)
     page_number = display_page_number - 1  # page_number is 0 indexed
     username = _username_from_header(request)
@@ -505,3 +510,10 @@ def _username_from_header(request):
         user_id = p.sub("", user_id)
     LOGGER.debug("_username_from_header: {0}".format(user_id))
     return user_id
+
+
+def _validates_user_group(request):
+    # Get user group from WebSeal headers
+    user_group = request.headers.get("iv-groups", "")
+    if "DRV" not in user_group.upper():
+        abort(404)
