@@ -72,22 +72,25 @@
 
         {% for proprietor in title.proprietors %}
           <dd>
-            <div class="address spacing-bottom-half">
-              <span class="bold">{{ proprietor.name }} {{ proprietor.name_extra_info }}</span>
-              {% if proprietor.co_reg_no %}
-                <span>{{ proprietor.co_reg_no }}</span>
+            <h2 class="bold">{{ proprietor.name }} {{ proprietor.name_extra_info }}</h2>
+            {% if proprietor.co_reg_no %}
+              <h3 class="visuallyhidden">Company registration number</h3>
+              <div>{{ proprietor.co_reg_no }}</div>
 
-                {% if proprietor.company_location %}
-                  <span>{{ proprietor.company_location }}</span>
-                {% endif %}
+              {% if proprietor.company_location %}
+                <h3 class="visuallyhidden">Company location</h3>
+                <div>{{ proprietor.company_location }}</div>
               {% endif %}
+            {% endif %}
 
-              {% for address in proprietor.addresses %}
+            <h3 class="visuallyhidden">Addresses</h3>
+            {% for address in proprietor.addresses %}
+              <div class="address spacing-top-half">
                 {% for line in address.lines %}
                   <span>{{ line|safe }}</span>
                 {% endfor %}
-              {% endfor %}
-            </div>
+              </div>
+            {% endfor %}
           </dd>
         {% endfor %}
 
@@ -95,23 +98,23 @@
           <dt>{{ _('Lender') }}{{ title.lenders|length|pluralize }}</dt>
           {% for lender in title.lenders %}
             <dd>
-              <div class="address spacing-bottom-half">
-                <span class="bold">{{ lender.name }} {{ lender.name_extra_info }}</span>
+              <h2 class="bold">{{ lender.name }} {{ lender.name_extra_info }}</h2>
 
-                {% if lender.co_reg_no %}
-                  <span>{{ lender.co_reg_no }}</span>
-                {% endif %}
+              {% if lender.co_reg_no %}
+                <div>{{ lender.co_reg_no }}</div>
+              {% endif %}
 
-                {% if lender.company_location %}
-                  <span>{{ lender.company_location }}</span>
-                {% endif %}
+              {% if lender.company_location %}
+                <div>{{ lender.company_location }}</div>
+              {% endif %}
 
-                {% for address in lender.addresses %}
+              {% for address in lender.addresses %}
+                <div class="address spacing-top-half">
                   {% for line in address.lines %}
                     <span>{{ line|safe }}</span>
                   {% endfor %}
-                {% endfor %}
-              </div>
+                </div>
+              {% endfor %}
             </dd>
           {% endfor %}
         {% endif %}
@@ -159,7 +162,7 @@
                 {% endif %}
 
                 {% if receipt.trans_id %}
-                  <dt class="bold">Transaction ID / Invoice number</dt>
+                  <dt class="bold">Transaction ID</dt>
                   <dd>{{ receipt.trans_id }}</dd>
                 {% endif %}
 
