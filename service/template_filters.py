@@ -1,8 +1,10 @@
 import dateutil                       # type: ignore
 import dateutil.parser                # type: ignore
 import re
-
+import logging
 from service import title_utils
+LOGGER = logging.getLogger(__name__)
+
 
 ALPHANUMERIC_CHARACTER_PATTERN = re.compile(r'[^a-zA-Z0-9_ ;:\-,\.()&£]+', re.UNICODE)
 
@@ -31,6 +33,7 @@ def check_date_existence(value):
 
 def get_tenure_info(title):
     if title_utils.is_caution_title(title['data']):
+        LOGGER.info("Title is a caution title")
         return 'Caution against first registration'
     else:
         return '' if title['data'] is None else title['data']['tenure']

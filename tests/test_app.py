@@ -487,6 +487,21 @@ class TestWelsh:
         assert "Perchennog" in page_content
 
 
+class TestConfirmSelection:
+
+    base_url = '/confirm-selection'
+
+    def setup_method(self, method):
+        self.app = app.test_client()
+        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
+
+    @mock.patch('service.api_client.requests.get', return_value=fake_title)
+    @mock.patch('service.api_client.save_search_request', return_value=api_saved_to_results_db_response)
+    def test_get_confirmation_page(self, mock_save, mock_get):
+        response = self.app.get('{}/titleref/searchterm'.format(self.base_url), headers=self.headers)
+        assert response.status_code == 200
+
+
 class TestRightUserGroup:
     # Further use of the webseal header - testing that
     def setup_method(self, method):
@@ -503,21 +518,6 @@ class TestRightUserGroup:
         self.headers = Headers([('iv-user', TEST_USERNAME)])
         response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         assert response.status_code == 404
-
-
-class TestConfirmSelection:
-
-    base_url = '/confirm-selection'
-
-    def setup_method(self, method):
-        self.app = app.test_client()
-        self.headers = Headers([('iv-user', TEST_USERNAME), ('iv-groups', TEST_USER_GROUP)])
-
-    @mock.patch('service.api_client.requests.get', return_value=fake_title)
-    @mock.patch('service.api_client.save_search_request', return_value=api_saved_to_results_db_response)
-    def test_get_confirmation_page(self, mock_save, mock_get):
-        response = self.app.get('{}/titleref/searchterm'.format(self.base_url), headers=self.headers)
-        assert response.status_code == 200
 
 
 if __name__ == '__main__':
