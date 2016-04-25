@@ -25,8 +25,18 @@
   <p>Land Registry uses cookies to make the site simpler. <a href="/cookies">Find out more about cookies</a></p>
 {% endblock %}
 
-{% block content %}
+{% block proposition_header %}
+  <div class="header-proposition">
+    <div class="content">
+      <nav id="proposition-menu">
+        <span id="proposition-name">Find property information</span>
+      </nav>
+    </div>
+  </div>
+{% endblock %}
+{% block header_class %}with-proposition{% endblock %}
 
+{% block content %}
   <main id="content" role="main">
     <div class="phase-banner">
       <p>
@@ -66,6 +76,7 @@
 {% block footer_support_links %}
   <ul>
     <li><a href="/cookies">Cookies</a></li>
+    <li><a href="/terms-and-conditions">Terms and conditions</a></li>
     <li>Built by <a href="https://www.gov.uk/government/organisations/land-registry">Land Registry</a></li>
   </ul>
 {% endblock %}
