@@ -7,12 +7,12 @@
   {% set display_page_number = results.get('page_number', 0) + 1 %}
 
   <div class="grid-row spacing-top-single">
-    <div class="column-two-thirds tablet-column-two-thirds">
+    <div class="column-two-thirds tablet-column-two-thirds spacing-bottom-single">
       {% with h1=true, autofocus=false, label='Search results for' %}
         {% include 'includes/search_form.html' %}
       {% endwith %}
 
-      <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
+      <h2 class="font-xsmall">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
       <ol class="search-results-listing">
         {% for title in results['titles'] %}
           <li>
