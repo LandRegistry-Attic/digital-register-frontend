@@ -119,7 +119,7 @@ function match(e,o){if(vendor)return vendor.call(e,o);for(var t=e.parentNode.que
 require("./js/webfontloader");
 },{"./js/webfontloader":41}],41:[function(require,module,exports){
 (function (assetPath){
-var WebFont=require("webfontloader"),PubSub=require("pubsub-js");WebFont.load({custom:{families:["nta","ntatabularnumbers"],urls:[assetPath+"/stylesheets/fonts.css"]},active:function(){PubSub.publish("webfonts.active")}});
+var WebFont=require("webfontloader"),PubSub=require("pubsub-js");window.addEventListener("load",function(){WebFont.load({custom:{families:["nta","ntatabularnumbers"],urls:[assetPath+"/stylesheets/fonts.css"]},active:function(){PubSub.publish("webfonts.active")}})});
 
 }).call(this,"/static/.land-registry-elements/assets")
 },{"pubsub-js":37,"webfontloader":39}],42:[function(require,module,exports){
