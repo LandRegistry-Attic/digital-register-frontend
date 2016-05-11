@@ -4,8 +4,7 @@ import sass                          # type: ignore
 def compile_sass(_in, out, **kw):
     out.write(
         sass.compile(
-            string=_in.read(),
-            include_paths=['/vagrant/apps/land-registry-elements']
+            string=_in.read()
         )
     )
 
@@ -24,21 +23,21 @@ govuk_ie6 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie
 govuk_print = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-print.css',
                     filters=('cssmin'), output='.dist/css/print.css')
 
-elements = Bundle('.land-registry-elements/assets/sass/elements.scss',
+elements = Bundle('.land-registry-elements/assets/stylesheets/elements.css',
              'app/stylesheets/application.scss',
               filters=(compile_sass, 'cssmin'), output='.dist/css/main.css')
 
-elements_ie8 = Bundle('.land-registry-elements/assets/sass/elements-ie8.scss',
+elements_ie8 = Bundle('.land-registry-elements/assets/stylesheets/elements-ie8.css',
                  '.land-registry-elements/assets/stylesheets/fonts-ie8.css',
                  'app/stylesheets/application.scss',
                   filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie8.css')
 
-elements_ie7 = Bundle('.land-registry-elements/assets/sass/elements-ie7.scss',
+elements_ie7 = Bundle('.land-registry-elements/assets/stylesheets/elements-ie7.css',
                  '.land-registry-elements/assets/stylesheets/fonts-ie8.css',
                  'app/stylesheets/application.scss',
                   filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie7.css')
 
-elements_ie6 = Bundle('.land-registry-elements/assets/sass/elements-ie6.scss',
+elements_ie6 = Bundle('.land-registry-elements/assets/stylesheets/elements-ie6.css',
                  '.land-registry-elements/assets/stylesheets/fonts-ie8.css',
                  'app/stylesheets/application.scss',
                   filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie6.css')
