@@ -1,5 +1,7 @@
 window.onload = function() {
 
+  L.Icon.Default.imagePath = window.assetPath + '.land-registry-elements/assets/images/leaflet';
+
   var mapElement = document.getElementById('map');
 
   // Remove default 'no javascript' message

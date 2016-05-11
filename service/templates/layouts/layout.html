@@ -26,7 +26,6 @@
   </script>
   {% assets "js_googleanalytics" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 
-
   {% block head_additionals %}{% endblock %}
 {% endblock %}
 
@@ -75,6 +74,11 @@
 {% endblock %}
 
 {% block body_end %}
+
+  <script>
+    var assetPath = '{{ url_for('static', filename='') }}';
+  </script>
+
   {% assets "js" %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
   {% block js_additionals %}{% endblock %}
 {% endblock %}
