@@ -22,10 +22,11 @@ def error_handler(error):
         code = 500
         error_title = GENERIC_ERROR_WORDING
         description = GENERIC_ERROR_DESCRIPTION
-    breadcrumbs = [{'text': 'Search the land and property register', 'url': '/title-search'}]
+
     LOGGER.debug("ENDED: error_handler")
+
     return render_template(error_template, error=error_title, code=code, description=Markup(description),
-                           breadcrumbs=breadcrumbs), code
+                           ), code
 
 
 def setup_errors(app):

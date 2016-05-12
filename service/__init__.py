@@ -38,7 +38,14 @@ def before_first_request():
     Set price only after all services are running - digital-register-api in particular.
     """
 
-    price = "{0:.2f}".format(api_client.get_pound_price())
+    price = api_client.get_pound_price()
+
+    # If the price is a round number of pounds we don't want to display any decimal places
+    if price.is_integer():
+        price = "{0:.0f}".format(price)
+    else:
+        price = "{0:.2f}".format(price)
+
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT'].format(price)
 
     app.config.update({'TITLE_REGISTER_SUMMARY_PRICE': price})

@@ -1,108 +1,46 @@
-{% extends "layout.html" %}
+{% extends "layouts/layout.html" %}
+
+{% block title %}Search results{% endblock %}
 
 {% block body %}
 
   {% set display_page_number = results.get('page_number', 0) + 1 %}
 
-  <form class="form" action="{{ url_for('find_titles') }}" method="post" role="form">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-      <h1 class="heading-medium">
-        <label for="search_term">
-          Search results for <span class="visuallyhidden">{% if search_term %}{{ search_term }}{% endif %}</span>
-        </label>
-      </h1>
-      <input type="text" class="form-control" name="search_term" id="search_term" value="{% if search_term %}{{ search_term }}{% endif %}"  autofocus="autofocus">
-      <input type="submit" value="Search" class="button search-button">
-    </div>
-  </form>
-  <div class="grid-row">
-    <div class="column-two-thirds">
-      <h2 class="font-xsmall expand-bottom-half">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
+  <div class="grid-row spacing-top-single">
+    <div class="column-two-thirds tablet-column-two-thirds spacing-bottom-single">
+      {% with h1=true, autofocus=false, label='Search results for' %}
+        {% include 'includes/search_form.html' %}
+      {% endwith %}
+
+      <h2 class="font-xsmall">{{ results['number_results'] }} result{{ results['number_results']|pluralize }} found</h2>
       <ol class="search-results-listing">
         {% for title in results['titles'] %}
           <li>
-            <h2 class="heading-small">
-              {% if title['data'] %}
-                <a href="{{ url_for('confirm_selection', title_number=title['title_number'], search_term=search_term, display_page_number=display_page_number) }}">{% if addressbase %}{{ title['address'] }}{% else %}{{ title['data']['address']['address_string'] }}{% endif %}</a>
-              {% else %}
-                {{ title['address'] }}
-              {% endif %}
-            </h2>
-            <div class="font-xsmall">
-              {% if title['data'] %}
-                Title number: {{ title['title_number'] }}<br>
-              {% else %}
-                No title information found
-              <div class="font-xsmall">
-                <p class="collapse-bottom"></p>
-                <details>
-                  <summary>Why not?</summary>
-                  <p>This may be because:</p>
-                  <ul>
-                  <li>This service is new, so some titles aren’t available here yet. Try <a href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">searching on the Land Registry ’Find a Property’ service</a> instead.</li>
-                  <li>The property isn’t registered yet. Registration has only been compulsory across England and Wales since the 1990s. If the property hasn’t changed hands since then it may not be registered.</li>
-                </ul>
-                </details>
-                </div>
-              {% endif %}
-
-              <b>
-              {% if title['data'] and title['data'].get('is_caution_title') %}Caution against first registration - {% endif %}{{ title['data']['tenure'] }}</b>
-              {% if title['data'] and title['data'].get('is_caution_title') %}
-                <details>
-                  <summary>What's this?</summary>
-                  <div class="panel-indent">
-                    <p>This property hasn’t been registered yet. You can’t find out who owns it from this service. </p>
-                    <p>Someone other than the owner (known as the ‘cautioner’) has registered a right or interest in the property. They will be told if anyone tries to register it, and can object to the registration going ahead until their claim has been looked at. You can get the cautioner’s name and address from this service.</p>
-                    <p>Registration has only been compulsory throughout England and Wales since the 1990s. Property that hasn’t changed hands since then may not be registered.</p>
-                  </div>
-                </details>
-              {% endif %}
-            </div>
+            {% include 'includes/register_teaser.html' %}
           </li>
         {% endfor %}
       </ol>
 
       {% if results['number_pages'] %}
-        <div class="pagination-prev-next">
-          {% if display_page_number > 1 or display_page_number < results['number_pages'] %}
-            <ul>
-              {% if display_page_number > 1 %}
-                <li class="previous-page">
-                  <a href="{{ url_for('find_titles', search_term=search_term, page=display_page_number - 1) }}">
-                    <span class="pagination-label">Previous <span class="visuallyhidden">page</span></span>
-                  </a>
-                </li>
-              {% endif %}
-              {% if display_page_number < results['number_pages'] %}
-                <li class="next-page">
-                  <a href="{{ url_for('find_titles', search_term=search_term, page=display_page_number + 1) }}">
-                    <span class="pagination-label">Next <span class="visuallyhidden">page</span></span>
-                  </a>
-                </li>
-              {% endif %}
-            </ul>
-          {% endif %}
-        </div>
-        <div id="pagination" style="text-align: center">Page {{ display_page_number }} of {{ results['number_pages'] }}</div>
+        {% include 'includes/pagination.html' %}
       {% endif %}
     </div>
-    <div id="help-sidebar" class="column-third">
-      <h2 style="border-top: 10px solid #005ea5;padding-top:25px;" class="heading-medium">Help finding the right property</h2>
-      <p>
-        <img style="display: block;margin-bottom:10px" src="/static/images/beta.png" alt="">
-        This is a beta service. If you're not seeing the search results you expect please <a rel="external" href="mailto:digital-register-feedback@digital.landregistry.gov.uk">let us know</a>
-      </p>
-      <p>If you're having trouble finding the property or land you're looking for, try the <a href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">existing Land Registry service</a> instead</p>
+
+    <div class="column-one-third tablet-column-one-third">
+      <aside class="supplementary-panel">
+        <h2 class="heading-medium">Help finding the right property</h2>
+        <strong class="phase-tag-beta spacing-bottom-half">BETA</strong>
+        <p>This is a new service. If you're not seeing the search results you expect please <a rel="external" href="mailto:digital-register-feedback@digital.landregistry.gov.uk">let us know</a></p>
+        <p>If you're having trouble finding the property or land you're looking for, try the <a rel="external" href="https://eservices.landregistry.gov.uk/wps/portal/Property_Search">Land Registry 'Find a Property' service</a> instead</p>
+      </aside>
     </div>
   </div>
 {% endblock %}
 
 {% block js_bottom %}
-  <script type="text/javascript">
-    number_results = {{ results['titles']|length }};
-    page_number = {{ display_page_number or 0 }};
+  <script>
+    var number_results = {{ results['titles']|length }};
+    var page_number = {{ display_page_number or 0 }};
   </script>
-  <script src="/static/javascripts/ga_search_results.js"></script>
+  {% assets "js_ga_search_results" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}

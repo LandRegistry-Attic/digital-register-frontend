@@ -1,7 +1,14 @@
-{% extends "layout.html" %}
-{% block body %}
+{% extends "layouts/layout.html" %}
 
-  <a class="back-link js-only" href="#" onclick="history.go(-1); return false;">Back</a>
+{% block title %}Terms &amp; conditions{% endblock %}
+
+{% block header_primary %}
+  {% with title='Back', url='#', historyBased=True %}
+    {% include 'includes/back_link.html' %}
+  {% endwith %}
+{% endblock %}
+
+{% block body %}
 
   <h1 class="heading-xlarge expand-bottom">Terms and conditions<span class="heading-secondary">Land Registry service</span></h1>
 
