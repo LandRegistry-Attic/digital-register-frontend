@@ -14,7 +14,7 @@
 
 {% block body %}
 
-  <h1 class="heading-large spacing-top-single">{{ _('Summary of title') }} {{ title.number }}</h1>
+  <h1 class="heading-large spacing-top-single">{% if is_caution_title %}{{ _('Summary of caution title') }}{% else %}{{ _('Summary of title') }}{% endif %} {{ title.number }}</h1>
 
   <p class="font-xsmall">{{ _('This title was last changed on') }} <time datetime="{{ title.last_changed | date }}">{{ title.last_changed | date }} {{ _('at') }} {{ title.last_changed | time }}</time></p>
 
