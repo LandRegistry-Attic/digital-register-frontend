@@ -231,7 +231,7 @@ def find_titles():
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     search_term = request.form['search_term'].strip()
-    form=TitleSearchForm()
+    form = TitleSearchForm()
 
     if search_term and form.validate():
         LOGGER.debug("ENDED: find_titles search_term: {0}".format(search_term))
@@ -402,7 +402,7 @@ def _initial_search_page(request):
     username = _username_from_header(request)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
-    form=TitleSearchForm()
+    form = TitleSearchForm()
     search_term = ''
 
     if request.method == 'POST':
