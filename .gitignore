@@ -66,6 +66,7 @@ service/static/.webassets-cache/
 
 # Generated files
 service/static/.dist
+service/static/.land-registry-elements/assets/sass
 
 # Node.js
 node_modules
