@@ -32,6 +32,7 @@ CONFIG_DICT = {  # type: ignore
     'SHOW_FULL_TITLE_DATA': show_full_title_data,
     'SHOW_FULL_TITLE_PDF': show_full_title_pdf,
     'TITLE_REGISTER_SUMMARY_PRICE_TEXT': title_register_summary_price_text,
+    'GOVUK_FEEDBACK_URL': os.environ['GOVUK_FEEDBACK_URL'],
 
     # This value is set at run-time.
     'TITLE_REGISTER_SUMMARY_PRICE': None,

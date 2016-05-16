@@ -58,11 +58,15 @@ for (filter_name, filter_method) in template_filters.get_all_filters().items(): 
     app.jinja_env.filters[filter_name] = filter_method
 
 GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
+GOVUK_FEEDBACK_URL = app.config['GOVUK_FEEDBACK_URL']
 
 
 @app.context_processor
-def inject_google_analytics():
-    return {'google_api_key': GOOGLE_ANALYTICS_API_KEY}
+def inject_global_config():
+    return dict(
+        google_api_key = GOOGLE_ANALYTICS_API_KEY,
+        govuk_feedback_url = GOVUK_FEEDBACK_URL
+    )
 
 
 logging_config.setup_logging()  # type: ignore
