@@ -119,7 +119,7 @@ class TestViewTitle:
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
     def test_address_string_only_on_title_page(self, mock_get_official_copy_data, mock_get):
         response = self.app.get('/titles/titleref', headers=self.headers)
-        assert '17 Hazelbury Crescent<br>Luton<br>LU1 1DZ' in str(response.data)
+        assert '<span>17 Hazelbury Crescent</span><span>Luton</span><span>LU1 1DZ</span>' in str(response.data)
 
     @mock.patch('service.api_client.requests.get', return_value=address_only_no_regex_match_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
@@ -138,7 +138,7 @@ class TestViewTitle:
         response_data = response.data.decode()
         assert 'Scott Oakes' in response_data
         assert 'Owners' in response_data
-        assert 'Cautioners' not in response_data
+        assert 'Cautioner' not in response_data
 
     @mock.patch('service.title_utils.is_caution_title', return_value=True)
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
@@ -152,7 +152,7 @@ class TestViewTitle:
         response_data = response.data.decode()
         assert 'Scott Oakes' in response_data
         assert 'Owners' not in response_data
-        assert 'Cautioners' in response_data
+        assert 'Cautioner' in response_data
 
     @mock.patch('service.api_client.requests.get', return_value=fake_charge_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
@@ -217,25 +217,6 @@ class TestViewTitle:
         assert response.status_code == 500
         assert 'Sorry, we are experiencing technical difficulties.' in response.data.decode()
         assert mock_audit.mock_calls == []
-
-    @mock.patch('service.api_client.requests.get', return_value=fake_title)
-    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_breadcrumbs_search_results_do_not_appear(self, mock_get_official_copy_data, mock_get):
-        # This tests that when going directly to a title the search results breadcrumb doesn't show
-        response = self.app.get('/titles/DN1000', headers=self.headers)
-        page_content = response.data.decode()
-        assert 'Search the land and property register' in page_content
-        assert 'Search results' not in page_content
-        assert 'Viewing DN1000' in page_content
-
-    @mock.patch('service.api_client.requests.get', return_value=fake_title)
-    @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
-    def test_breadcrumbs_search_results_appear(self, mock_get_official_copy_data, mock_get):
-        response = self.app.get('/titles/DN1000?search_term="testing"', headers=self.headers)
-        page_content = response.data.decode()
-        assert 'Search the land and property register' in page_content
-        assert 'Search results' in page_content
-        assert 'Viewing DN1000' in page_content
 
     @mock.patch('service.api_client.requests.get', return_value=fake_title)
     @mock.patch('service.api_client.get_official_copy_data', return_value=official_copy_response)
@@ -318,7 +299,7 @@ class TestDisplayTitlePdf:
         actual_args = actual_call[1]
         actual_kwargs = actual_call[2]
 
-        assert actual_args[0] == 'full_title.html'
+        assert actual_args[0] == 'pdf/full_title.html'
         assert actual_kwargs['title_number'] == 'titleref'
         assert actual_kwargs['last_entry_date'] == '3 February 3001 at 04:05:06'
         assert actual_kwargs['issued_date'] == datetime.now().strftime('%-d %B %Y')
@@ -365,7 +346,8 @@ class TestTitleSearch:
         assert 'Search the land and property register' in str(response.data)
 
     @mock.patch('requests.get', return_value=fake_title)
-    def test_title_search_redirects(self, mock_get):
+    @mock.patch.object(service.api_client, 'get_official_copy_data')
+    def test_title_search_redirects(self, mock_get, mock_get_official_copy_data):
         response = self.app.post('/title-search', data=dict(search_term='DN1000'), headers=self.headers, follow_redirects=False)  # type: ignore
         assert response.status_code == 302
 

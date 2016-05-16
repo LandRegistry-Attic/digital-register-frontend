@@ -1,51 +1,71 @@
 from flask.ext.assets import Bundle  # type: ignore
-from os import path                  # type: ignore
-import sass as libsass               # type: ignore
-
-
-__dot = path.dirname(path.realpath(__file__))
-
-__toolkit_scss_dir = path.join(__dot, 'govuk_frontend_toolkit/stylesheets/')
-__styleguide_scss_dir = path.join(__dot, 'lr-styleguide/sass/')
+import sass                          # type: ignore
 
 
 def compile_sass(_in, out, **kw):
     out.write(
-        libsass.compile(
-            string=_in.read(),
-            include_paths=[__toolkit_scss_dir, __styleguide_scss_dir]
+        sass.compile(
+            string=_in.read()
         )
     )
 
-sass = Bundle('lr-styleguide/sass/styleguide.scss',
-              filters=(compile_sass,), output='lr-styleguide/css/styleguide.css')
+govuk = Bundle('.land-registry-elements/assets/stylesheets/govuk-template.css',
+               filters=(compile_sass, 'cssmin'), output='.dist/css/govuk-template.css')
+
+govuk_ie8 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie8.css',
+                   filters=(compile_sass, 'cssmin'), output='.dist/css/govuk-template-ie8.css')
+
+govuk_ie7 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie7.css',
+                   filters=(compile_sass, 'cssmin'), output='.dist/css/govuk-template-ie7.css')
+
+govuk_ie6 = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-ie6.css',
+                   filters=(compile_sass, 'cssmin'), output='.dist/css/govuk-template-ie6.css')
+
+govuk_print = Bundle('.land-registry-elements/assets/stylesheets/govuk-template-print.css',
+                     filters=('cssmin'), output='.dist/css/print.css')
+
+elements = Bundle('.land-registry-elements/assets/stylesheets/elements.css',
+                  'app/stylesheets/application.scss',
+                  filters=(compile_sass, 'cssmin'), output='.dist/css/main.css')
+
+elements_ie8 = Bundle('.land-registry-elements/assets/stylesheets/elements-ie8.css',
+                      '.land-registry-elements/assets/stylesheets/fonts-ie8.css',
+                      'app/stylesheets/application.scss',
+                      filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie8.css')
+
+elements_ie7 = Bundle('.land-registry-elements/assets/stylesheets/elements-ie7.css',
+                      '.land-registry-elements/assets/stylesheets/fonts-ie8.css',
+                      'app/stylesheets/application.scss',
+                      filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie7.css')
+
+elements_ie6 = Bundle('.land-registry-elements/assets/stylesheets/elements-ie6.css',
+                      '.land-registry-elements/assets/stylesheets/fonts-ie8.css',
+                      'app/stylesheets/application.scss',
+                      filters=(compile_sass, 'cssmin'), output='.dist/css/main-ie6.css')
 
 
-sass_ie8 = Bundle('lr-styleguide/sass/styleguide-ie8.scss',
-                  filters=(compile_sass,), output='lr-styleguide/css/styleguide-ie8.css')
+js_polyfills_ie9 = Bundle('.land-registry-elements/assets/javascripts/polyfills-ie9.js',
+                          filters='rjsmin', output='.dist/javascript/polyfills-ie9.js')
 
+js_polyfills_ie8 = Bundle('.land-registry-elements/assets/javascripts/polyfills-ie8.js',
+                          filters='rjsmin', output='.dist/javascript/polyfills-ie8.js')
 
-sass_ie7 = Bundle('lr-styleguide/sass/styleguide-ie7.scss',
-                  filters=(compile_sass,), output='lr-styleguide/css/styleguide-ie7.css')
+js_promise = Bundle('.land-registry-elements/assets/javascripts/polyfills-promise.js',
+                    filters='rjsmin', output='.dist/javascript/polyfills-promise.js')
 
+js = Bundle('.land-registry-elements/assets/javascripts/govuk-template.js',
+            '.land-registry-elements/assets/javascripts/landregistry.js',
+            filters='rjsmin', output='.dist/javascript/main.js')
 
-sass_ie6 = Bundle('lr-styleguide/sass/styleguide-ie6.scss',
-                  filters=(compile_sass,), output='lr-styleguide/css/styleguide-ie6.css')
+js_map = Bundle('.land-registry-elements/assets/javascripts/leaflet.js',
+                'app/javascripts/map.js',
+                filters='rjsmin', output='.dist/javascript/leaflet.js')
 
-print = Bundle('stylesheets/sass/print.scss',
-               filters=(compile_sass,), output='stylesheets/css/print.css')
+js_googleanalytics = Bundle('app/javascripts/googleanalytics.js',
+                            filters='rjsmin', output='.dist/javascript/googleanalytics.js')
 
-beta = Bundle('stylesheets/sass/beta.scss',
-              filters=(compile_sass,), output='stylesheets/css/beta.css')
+js_ga_search = Bundle('app/javascripts/ga_search.js',
+                      filters='rjsmin', output='.dist/javascript/ga_search.js')
 
-
-js = Bundle('lr-styleguide/js/vendor/jquery/jquery-1.11.3.js',
-            'govuk_frontend_toolkit/javascripts/vendor/polyfills/bind.js',
-            'govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
-            'govuk_frontend_toolkit/javascripts/govuk/stick-at-top-when-scrolling.js',
-            'govuk_frontend_toolkit/javascripts/govuk/stop-scrolling-at-footer.js',
-            'lr-styleguide/js/vendor/polyfills/details.polyfill.js',
-            'lr-styleguide/js/components/buttons-actions.js',
-            'lr-styleguide/js/components/case-list.js',
-            'lr-styleguide/js/components/inits.js',
-            filters='rjsmin', output='lr-styleguide/js/styleguide-components.js')
+js_ga_search_results = Bundle('app/javascripts/ga_search_results.js',
+                              filters='rjsmin', output='.dist/javascript/ga_search_results.js')

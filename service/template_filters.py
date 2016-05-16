@@ -32,11 +32,7 @@ def check_date_existence(value):
 
 
 def get_tenure_info(title):
-    if title_utils.is_caution_title(title['data']):
-        LOGGER.info("Title is a caution title")
-        return 'Caution against first registration'
-    else:
-        return '' if title['data'] is None else title['data']['tenure']
+    return '' if title['data'] is None else title['data']['tenure']
 
 
 def strip_illegal_characters(value):

@@ -18,3 +18,4 @@ Werkzeug==0.9.6
 wtforms==1.0.5
 virtualenvwrapper==4.7.1
 pg8000==1.10.3
+cssmin==0.2.0

@@ -21,22 +21,23 @@ POSTCODE_REGEX = re.compile(address_utils.BASIC_POSTCODE_REGEX)
 LOGGER = logging.getLogger(__name__)
 
 
+# landing page for DRV - this is whitelisted by webseal.
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/landing-page', methods=['GET', 'POST'])
-@app.route('/landing-page/<eligibility>', methods=['GET', 'POST'])
-def landing_page(eligibility=''):
-    # landing page for DRV - this is whitelisted by webseal.
+def landing_page():
+
     form = LandingPageForm()
-    if request.method == "POST" and form.validate():
-        eligibility = request.form.get('eligibility', '')
-    if not eligibility:
-        return render_template('landing_page.html', form=form)
-    elif eligibility == 'eligible':
-        return redirect(url_for('search'))
-    elif eligibility == 'find_a_property':
-        return redirect('https://eservices.landregistry.gov.uk/wps/portal/Property_Search')
-    elif eligibility == 'official_copy':
-        return redirect('https://www.gov.uk/government/publications/official-copies-of-register-or-plan-registration-oc1')
+    price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+
+    if request.method == 'POST' and form.validate():
+        if form.information.data == 'title_summary':
+            return redirect(url_for('search'))
+        elif form.information.data == 'full_title_documents':
+            return redirect('https://eservices.landregistry.gov.uk/wps/portal/Property_Search')
+        elif form.information.data == 'official_copy':
+            return redirect('https://www.gov.uk/government/publications/official-copies-of-register-or-plan-registration-oc1')
+
+    else:
+        return render_template('landing_page.html', form=form, price=price)
 
 
 @app.route('/search', methods=['GET'])
@@ -57,13 +58,15 @@ def search():
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
 def confirm_selection(title_number, search_term):
+
     LOGGER.debug("STARTED: confirm_selection title_number, search_term: {0}, {1}".format(
         title_number, search_term
     ))
-    breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, 1)
+
     username = _username_from_header(request)
 
     params = dict()
+    params['search_term'] = search_term
     params['title'] = _get_register_title(request.args.get('title', title_number))
     params['title_number'] = title_number
     params['display_page_number'] = 1
@@ -100,8 +103,10 @@ def confirm_selection(title_number, search_term):
     response = api_client.save_search_request(params)
     params['cartId'] = response.text
     action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
+
     LOGGER.debug("ENDED: confirm_selection")
-    return render_template('confirm_selection.html', params=params, action_url=action_url, breadcrumbs=breadcrumbs, price_text=price_text,)
+
+    return render_template('confirm_selection.html', params=params, action_url=action_url, price_text=price_text,)
 
 
 @app.route('/health', methods=['GET'])
@@ -144,7 +149,6 @@ def get_title(title_number):
     if title and _user_can_view(username, title_number):
         display_page_number = int(request.args.get('page') or 1)
         search_term = request.args.get('search_term', title_number)
-        breadcrumbs = _breadcumbs_for_title_details(title_number, search_term, display_page_number)
         show_pdf = _should_show_full_title_pdf()
         full_title_data = (
             api_client.get_official_copy_data(title_number) if _should_show_full_title_data() else None
@@ -189,8 +193,11 @@ def get_title(title_number):
             "total": "{0:.2f}".format(vat_json['fee_amt']),
             "reg_number": vat_json['vat_num']
         }
+
         LOGGER.debug("ENDED: get_title")
-        return _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt)
+
+        return _title_details_page(title, search_term, show_pdf, full_title_data, request, receipt)
+
     else:
         LOGGER.debug("ENDED: get_title")
         abort(404)
@@ -224,8 +231,11 @@ def find_titles():
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
     search_term = request.form['search_term'].strip()
-    if search_term:
+    form = TitleSearchForm()
+
+    if search_term and form.validate():
         LOGGER.debug("ENDED: find_titles search_term: {0}".format(search_term))
+
         return redirect(url_for('find_titles', search_term=search_term, page=display_page_number, price=price, price_text=price_text,))
     else:
         # TODO: we should redirect to that page
@@ -374,14 +384,13 @@ def _normalise_postcode(postcode_in):
     return postcode
 
 
-def _title_details_page(title, search_term, breadcrumbs, show_pdf, full_title_data, request, receipt):
+def _title_details_page(title, search_term, show_pdf, full_title_data, request, receipt):
     username = _username_from_header(request)
     return render_template(
         'display_title.html',
         title=title,
         username=username,
         search_term=search_term,
-        breadcrumbs=breadcrumbs,
         show_pdf=show_pdf,
         full_title_data=full_title_data,
         is_caution_title=title_utils.is_caution_title(title),
@@ -393,12 +402,20 @@ def _initial_search_page(request):
     username = _username_from_header(request)
     price = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
+    form = TitleSearchForm()
+    search_term = ''
+
+    if request.method == 'POST':
+        form.validate()
+        search_term = request.form['search_term'].strip()
+
     return render_template(
         'search.html',
-        form=TitleSearchForm(),
+        form=form,
         username=username,
         price=price,
         price_text=price_text,
+        search_term=search_term
     )
 
 
@@ -410,11 +427,7 @@ def _search_results_page(results, search_term, addressbase=False):
         results=results,
         form=TitleSearchForm(),
         addressbase=addressbase,
-        username=username,
-        breadcrumbs=[
-            {'text': 'Search the land and property register', 'url': url_for('find_titles')},
-            {'current': 'Search results'}
-        ]
+        username=username
     )
 
 
@@ -457,8 +470,10 @@ def _create_pdf_template(sub_registers, title, title_number):
     class_of_title = title.get('class_of_title')
     # need to check for caution title as we don't display Class of title for them
     is_caution = title.get('is_caution_title') is True
+
     LOGGER.debug("ENDED: _create_pdf_template")
-    return render_template('full_title.html', title_number=title_number, title=title,
+
+    return render_template('pdf/full_title.html', title_number=title_number, title=title,
                            last_entry_date=last_entry_date,
                            issued_date=issued_date,
                            edition_date=edition_date,
