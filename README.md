@@ -59,8 +59,9 @@ We use three separate builds:
 ## Frontend assets
 The frontend assets are supplied by [LandRegistry/land-registry-elements](https://github.com/LandRegistry/land-registry-elements).
 To rebuild these, this repository contains a script called `build_assets.js`. This can be run as follows:
-* `npm run build` from the `digital-register-frontend` application directory.
-* or most easily: `lr-rebuild-assets` which can be run from anywhere within the vagrant box
+* `npm install` followed by `npm run build` from the `digital-register-frontend` application directory. This should be done from the host machine and not the vagrant box. Requires Nodejs 6 to be installed (Highly recommend using [https://github.com/creationix/nvm](https://github.com/creationix/nvm) and doing `nvm install 6`).
+
+If you want to work on `land-registry-elements` in it's own right, you should check out the `land-registry-elements` repository to another location and using [npm link](https://docs.npmjs.com/cli/link) to symlink it into digital-registry-frontend.
 
 Due to time constraints, the resulting build artefacts have been committed into the `digital-register-frontend` repository in the `service/static/.land-registry-elements` folder (Which on many OSs should be hidden). Therefore once you have rebuilt the assets based on changes upstream in the `land-registry-elements` repository, you need to then commit the changes to `digital-register-frontend`. Ideally this constraint will be removed in future by improvements to the build pipeline.
 
