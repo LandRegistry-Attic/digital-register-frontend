@@ -62,9 +62,21 @@ def confirm_selection(title_number, search_term):
     LOGGER.debug("STARTED: confirm_selection title_number, search_term: {0}, {1}".format(
         title_number, search_term
     ))
-
     username = _username_from_header(request)
+    params = worldpay_form(search_term, title_number, username)
 
+    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
+
+    # Save user's search details.
+    response = api_client.save_search_request(params)
+    params['cartId'] = response.text
+    action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
+
+    LOGGER.debug("ENDED: confirm_selection")
+
+    return render_template('confirm_selection.html', params=params, action_url=action_url, price_text=price_text,)
+
+def worldpay_form(search_term, title_number, username):
     params = dict()
     params['search_term'] = search_term
     params['title'] = _get_register_title(request.args.get('title', title_number))
@@ -80,15 +92,13 @@ def confirm_selection(title_number, search_term):
     params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     params['MC_userId'] = username
 
-    price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
-
     # Last changed date - modified to remove colon in UTC offset, which python
     # datetime.strptime() doesn't like >>>
     datestring = params['title']['last_changed']
     if len(datestring) == 25:
         if datestring[22] == ':':
             l = list(datestring)
-            del(l[22])
+            del (l[22])
             datestring = "".join(l)
 
     dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
@@ -99,15 +109,7 @@ def confirm_selection(title_number, search_term):
                       '{:02d}'.format(dt_obj.minute),
                       '{:02d}'.format(dt_obj.second))
 
-    # Save user's search details.
-    response = api_client.save_search_request(params)
-    params['cartId'] = response.text
-    action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
-
-    LOGGER.debug("ENDED: confirm_selection")
-
-    return render_template('confirm_selection.html', params=params, action_url=action_url, price_text=price_text,)
-
+    return params
 
 @app.route('/health', methods=['GET'])
 def healthcheck():
