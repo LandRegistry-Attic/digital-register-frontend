@@ -16,6 +16,7 @@
       <ol class="search-results-listing">
         {% for title in results['titles'] %}
           <li>
+            {% set results_loop = loop %}
             {% include 'includes/register_teaser.html' %}
           </li>
         {% endfor %}
