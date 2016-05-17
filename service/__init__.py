@@ -64,8 +64,8 @@ GOVUK_FEEDBACK_URL = app.config['GOVUK_FEEDBACK_URL']
 @app.context_processor
 def inject_global_config():
     return dict(
-        google_api_key = GOOGLE_ANALYTICS_API_KEY,
-        govuk_feedback_url = GOVUK_FEEDBACK_URL
+        google_api_key=GOOGLE_ANALYTICS_API_KEY,
+        govuk_feedback_url=GOVUK_FEEDBACK_URL
     )
 
 
