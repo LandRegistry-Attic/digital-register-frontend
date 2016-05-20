@@ -1,5 +1,7 @@
 <div class="language-switcher {% if g.locale == 'cy' %}language-switcher-invert{% endif %}">
   <form method="get">
+    <input type="hidden" name="transid" value="{{ request.args.get('transid') }}">
+
     {% if g.locale == 'en' %}
 
       <span class="language-switcher-current">
