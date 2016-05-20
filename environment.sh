@@ -21,3 +21,5 @@ export SESSION_COOKIE_SECURE='False'
 # Ensure the following 2 FULL_TITLE env vars are false in pre-prod and prod (until we get the green light)
 export SHOW_FULL_TITLE_DATA='true'
 export SHOW_FULL_TITLE_PDF='true'
+
+export GOVUK_FEEDBACK_URL='https://www.gov.uk/done/search-property-information-land-registry'
