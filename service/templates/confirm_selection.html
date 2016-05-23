@@ -126,21 +126,12 @@
       <p>You can pay by credit or debit card.</p>
 
 
-      <form method="POST" action="{{ action_url }}" data-clientside-validation="cra_form_validation" data-clientside-validation-no-summary>
+      <form method="POST" action="{{ url_for('confirm_selection', title_number = params['title_number'], search_term = search_term) }}" data-clientside-validation="cra_form_validation" data-clientside-validation-no-summary>
         <p>You need to accept the following terms to continue.</p>
-
-        <input type='hidden' name='MC_titleNumber' id='MC_titleNumber' value="{{params.MC_titleNumber}}"/>
-        <input type='hidden' name='MC_searchType' id='MC_searchType' value="{{params.MC_searchType}}"/>
-        <input type='hidden' name='MC_timestamp' id='MC_timestamp' value="{{params.MC_timestamp}}"/>
-        <input type='hidden' name='MC_purchaseType' id='MC_purchaseType' value="{{params.MC_purchaseType}}"/>
-        <input type='hidden' name='MC_unitCount' id='MC_unitCount' value="{{params.MC_unitCount}}"/>
-        <input type='hidden' name='MC_userId' id='MC_userId' value="{{params.MC_userId}}"/>
-        <input type='hidden' name='cartId' id='cartId' value="{{params.cartId}}"/>
-        <input type='hidden' name='amount' id='amount' value="{{params.amount}}"/>
-
         <div class="form-group">
+          {{ form.hidden_tag() }}
           <label class="block-label" for="right_to_cancel">
-            <input id="right_to_cancel" name="right_to_cancel" type="checkbox" value="agree">
+            {{ form.right_to_cancel }}
             I agree that you will provide the summary as soon as I’ve paid.<br>
             I accept that I will lose my right to cancel the contract once the summary is displayed.
           </label>
