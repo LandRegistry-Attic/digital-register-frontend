@@ -69,7 +69,7 @@ def confirm_selection(title_number, search_term):
     params['search_term'] = search_term
     params['title'] = _get_register_title(request.args.get('title', title_number))
     params['title_number'] = title_number
-    params['display_page_number'] = 1
+    params['display_page_number'] = int(request.args.get('page') or 1)
     params['MC_titleNumber'] = title_number
     # should one of: A, D, M, T, I
     params['MC_searchType'] = 'D'
