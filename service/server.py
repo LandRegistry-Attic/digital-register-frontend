@@ -312,7 +312,7 @@ def _worldpay_form(search_term, title_number, username):
 
     params = dict()
     params['search_term'] = search_term
-    params['title'] = _get_register_title(request.args.get('title', title_number))
+    params['title'] = _get_register_title(title_number)
     params['title_number'] = title_number
     params['display_page_number'] = 1
     params['MC_titleNumber'] = title_number
@@ -321,7 +321,7 @@ def _worldpay_form(search_term, title_number, username):
     params['MC_timestamp'] = api_client._get_time()
     params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
     params['MC_unitCount'] = '1'
-    params['desc'] = request.args.get('search_term', search_term)
+    params['desc'] = search_term
     params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
     params['MC_userId'] = username
 

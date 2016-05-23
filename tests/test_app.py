@@ -10,11 +10,56 @@ from lxml.html import document_fromstring  # type: ignore
 
 from config import CONFIG_DICT  # type: ignore
 import service  # type: ignore
-from service.server import app  # type: ignore
+from service.server import app, _worldpay_form, _get_register_title, _payment  # type: ignore
 from .fake_response import FakeResponse  # type: ignore
 
 TEST_USERNAME = 'username1'
 TEST_USER_GROUP = ("DRV", "psu")
+
+register_title_data = {'tenure': 'Freehold',
+                               'districts': [{'name': 'CITY OF PLYMOUTH', 'county': 'County Name'}],
+                               'class_of_title': 'Absolute',
+                               'last_changed': '1996-07-02T00:59:59+01:00',
+                               'number': 'DN195541',
+                               'lenders': [{'name': 'CCHR Company Name',
+                                            'name_extra_info': '',
+                                            'addresses': [{'lines': []}]}],
+                               'is_caution_title': False,
+                               'edition_date': '1996-07-01',
+                               'indexPolygon': {},
+                               'address_lines': ['99482A Test Street', 'Plymouth', 'PL9 8TB'],
+                               'proprietors': [{'name': 'Proprietor name 1',
+                                                'name_extra_info': '',
+                                                'addresses': [{'lines': ['address string UNKNOWN']}]}]}
+worldpay_form_params = {'desc': 'plymouth',
+                        'title':
+                            {'tenure': 'Freehold',
+                             'districts': [{'name': 'CITY OF PLYMOUTH', 'county': 'County Name'}],
+                             'class_of_title': 'Absolute',
+                             'last_changed': '1996-07-02T00:59:59+01:00',
+                             'number': 'DN195541',
+                             'lenders': [{'name': 'CCHR Company Name',
+                                          'name_extra_info': '',
+                                          'addresses': [{'lines': []}]}],
+                             'is_caution_title': False,
+                             'edition_date': '1996-07-01',
+                             'indexPolygon': {},
+                             'address_lines': ['99482A Test Street', 'Plymouth', 'PL9 8TB'],
+                             'proprietors': [{'name': 'Proprietor name 1',
+                                              'name_extra_info': '',
+                                              'addresses': [{'lines': ['address string UNKNOWN']}]}]},
+                        'last_changed_timestring': '00:59:59',
+                        'amount': '3',
+                        'title_number': 'DN195541',
+                        'MC_titleNumber': 'DN195541',
+                        'MC_userId': 'username1',
+                        'last_changed_datestring': '2 July 1996',
+                        'MC_unitCount': '1',
+                        'search_term': 'plymouth',
+                        'display_page_number': 1,
+                        'MC_purchaseType': 'drvSummaryView',
+                        'MC_timestamp': '2016-05-20 14:20:20.154795',
+                        'MC_searchType': 'D'}
 
 with open('tests/data/fake_title.json', 'r') as fake_title_file:
     fake_title_file_json_string = fake_title_file.read()
@@ -494,6 +539,80 @@ class TestRightUserGroup:
         self.headers = Headers([('iv-user', TEST_USERNAME)])
         response = self.app.get('/title-search/search term', follow_redirects=True, headers=self.headers)
         assert response.status_code == 200
+
+
+class TestPayment():
+
+    def setup_method(self, method):
+        self.app = app.test_client()
+        self.headers = Headers([('iv-user', TEST_USERNAME)])
+
+    @mock.patch("service.api_client._get_time", return_value="2016-05-20 14:20:20.154795")
+    @mock.patch('service.server._get_register_title', return_value=register_title_data)
+    def test_worldpay_form_returns_correct_params(self, mock_get_register_title, mock_get_time):
+        search_term = "plymouth"
+        title_number = "DN195541"
+        username = "username1"
+        params = service.server._worldpay_form(search_term, title_number, username)
+        assert params == {'desc': 'plymouth',
+                          'title':
+                              {'tenure': 'Freehold',
+                               'districts': [{'name': 'CITY OF PLYMOUTH', 'county': 'County Name'}],
+                               'class_of_title': 'Absolute',
+                               'last_changed': '1996-07-02T00:59:59+01:00',
+                               'number': 'DN195541',
+                               'lenders': [{'name': 'CCHR Company Name',
+                                            'name_extra_info': '',
+                                            'addresses': [{'lines': []}]}],
+                               'is_caution_title': False,
+                               'edition_date': '1996-07-01',
+                               'indexPolygon': {},
+                               'address_lines': ['99482A Test Street', 'Plymouth', 'PL9 8TB'],
+                               'proprietors': [{'name': 'Proprietor name 1',
+                                                'name_extra_info': '',
+                                                'addresses': [{'lines': ['address string UNKNOWN']}]}]},
+                          'last_changed_timestring': '00:59:59',
+                          'amount': '3',
+                          'title_number': 'DN195541',
+                          'MC_titleNumber': 'DN195541',
+                          'MC_userId': 'username1',
+                          'last_changed_datestring': '2 July 1996',
+                          'MC_unitCount': '1',
+                          'search_term': 'plymouth',
+                          'display_page_number': 1,
+                          'MC_purchaseType': 'drvSummaryView',
+                          'MC_timestamp': '2016-05-20 14:20:20.154795',
+                          'MC_searchType': 'D'}
+
+    @mock.patch('service.server._worldpay_form', return_value=worldpay_form_params)
+    def test_confirm_page_logged_in(self, mock_worldpay_form):
+        self.app.get('/confirm-selection/DN195541/plymouth', headers=self.headers)
+
+        mock_worldpay_form.assert_called_once_with('plymouth', 'DN195541', 'username1')
+
+    @mock.patch('service.server._worldpay_form', return_value=worldpay_form_params)
+    def test_confirm_page_logged_in(self, mock_worldpay_form):
+        self.app.get('/confirm-selection/DN195541/plymouth', follow_redirects=True)
+
+        mock_worldpay_form.hello.assert_not_called
+
+    def test_confirm_order_get_request_logged_in(self):
+        response = self.app.get('/confirm-selection/DN195541/plymouth', follow_redirects=True, headers=self.headers)
+        page_content = response.data.decode()
+        assert 'Confirm your order' in page_content
+
+    def test_confirm_order_post_request_form_not_validated(self):
+        response = self.app.post('/confirm-selection/DN195541/plymouth', follow_redirects=True, headers=self.headers, data='')
+        page_content = response.data.decode()
+        assert 'Confirm your order' in page_content
+
+    @mock.patch('service.server._worldpay_form', return_value=worldpay_form_params)
+    @mock.patch('requests.post', return_value='stuff')
+    def test_confirm_order_post_request_logged_in(self, mock_requests_post, mock_worldpay_form):
+
+        self.app.post('/confirm-selection/DN195541/plymouth',
+                     follow_redirects=True, headers=self.headers, data=dict(right_to_cancel=True))
+        mock_requests_post.assert_called_once_with('http://landregistry.local:8004/save_search_request', data=worldpay_form_params)
 
 
 if __name__ == '__main__':
