@@ -1,20 +1,21 @@
 from flask_wtf import Form                                          # type: ignore
 from wtforms.fields import StringField, PasswordField, RadioField, SubmitField   # type: ignore
-from wtforms.validators import Required, Length                     # type: ignore
+from wtforms.validators import InputRequired, Length                     # type: ignore
 
 
 class TitleSearchForm(Form):  # type: ignore
     search_term = StringField('search_term',
-                              [Required(message='Search term is required'),
-                               Length(min=3, max=70, message='Search term is too short/long')])
+                              [InputRequired(message='Postcode is required')])
 
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
 
 class LandingPageForm(Form):  # type: ignore
-    eligibility = RadioField('eligibility', validators=[Required(message='This field is required.')],
-                             choices=[('eligible', 'description'), ('find_a_property', 'description'), ('official_copy', 'description'), ('dont_know', 'description')])
+    information = RadioField('information', validators=[InputRequired(message='Please choose an option.')],
+                             choices=[('title_summary', 'Title summary'), ('full_title_documents', 'Full title documents'), ('official_copy', 'Official copy')])
+
+    submit = SubmitField("Continue")
 
     def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)

@@ -37,9 +37,10 @@ class TestTemplateFilters:
         assert template_filters.check_date_existence(None) == ' Not Dated '
 
     @mock.patch('service.title_utils.is_caution_title', return_value=True)
-    def test_tenure_info_returns_caution_info_when_caution_title(self, mock_is_caution_title):
-        tenure_info = template_filters.get_tenure_info({'data': 'title_data'})
-        assert tenure_info == 'Caution against first registration'
+    def test_tenure_info_returns_tenure_when_caution_title(self, mock_is_caution_title):
+        tenure = 'tenure123'
+        tenure_info = template_filters.get_tenure_info({'data': {'tenure': tenure}})
+        assert tenure_info == tenure
 
     @mock.patch('service.title_utils.is_caution_title', return_value=False)
     def test_tenure_info_returns_tenure_when_not_caution_title(self, mock_is_caution_title):
