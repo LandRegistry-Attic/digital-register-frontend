@@ -17,20 +17,21 @@ TEST_USERNAME = 'username1'
 TEST_USER_GROUP = ("DRV", "psu")
 
 register_title_data = {'tenure': 'Freehold',
-                               'districts': [{'name': 'CITY OF PLYMOUTH', 'county': 'County Name'}],
-                               'class_of_title': 'Absolute',
-                               'last_changed': '1996-07-02T00:59:59+01:00',
-                               'number': 'DN195541',
-                               'lenders': [{'name': 'CCHR Company Name',
-                                            'name_extra_info': '',
-                                            'addresses': [{'lines': []}]}],
-                               'is_caution_title': False,
-                               'edition_date': '1996-07-01',
-                               'indexPolygon': {},
-                               'address_lines': ['99482A Test Street', 'Plymouth', 'PL9 8TB'],
-                               'proprietors': [{'name': 'Proprietor name 1',
-                                                'name_extra_info': '',
-                                                'addresses': [{'lines': ['address string UNKNOWN']}]}]}
+                       'districts': [{'name': 'CITY OF PLYMOUTH', 'county': 'County Name'}],
+                       'class_of_title': 'Absolute',
+                       'last_changed': '1996-07-02T00:59:59+01:00',
+                       'number': 'DN195541',
+                       'lenders': [{'name': 'CCHR Company Name',
+                                    'name_extra_info': '',
+                                    'addresses': [{'lines': []}]}],
+                       'is_caution_title': False,
+                       'edition_date': '1996-07-01',
+                       'indexPolygon': {},
+                       'address_lines': ['99482A Test Street', 'Plymouth', 'PL9 8TB'],
+                       'proprietors': [{'name': 'Proprietor name 1',
+                                        'name_extra_info': '',
+                                        'addresses': [{'lines': ['address string UNKNOWN']}]}]}
+
 worldpay_form_params = {'desc': 'plymouth',
                         'title':
                             {'tenure': 'Freehold',
@@ -611,7 +612,7 @@ class TestPayment():
     def test_confirm_order_post_request_logged_in(self, mock_requests_post, mock_worldpay_form):
 
         self.app.post('/confirm-selection/DN195541/plymouth',
-                     follow_redirects=True, headers=self.headers, data=dict(right_to_cancel=True))
+                      follow_redirects=True, headers=self.headers, data=dict(right_to_cancel=True))
         mock_requests_post.assert_called_once_with('http://landregistry.local:8004/save_search_request', data=worldpay_form_params)
 
 
