@@ -46,7 +46,7 @@ js = Bundle('.dist/javascripts/govuk-template.js',
 
 js_map = Bundle('.land-registry-elements/assets/javascripts/leaflet.js',
                 'app/javascripts/map.js',
-                filters='rjsmin', output='.dist/javascripts/leaflet.js')
+                filters='rjsmin', output='.dist/javascripts/property-map.js')
 
 js_googleanalytics = Bundle('app/javascripts/googleanalytics.js',
                             filters='rjsmin', output='.dist/javascripts/googleanalytics.js')
