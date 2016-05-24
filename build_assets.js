@@ -5,7 +5,7 @@ landRegistryElements({
   'mode': 'production',
   'includePath': __dirname,
   'destination': path.resolve(__dirname, 'service/static/.land-registry-elements'),
-  'assetPath': '/static/.land-registry-elements/assets',
+  'assetPath': false, // Don't insert an asset path, we'll let flask set it as a global JS variable
   'components': [
     'pages/find-property-information/landing-form',
     'pages/find-property-information/search-form',
