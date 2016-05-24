@@ -9,7 +9,7 @@ from service import logging_config, error_handler, ui, title_utils, template_fil
 fault_log_file = open(str(CONFIG_DICT['FAULT_LOG_FILE_PATH']), 'a')
 faulthandler.enable(file=fault_log_file)
 
-app = Flask(__name__, static_folder = 'ui')
+app = Flask(__name__, static_folder='ui')
 app.config.update(CONFIG_DICT)
 babel = Babel(app)
 
