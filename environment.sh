@@ -23,3 +23,5 @@ export SHOW_FULL_TITLE_DATA='true'
 export SHOW_FULL_TITLE_PDF='true'
 
 export GOVUK_FEEDBACK_URL='https://www.gov.uk/done/search-property-information-land-registry'
+
+export JUNCTION=''
