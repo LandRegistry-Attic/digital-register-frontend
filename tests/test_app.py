@@ -7,7 +7,7 @@ import pytest  # type: ignore
 from unittest.mock import call  # type: ignore
 from werkzeug.datastructures import Headers  # type: ignore
 from lxml.html import document_fromstring  # type: ignore
-
+from mock import MagicMock
 from config import CONFIG_DICT  # type: ignore
 import service  # type: ignore
 from service.server import app, _worldpay_form, _get_register_title, _payment  # type: ignore
@@ -597,23 +597,26 @@ class TestPayment():
 
         mock_worldpay_form.hello.assert_not_called
 
-    def test_confirm_order_get_request_logged_in(self):
+    @mock.patch('requests.post', return_value=MagicMock(response="1234"))
+    @mock.patch('service.server._worldpay_form', return_value=worldpay_form_params)
+    def test_confirm_order_get_request_logged_in(self, mock_worldpay_form, mock_requests_post):
         response = self.app.get('/confirm-selection/DN195541/plymouth', follow_redirects=True, headers=self.headers)
         page_content = response.data.decode()
         assert 'Confirm your order' in page_content
 
-    def test_confirm_order_post_request_form_not_validated(self):
-        response = self.app.post('/confirm-selection/DN195541/plymouth', follow_redirects=True, headers=self.headers, data='')
+    @mock.patch('requests.post', return_value=MagicMock(response="1234"))
+    @mock.patch('service.server._worldpay_form', return_value=worldpay_form_params)
+    def test_confirm_order_post_request_form_not_validated(self, mock_worldpay_form, mock_requests_post):
+        response = self.app.post('/confirm-selection/DN195541/plymouth', follow_redirects=True, headers=self.headers)
         page_content = response.data.decode()
         assert 'Confirm your order' in page_content
 
     @mock.patch('service.server._worldpay_form', return_value=worldpay_form_params)
-    @mock.patch('requests.post', return_value='stuff')
+    @mock.patch('requests.post', return_value=MagicMock(response="1234"))
     def test_confirm_order_post_request_logged_in(self, mock_requests_post, mock_worldpay_form):
 
-        self.app.post('/confirm-selection/DN195541/plymouth',
-                      follow_redirects=True, headers=self.headers, data=dict(right_to_cancel=True))
-        mock_requests_post.assert_called_once_with('http://landregistry.local:8004/save_search_request', data=worldpay_form_params)
+        self.app.post('/confirm-selection/DN195541/plymouth', headers=self.headers, data=dict(right_to_cancel=True))
+        mock_requests_post.assert_called_with('http://land-registry-payment-interface.landregistry.local:8011/wp', data=worldpay_form_params)
 
 
 if __name__ == '__main__':
