@@ -61,12 +61,12 @@ target/
 .idea
 
 # Compiled CSS
-service/static/gen/
-service/static/.webassets-cache/
+service/ui/gen/
+service/ui/.webassets-cache/
 
 # Generated files
-service/static/.dist
-service/static/.land-registry-elements/assets/sass
+service/ui/.dist
+service/ui/.land-registry-elements/assets/sass
 
 # Node.js
 node_modules
