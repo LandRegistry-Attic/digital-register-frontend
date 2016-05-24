@@ -77,6 +77,6 @@
 {% endblock %}
 
 {% block body_end %}
-  {% assets "js" %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
+  {% assets "js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
   {% block js_additionals %}{% endblock %}
 {% endblock %}

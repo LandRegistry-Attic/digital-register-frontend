@@ -36,20 +36,15 @@ elements_ie6 = Bundle('.dist/stylesheets/elements-ie6.css',
                       filters=(compile_sass, 'cssmin'), output='.dist/stylesheets/main-ie6.css')
 
 
-js_polyfills_ie9 = Bundle('.dist/javascripts/polyfills-ie9.js',
-                          filters='rjsmin', output='.dist/javascripts/polyfills-ie9.js')
-
-js_polyfills_ie8 = Bundle('.dist/javascripts/polyfills-ie8.js',
-                          filters='rjsmin', output='.dist/javascripts/polyfills-ie8.js')
-
-js_promise = Bundle('.dist/javascripts/polyfills-promise.js',
-                    filters='rjsmin', output='.dist/javascripts/polyfills-promise.js')
+js_polyfills_ie9 = Bundle('.dist/javascripts/polyfills-ie9.js')
+js_polyfills_ie8 = Bundle('.dist/javascripts/polyfills-ie8.js')
+js_promise = Bundle('.dist/javascripts/polyfills-promise.js')
 
 js = Bundle('.dist/javascripts/govuk-template.js',
             '.dist/javascripts/landregistry.js',
             filters='rjsmin', output='.dist/javascripts/main.js')
 
-js_map = Bundle('.dist/javascripts/leaflet.js',
+js_map = Bundle('.land-registry-elements/assets/javascripts/leaflet.js',
                 'app/javascripts/map.js',
                 filters='rjsmin', output='.dist/javascripts/leaflet.js')
 
