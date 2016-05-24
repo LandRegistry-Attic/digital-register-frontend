@@ -1,24 +1,27 @@
-{% set asset_path = '/static/.land-registry-elements/assets/' %}
+{% set asset_path = '/ui/.dist/' %}
 
 {% extends "layouts/govuk_template.html" %}
 
 {% block head %}
+  <script>
+    var assetPath = '{{junction}}{{ url_for('static', filename='') }}.dist';
+  </script>
 
   {% assets "govuk" %}<link href="{{ ASSET_URL }}" media="screen" rel="stylesheet" type="text/css" />{% endassets %}
-  {% assets "govuk_ie8" %}<!--[if IE 8]><link href="{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
-  {% assets "govuk_ie7" %}<!--[if IE 7]><link href="{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
-  {% assets "govuk_ie6" %}<!--[if IE 6]><link href="{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "govuk_ie8" %}<!--[if IE 8]><link href="{{junction}}{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "govuk_ie7" %}<!--[if IE 7]><link href="{{junction}}{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "govuk_ie6" %}<!--[if IE 6]><link href="{{junction}}{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
 
   {% assets "govuk_print" %}<link href="{{ ASSET_URL }}" media="print" rel="stylesheet" type="text/css" />{% endassets %}
 
   {% assets "elements" %}<!--[if gt IE 8]><!--><link href="{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><!--<![endif]-->{% endassets %}
-  {% assets "elements_ie8" %}<!--[if IE 8]><link href="{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
-  {% assets "elements_ie7" %}<!--[if IE 7]><link href="{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
-  {% assets "elements_ie6" %}<!--[if IE 6]><link href="{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "elements_ie8" %}<!--[if IE 8]><link href="{{junction}}{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "elements_ie7" %}<!--[if IE 7]><link href="{{junction}}{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
+  {% assets "elements_ie6" %}<!--[if IE 6]><link href="{{junction}}{{ ASSET_URL }}" media="all" rel="stylesheet" type="text/css" /><![endif]-->{% endassets %}
 
-  <!--[if lte IE 11]>{% assets "js_promise" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
-  <!--[if lte IE 9]>{% assets "js_polyfills_ie9" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
-  <!--[if lte IE 8]>{% assets "js_polyfills_ie8" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
+  <!--[if lte IE 11]>{% assets "js_promise" %}<script src="{{junction}}{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
+  <!--[if lte IE 9]>{% assets "js_polyfills_ie9" %}<script src="{{junction}}{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
+  <!--[if lte IE 8]>{% assets "js_polyfills_ie8" %}<script src="{{junction}}{{ ASSET_URL }}"></script>{% endassets %}<![endif]-->
 
   <!-- Google Analytics -->
   <script>
@@ -74,11 +77,6 @@
 {% endblock %}
 
 {% block body_end %}
-
-  <script>
-    var assetPath = '{{ url_for('static', filename='') }}';
-  </script>
-
-  {% assets "js" %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
+  {% assets "js" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
   {% block js_additionals %}{% endblock %}
 {% endblock %}

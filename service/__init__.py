@@ -3,13 +3,13 @@ from flask import Flask, request, g     # type: ignore
 from flask.ext.babel import Babel       # type: ignore
 
 from config import CONFIG_DICT          # type: ignore
-from service import logging_config, error_handler, static, title_utils, template_filters, api_client   # type: ignore
+from service import logging_config, error_handler, ui, title_utils, template_filters, api_client   # type: ignore
 
 # This causes the traceback to be written to the fault log file in case of serious faults
 fault_log_file = open(str(CONFIG_DICT['FAULT_LOG_FILE_PATH']), 'a')
 faulthandler.enable(file=fault_log_file)
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='ui')
 app.config.update(CONFIG_DICT)
 babel = Babel(app)
 
@@ -52,20 +52,22 @@ def before_first_request():
     app.config.update({'TITLE_REGISTER_SUMMARY_PRICE_TEXT': price_text})
 
 
-static.register_assets(app)  # type: ignore
+ui.register_assets(app)  # type: ignore
 
 for (filter_name, filter_method) in template_filters.get_all_filters().items():  # type: ignore
     app.jinja_env.filters[filter_name] = filter_method
 
 GOOGLE_ANALYTICS_API_KEY = app.config['GOOGLE_ANALYTICS_API_KEY']
 GOVUK_FEEDBACK_URL = app.config['GOVUK_FEEDBACK_URL']
+JUNCTION = app.config['JUNCTION']
 
 
 @app.context_processor
 def inject_global_config():
     return dict(
         google_api_key=GOOGLE_ANALYTICS_API_KEY,
-        govuk_feedback_url=GOVUK_FEEDBACK_URL
+        govuk_feedback_url=GOVUK_FEEDBACK_URL,
+        junction=JUNCTION
     )
 
 

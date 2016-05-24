@@ -259,6 +259,6 @@
       var indexData = {{ title.indexPolygon | tojson }};
     </script>
 
-    {% assets "js_map" %}<script defer src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% assets "js_map" %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
   {% endif %}
 {% endblock %}
