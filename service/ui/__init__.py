@@ -33,11 +33,11 @@ def register_assets(app):
     # Reason being, we are using flask assets to compress the css to a new folder
     # but the images don't automatically come along with it so we have to copy them manually
     dir = os.path.dirname(__file__)
-    folders = ['external-links', 'fonts', 'images']
+    folders = ['images', 'javascripts', 'stylesheets']
 
     for folder in folders:
-        src = os.path.join(dir, '.land-registry-elements/assets/stylesheets', folder)
-        dest = os.path.join(dir, '.dist/css', folder)
+        src = os.path.join(dir, '.land-registry-elements/assets', folder)
+        dest = os.path.join(dir, '.dist', folder)
         rmtree(dest, True)
         copytree(src, dest)
 

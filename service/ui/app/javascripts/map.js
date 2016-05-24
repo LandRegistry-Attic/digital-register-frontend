@@ -1,6 +1,6 @@
 window.onload = function() {
 
-  L.Icon.Default.imagePath = window.assetPath + '.land-registry-elements/assets/images/leaflet';
+  L.Icon.Default.imagePath = window.assetPath + '/images/leaflet';
 
   var mapElement = document.getElementById('map');
 
