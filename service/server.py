@@ -93,7 +93,7 @@ def _payment(price_text, form, search_term, username, title_number):
 
     lrpi_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
 
-    if request.method == 'POST' and form.validate() and username:
+    if request.method == 'POST' and form.validate() and username is not None:
         # If they ticked the checkbox and are logged in ...
         params = _worldpay_form(search_term, title_number, username)
 
@@ -114,7 +114,7 @@ def _payment(price_text, form, search_term, username, title_number):
 
             return redirect(redirect_url)
 
-    elif request.method == 'POST' and form.validate() and not username:
+    elif request.method == 'POST' and form.validate() and username is None:
         # If they have ticked the box but they are not logged in
         LOGGER.debug("ENDED: _payment")
 
