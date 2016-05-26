@@ -57,7 +57,6 @@ worldpay_form_params = {'desc': 'plymouth',
                         'last_changed_datestring': '2 July 1996',
                         'MC_unitCount': '1',
                         'search_term': 'plymouth',
-                        'display_page_number': 1,
                         'MC_purchaseType': 'drvSummaryView',
                         'MC_timestamp': '2016-05-20 14:20:20.154795',
                         'MC_searchType': 'D'}
@@ -580,7 +579,6 @@ class TestPayment():
                           'last_changed_datestring': '2 July 1996',
                           'MC_unitCount': '1',
                           'search_term': 'plymouth',
-                          'display_page_number': 1,
                           'MC_purchaseType': 'drvSummaryView',
                           'MC_timestamp': '2016-05-20 14:20:20.154795',
                           'MC_searchType': 'D'}

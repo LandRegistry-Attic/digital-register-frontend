@@ -57,38 +57,18 @@ def search():
     )
 
 
-@app.route('/confirm-selection-hidden/<title_number>/<search_term>', methods=['GET'])
+@app.route('/confirm-selection-hidden/<title_number>/<search_term>', methods=['POST'])
 def confirm_selection_after_login(title_number, search_term):
 
     LOGGER.debug("STARTED: confirm_selection_after_login title_number, search_term: {0}, {1}".format(
         title_number, search_term
     ))
-
+    form = request.args.get('forms')
+    price_text = request.args.get('price_text')
     username = _username_from_header(request)
-    params = _worldpay_form(search_term, title_number, username)
-    # Save user's search details.
-    response = api_client.save_search_request(params)
-    params['cartId'] = response.text
     LOGGER.debug("ENDED: confirm_selection")
 
-    return _payment(params, price_text, form, search_term)
-
-
-def worldpay_form(search_term, title_number, username):
-    params = dict()
-    params['search_term'] = search_term
-    params['title'] = _get_register_title(request.args.get('title', title_number))
-    params['title_number'] = title_number
-    params['display_page_number'] = int(request.args.get('page') or 1)
-    params['MC_titleNumber'] = title_number
-    # should one of: A, D, M, T, I
-    params['MC_searchType'] = 'D'
-    params['MC_timestamp'] = api_client._get_time()
-    params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
-    params['MC_unitCount'] = '1'
-    params['desc'] = request.args.get('search_term', search_term)
-    params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-    params['MC_userId'] = username
+    return _payment(price_text, form, search_term, username, title_number)
 
 
 @app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET', 'POST'])
@@ -103,18 +83,52 @@ def confirm_selection(title_number, search_term):
     search_term = request.args.get('search_term', search_term)
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
 
-    if username:
+    LOGGER.debug("ENDED: confirm_selection")
+    return _payment(price_text, form, search_term, username, title_number)
+
+def _payment(price_text, form, search_term, username, title_number):
+    LOGGER.debug("STARTED: _payment price_text, form, search_term: {0}, {1}, {2}".format(price_text,
+        form, search_term
+    ))
+
+    lrpi_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
+
+    if request.method == 'POST' and form.validate() and username:
+        # If they ticked the checkbox and are logged in ...
         params = _worldpay_form(search_term, title_number, username)
+
         # Save user's search details.
         response = api_client.save_search_request(params)
         params['cartId'] = response.text
-        LOGGER.debug("ENDED: confirm_selection")
 
-        return _payment(params, price_text, form, search_term)
+        worldpay_data = requests.post(lrpi_url, data=params)
+
+        if worldpay_data.headers['pay_mode'] == 'worldpay':
+            worldpay_json = json.loads(worldpay_data.text)
+            LOGGER.debug("ENDED: _payment")
+
+            return render_template('hiddenWP.html', worldpay_params=worldpay_json)
+        else:
+            redirect_url = worldpay_data.text
+            LOGGER.debug("ENDED: _payment")
+
+            return redirect(redirect_url)
+
+    elif request.method == 'POST' and form.validate() and not username:
+        # If they have ticked the box but they are not logged in
+        LOGGER.debug("ENDED: _payment")
+
+        return redirect(url_for(confirm_selection_after_login, title_number=title_number, price_text=price_text, form=form,
+                               search_term=search_term))
+
     else:
-        LOGGER.debug("ENDED: confirm_selection")
+        # If they have just been sent to the page, or haven't ticked the checkbox ...
+        params = _worldpay_form(search_term, title_number, username)
+        params['display_page_number'] = int(request.args.get('page') or 1)
+        LOGGER.debug("ENDED: _payment")
 
-        return redirect(url_for(confirm_selection_after_login, title_number=title_number, search_term=search_term))
+        return render_template('confirm_selection.html', title_number=title_number, params=params, price_text=price_text, form=form,
+                               search_term=search_term)
 
 
 @app.route('/health', methods=['GET'])
@@ -278,33 +292,6 @@ def find_titles_page(search_term=''):
         return _get_address_search_response(search_term, page_number)
 
 
-def _payment(params, price_text, form, search_term):
-    LOGGER.debug("STARTED: _payment params, price_text, form, search_term: {0}, {1}, {2}, {3}".format(
-        params, price_text, form, search_term
-    ))
-
-    lrpi_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
-
-    if request.method == 'POST' and form.validate():
-        worldpay_data = requests.post(lrpi_url, data=params)
-
-        if worldpay_data.headers['pay_mode'] == 'worldpay':
-            worldpay_json = json.loads(worldpay_data.text)
-            LOGGER.debug("ENDED: _payment")
-
-            return render_template('hiddenWP.html', worldpay_params=worldpay_json)
-        else:
-            redirect_url = worldpay_data.text
-            LOGGER.debug("ENDED: _payment")
-
-            return redirect(redirect_url)
-    else:
-        LOGGER.debug("ENDED: _payment")
-
-        return render_template('confirm_selection.html', params=params, price_text=price_text, form=form,
-                               search_term=search_term)
-
-
 def _worldpay_form(search_term, title_number, username):
     LOGGER.debug("STARTED: _worldpay_form search_term, title_number, username: {0}, {1}, {2}".format(
         search_term, title_number, username
@@ -314,7 +301,6 @@ def _worldpay_form(search_term, title_number, username):
     params['search_term'] = search_term
     params['title'] = _get_register_title(title_number)
     params['title_number'] = title_number
-    params['display_page_number'] = 1
     params['MC_titleNumber'] = title_number
     # should one of: A, D, M, T, I
     params['MC_searchType'] = 'D'
@@ -603,5 +589,7 @@ def _username_from_header(request):
     if user_id:
         p = re.compile("[%][{0-9}][{0-9}]")
         user_id = p.sub("", user_id)
+    if user_id == "Unauthenticated":
+        user_id = None
     LOGGER.debug("_username_from_header: {0}".format(user_id))
     return user_id
