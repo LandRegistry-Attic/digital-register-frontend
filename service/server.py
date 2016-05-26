@@ -4,10 +4,11 @@ import logging
 import logging.config                                                                                  # type: ignore
 import re
 import os
+import requests
 from flask import abort, Markup, redirect, render_template, request, Response, url_for  # type: ignore
 from flask_weasyprint import HTML, render_pdf                                                          # type: ignore
 from service import (address_utils, api_client, app, auditing, health_checker, title_formatter, title_utils)
-from service.forms import TitleSearchForm, LandingPageForm
+from service.forms import TitleSearchForm, LandingPageForm, ConfirmTermsConditionsForm
 from datetime import datetime
 
 # TODO: move this to the template
@@ -56,57 +57,78 @@ def search():
     )
 
 
-@app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET'])
+@app.route('/confirm-selection-hidden/<title_number>/<search_term>', methods=['POST'])
+def confirm_selection_after_login(title_number, search_term):
+
+    LOGGER.debug("STARTED: confirm_selection_after_login title_number, search_term: {0}, {1}".format(
+        title_number, search_term
+    ))
+    form = request.args.get('forms')
+    price_text = request.args.get('price_text')
+    username = _username_from_header(request)
+    LOGGER.debug("ENDED: confirm_selection")
+
+    return _payment(price_text, form, search_term, username, title_number)
+
+
+@app.route('/confirm-selection/<title_number>/<search_term>', methods=['GET', 'POST'])
 def confirm_selection(title_number, search_term):
 
     LOGGER.debug("STARTED: confirm_selection title_number, search_term: {0}, {1}".format(
         title_number, search_term
     ))
 
+    form = ConfirmTermsConditionsForm()
     username = _username_from_header(request)
-
-    params = dict()
-    params['search_term'] = search_term
-    params['title'] = _get_register_title(request.args.get('title', title_number))
-    params['title_number'] = title_number
-    params['display_page_number'] = int(request.args.get('page') or 1)
-    params['MC_titleNumber'] = title_number
-    # should one of: A, D, M, T, I
-    params['MC_searchType'] = 'D'
-    params['MC_timestamp'] = api_client._get_time()
-    params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
-    params['MC_unitCount'] = '1'
-    params['desc'] = request.args.get('search_term', search_term)
-    params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
-    params['MC_userId'] = username
-
+    search_term = request.args.get('search_term', search_term)
     price_text = app.config['TITLE_REGISTER_SUMMARY_PRICE_TEXT']
 
-    # Last changed date - modified to remove colon in UTC offset, which python
-    # datetime.strptime() doesn't like >>>
-    datestring = params['title']['last_changed']
-    if len(datestring) == 25:
-        if datestring[22] == ':':
-            l = list(datestring)
-            del(l[22])
-            datestring = "".join(l)
-
-    dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
-    params['last_changed_datestring'] = \
-        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
-    params['last_changed_timestring'] = \
-        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
-                      '{:02d}'.format(dt_obj.minute),
-                      '{:02d}'.format(dt_obj.second))
-
-    # Save user's search details.
-    response = api_client.save_search_request(params)
-    params['cartId'] = response.text
-    action_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
-
     LOGGER.debug("ENDED: confirm_selection")
+    return _payment(price_text, form, search_term, username, title_number)
 
-    return render_template('confirm_selection.html', params=params, action_url=action_url, price_text=price_text,)
+def _payment(price_text, form, search_term, username, title_number):
+    LOGGER.debug("STARTED: _payment price_text, form, search_term: {0}, {1}, {2}".format(price_text,
+        form, search_term
+    ))
+
+    lrpi_url = app.config['LAND_REGISTRY_PAYMENT_INTERFACE_URI']
+
+    if request.method == 'POST' and form.validate() and username is not None:
+        # If they ticked the checkbox and are logged in ...
+        params = _worldpay_form(search_term, title_number, username)
+
+        # Save user's search details.
+        response = api_client.save_search_request(params)
+        params['cartId'] = response.text
+
+        worldpay_data = requests.post(lrpi_url, data=params)
+
+        if worldpay_data.headers['pay_mode'] == 'worldpay':
+            worldpay_json = json.loads(worldpay_data.text)
+            LOGGER.debug("ENDED: _payment")
+
+            return render_template('hiddenWP.html', worldpay_params=worldpay_json)
+        else:
+            redirect_url = worldpay_data.text
+            LOGGER.debug("ENDED: _payment")
+
+            return redirect(redirect_url)
+
+    elif request.method == 'POST' and form.validate() and username is None:
+        # If they have ticked the box but they are not logged in
+        LOGGER.debug("ENDED: _payment")
+
+        return redirect(url_for(confirm_selection_after_login, title_number=title_number, price_text=price_text, form=form,
+                               search_term=search_term))
+
+    else:
+        # If they have just been sent to the page, or haven't ticked the checkbox ...
+        params = _worldpay_form(search_term, title_number, username)
+        params['display_page_number'] = int(request.args.get('page') or 1)
+        LOGGER.debug("ENDED: _payment")
+
+        return render_template('confirm_selection.html', title_number=title_number, params=params, price_text=price_text, form=form,
+                               search_term=search_term)
 
 
 @app.route('/health', methods=['GET'])
@@ -210,14 +232,18 @@ def display_title_pdf(title_number):
         abort(404)
 
     title = _get_register_title(title_number)
+
     if title:
         full_title_data = api_client.get_official_copy_data(title_number)
         full_title_data = _strip_delimiters(full_title_data)
+
         if full_title_data:
             sub_registers = full_title_data.get('official_copy_data', {}).get('sub_registers')
+
             if sub_registers:
                 html = _create_pdf_template(sub_registers, title, title_number)
                 LOGGER.debug("ENDED: display_title_pdf")
+
                 return render_pdf(HTML(string=html))
     LOGGER.debug("ENDED: display_title_pdf")
     abort(404)
@@ -240,6 +266,7 @@ def find_titles():
     else:
         # TODO: we should redirect to that page
         LOGGER.debug("ENDED: find_titles")
+
         return _initial_search_page(request)
 
 
@@ -247,18 +274,62 @@ def find_titles():
 @app.route('/title-search/<search_term>', methods=['GET'])
 def find_titles_page(search_term=''):
     LOGGER.debug("STARTED: find_titles_page search_term: {}".format(search_term))
+
     display_page_number = int(request.args.get('page') or 1)
     page_number = display_page_number - 1  # page_number is 0 indexed
     username = _username_from_header(request)
     search_term = search_term.strip()
+
     if not search_term:
         LOGGER.debug("ENDED: find_titles_page")
+
         return _initial_search_page(request)
     else:
         message_format = "SEARCH REGISTER: '{0}' was searched by {1}"
         auditing.audit(message_format.format(search_term, username))
         LOGGER.debug("ENDED: find_titles_page search_term: {0}".format(search_term))
+
         return _get_address_search_response(search_term, page_number)
+
+
+def _worldpay_form(search_term, title_number, username):
+    LOGGER.debug("STARTED: _worldpay_form search_term, title_number, username: {0}, {1}, {2}".format(
+        search_term, title_number, username
+    ))
+
+    params = dict()
+    params['search_term'] = search_term
+    params['title'] = _get_register_title(title_number)
+    params['title_number'] = title_number
+    params['MC_titleNumber'] = title_number
+    # should one of: A, D, M, T, I
+    params['MC_searchType'] = 'D'
+    params['MC_timestamp'] = api_client._get_time()
+    params['MC_purchaseType'] = os.getenv('WP_MC_PURCHASETYPE', 'drvSummaryView')
+    params['MC_unitCount'] = '1'
+    params['desc'] = search_term
+    params['amount'] = app.config['TITLE_REGISTER_SUMMARY_PRICE']
+    params['MC_userId'] = username
+
+    # Last changed date - modified to remove colon in UTC offset, which python
+    # datetime.strptime() doesn't like >>>
+    datestring = params['title']['last_changed']
+    if len(datestring) == 25:
+        if datestring[22] == ':':
+            l = list(datestring)
+            del (l[22])
+            datestring = "".join(l)
+
+    dt_obj = datetime.strptime(datestring, "%Y-%m-%dT%H:%M:%S%z")
+    params['last_changed_datestring'] = \
+        "%d %s %d" % (dt_obj.day, dt_obj.strftime("%B"), dt_obj.year)
+    params['last_changed_timestring'] = \
+        "%s:%s:%s" % ('{:02d}'.format(dt_obj.hour),
+                      '{:02d}'.format(dt_obj.minute),
+                      '{:02d}'.format(dt_obj.second))
+    LOGGER.debug("ENDED: _worldpay_form")
+
+    return params
 
 
 def _get_register_title(title_number):
@@ -518,5 +589,7 @@ def _username_from_header(request):
     if user_id:
         p = re.compile("[%][{0-9}][{0-9}]")
         user_id = p.sub("", user_id)
+    if user_id == "Unauthenticated":
+        user_id = None
     LOGGER.debug("_username_from_header: {0}".format(user_id))
     return user_id

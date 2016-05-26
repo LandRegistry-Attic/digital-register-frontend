@@ -9,8 +9,7 @@
 
   {% if title['data'] %}
 
-    <p class="font-xsmall spacing-bottom-flush">Title number: {{ title['title_number'] }}</p>
-    <b class="bold-xsmall">{{ title | tenure_info }}</b>
+    <p class="bold-xsmall spacing-bottom-flush">{{ title | tenure_info }}</p>
 
     {% if title['data'].get('is_caution_title') %}
       <p class="font-xsmall"><strong class="bold">Caution against first registration</strong> <a class="split-detail-trigger" href="#whats-caution-against-first-registration-{{results_loop.index}}">What's this?</a></p>
